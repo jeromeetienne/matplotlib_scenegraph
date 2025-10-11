@@ -59,11 +59,11 @@ class SceneExamples:
         head_points.position[0] = 3
         head_points.position[1] = -3
 
-        head_points = SceneExamples.getSuzannePoints()
-        model_root.add_child(head_points)
-        head_points.scale[:] = 0.2
-        head_points.position[0] = -3
-        head_points.position[1] = -3
+        suzanne_points = SceneExamples.getSuzannePoints()
+        model_root.add_child(suzanne_points)
+        suzanne_points.scale[:] = 0.2
+        suzanne_points.position[0] = -3
+        suzanne_points.position[1] = -3
 
         def update_model_root(delta_time: float, timestamp: float) -> list[Object3D]:
             range = np.sin(timestamp) * 1 + 2

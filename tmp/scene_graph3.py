@@ -1,81 +1,99 @@
-from pyrr import matrix44, Vector3
 import numpy as np
+from pyrr import matrix44
+import math
 
 
 class Object3D:
-    def __init__(self, name="Object3D"):
+    def __init__(self, name="Object"):
         self.name = name
-        self.position = Vector3([0.0, 0.0, 0.0])
-        self.rotation_euler = Vector3([0.0, 0.0, 0.0])  # in radians
-        self.scale = Vector3([1.0, 1.0, 1.0])
+        self.position = np.array([0.0, 0.0, 0.0], dtype=float)
+        self.rotation = np.array([0.0, 0.0, 0.0], dtype=float)  # euler in radians
+        self.scale = np.array([1.0, 1.0, 1.0], dtype=float)
+
         self.parent = None
         self.children = []
-        self.local_matrix = matrix44.create_identity(dtype=np.float32)
-        self.world_matrix = matrix44.create_identity(dtype=np.float32)
 
-    def set_parent(self, parent):
-        self.parent = parent
-        parent.children.append(self)
+        self.local_matrix = np.eye(4, dtype=float)
+        self.world_matrix = np.eye(4, dtype=float)
 
-    def update_local_matrix(self):
-        # Order: scale -> rotate -> translate
-        S = matrix44.create_from_scale(self.scale, dtype=np.float32)
-        Rx = matrix44.create_from_x_rotation(self.rotation_euler.x, dtype=np.float32)
-        Ry = matrix44.create_from_y_rotation(self.rotation_euler.y, dtype=np.float32)
-        Rz = matrix44.create_from_z_rotation(self.rotation_euler.z, dtype=np.float32)
-        R = matrix44.multiply(Rz, matrix44.multiply(Ry, Rx))
-        T = matrix44.create_from_translation(self.position, dtype=np.float32)
+    def add_child(self, child: "Object3D"):
+        child.parent = self
+        self.children.append(child)
 
-        self.local_matrix = matrix44.multiply(R, S)
-        self.local_matrix = matrix44.multiply(T, self.local_matrix)
+    def compute_local_matrix(self):
+        t = matrix44.create_from_translation(self.position)
+        rx = matrix44.create_from_x_rotation(self.rotation[0])
+        ry = matrix44.create_from_y_rotation(self.rotation[1])
+        rz = matrix44.create_from_z_rotation(self.rotation[2])
+        s = matrix44.create_from_scale(self.scale)
+
+        # local = T * Rz * Ry * Rx * S  (common convention)
+        self.local_matrix = matrix44.multiply(s, np.eye(4))
+        self.local_matrix = matrix44.multiply(rx, self.local_matrix)
+        self.local_matrix = matrix44.multiply(ry, self.local_matrix)
+        self.local_matrix = matrix44.multiply(rz, self.local_matrix)
+        self.local_matrix = matrix44.multiply(t, self.local_matrix)
 
     def update_world_matrix(self, parent_world=None):
-        self.update_local_matrix()
+        self.compute_local_matrix()
 
         if parent_world is None:
             self.world_matrix = self.local_matrix.copy()
         else:
             self.world_matrix = matrix44.multiply(self.local_matrix, parent_world)
 
-        # update children
         for child in self.children:
             child.update_world_matrix(self.world_matrix)
 
 
-# -------- TEST --------
-def test_scene_graph():
-    print("Running scene graph test...")
+# -------------------- TESTS --------------------
 
+def almost_equal(a, b, eps=1e-5):
+    return np.allclose(a, b, atol=eps)
+
+
+def run_tests():
+    print("Running tests...")
+
+    # Test 1: Basic translation
     root = Object3D("Root")
-    root.position = Vector3([10, 0, 0])
-
-    child = Object3D("Child")
-    child.position = Vector3([5, 0, 0])
-    child.set_parent(root)
-
-    grandchild = Object3D("GrandChild")
-    grandchild.position = Vector3([2, 0, 0])
-    grandchild.set_parent(child)
-
-    # Update world matrices
+    root.position = np.array([1, 2, 3], dtype=float)
     root.update_world_matrix()
+    expected_translation = matrix44.create_from_translation([1, 2, 3])
+    assert almost_equal(root.world_matrix, expected_translation), "Translation test failed"
 
-    # Extract world translation from matrix (last column)
-    root_pos = root.world_matrix[3][:3]
-    child_pos = child.world_matrix[3][:3]
-    grandchild_pos = grandchild.world_matrix[3][:3]
+    # Test 2: Basic scaling
+    obj = Object3D("Scaler")
+    obj.scale = np.array([2, 2, 2], dtype=float)
+    obj.update_world_matrix()
+    expected_scale = matrix44.create_from_scale([2, 2, 2])
+    assert almost_equal(obj.world_matrix, expected_scale), "Scale test failed"
 
-    print("Root world position:       ", root_pos)
-    print("Child world position:      ", child_pos)
-    print("GrandChild world position: ", grandchild_pos)
+    # Test 3: Basic rotation (90° around Z)
+    obj = Object3D("Rotator")
+    obj.rotation = np.array([0, 0, math.pi/2], dtype=float)
+    obj.update_world_matrix()
+    expected_rot = matrix44.create_from_z_rotation(math.pi/2)
+    assert almost_equal(obj.world_matrix, expected_rot), "Rotation test failed"
 
-    # Assertions
-    assert np.allclose(root_pos, [10, 0, 0]), "Root world position incorrect"
-    assert np.allclose(child_pos, [15, 0, 0]), "Child world position should be Root + Child local"
-    assert np.allclose(grandchild_pos, [17, 0, 0]), "Grandchild world position should cascade hierarchy"
+    # Test 4: Hierarchical transformation
+    parent = Object3D("Parent")
+    child = Object3D("Child")
+    parent.position = np.array([5, 0, 0], dtype=float)
+    child.position = np.array([0, 3, 0], dtype=float)
+    parent.add_child(child)
+    parent.update_world_matrix()
 
-    print("✅ Scene graph hierarchy calculation is correct.")
+    # Child world = Parent translation * Child translation
+    expected_child_world = matrix44.create_from_translation([5, 0, 0])
+    expected_child_world = matrix44.multiply(
+        matrix44.create_from_translation([0, 3, 0]),
+        expected_child_world
+    )
+    assert almost_equal(child.world_matrix, expected_child_world), "Hierarchy test failed"
+
+    print("✅ All tests passed successfully!")
 
 
 if __name__ == "__main__":
-    test_scene_graph()
+    run_tests()

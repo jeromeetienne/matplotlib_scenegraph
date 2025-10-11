@@ -55,7 +55,7 @@ class Object3D:
             self._world_matrix = self._local_matrix @ parent_world_matrix
             # self._world_matrix = parent_world_matrix @ self._local_matrix
         else:
-            self._world_matrix = self._local_matrix
+            self._world_matrix = self._local_matrix.copy()
 
         for child in self._children:
             child.update_world_matrix(self._world_matrix)
