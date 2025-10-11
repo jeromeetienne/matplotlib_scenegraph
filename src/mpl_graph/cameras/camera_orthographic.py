@@ -1,7 +1,7 @@
-from core.object_3d import Object3D
+from ..core.object_3d import Object3D
 from pyrr import matrix44
 import numpy as np
-from cameras.camera_base import CameraBase
+from ..cameras.camera_base import CameraBase
 
 
 class CameraOrthographic(Object3D, CameraBase):

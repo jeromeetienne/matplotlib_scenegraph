@@ -2,7 +2,7 @@
 from pyrr import vector3, matrix44
 from math import atan2
 import numpy as np
-from core.random import Random
+from .random import Random
 
 
 class Object3D:

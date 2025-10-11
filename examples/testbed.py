@@ -6,14 +6,19 @@ import numpy as np
 
 
 # local imports
-from core.object_3d import Object3D
-from cameras.camera_orthographic import CameraOrthographic
-from renderers.matplotlib.renderer import RendererMatplotlib
-from helpers.animation_loop import AnimationLoop
-from objects.lines import Lines
-from helpers.scene_examples import SceneExamples
-from objects.polygons import Polygons
-from helpers.mesh_parser_obj_manual import MeshParserObjManual
+from mpl_graph.core.object_3d import Object3D
+from mpl_graph.cameras.camera_orthographic import CameraOrthographic
+from mpl_graph.renderers.matplotlib.renderer import RendererMatplotlib
+from mpl_graph.helpers.animation_loop import AnimationLoop
+from mpl_graph.objects.lines import Lines
+from mpl_graph.helpers.scene_examples import SceneExamples
+from mpl_graph.objects.polygons import Polygons
+from mpl_graph.helpers.mesh_parser_obj_manual import MeshParserObjManual
+
+
+__dirname__ = os.path.dirname(os.path.abspath(__file__))
+assets_path = os.path.join(__dirname__, "../assets")
+models_path = os.path.join(assets_path, "models")
 
 
 def main():
@@ -92,7 +97,7 @@ def main():
 
     if True:
         # Load a model from an .obj file
-        file_path = os.path.join(os.path.dirname(__file__), "assets", "models", "cube_meshio.obj")
+        file_path = os.path.join(models_path, "cube_meshio.obj")
 
         polygons = SceneExamples.polygons_from_obj(file_path)
         polygons.scale[:] = 0.5

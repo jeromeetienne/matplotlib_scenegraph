@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 
-from core.object_3d import Object3D
+from ..core.object_3d import Object3D
 
 
 class CameraBase(ABC):

@@ -8,11 +8,11 @@ import numpy as np
 from pyrr import matrix44
 
 # local imports
-from objects.points import Points
-from renderers.matplotlib.renderer import RendererMatplotlib
-from cameras.camera_orthographic import CameraOrthographic
-from cameras.camera_base import CameraBase
-from core.object_3d import Object3D
+from ..objects.points import Points
+from ..renderers.matplotlib.renderer import RendererMatplotlib
+from ..cameras.camera_orthographic import CameraOrthographic
+from ..cameras.camera_base import CameraBase
+from ..core.object_3d import Object3D
 
 
 class TransformUtils:

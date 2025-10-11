@@ -1,7 +1,7 @@
-from core.object_3d import Object3D
+from ..core.object_3d import Object3D
 from pyrr import vector3
 import numpy as np
-from core.constants import Constants
+from ..core.constants import Constants
 
 
 class Points(Object3D):

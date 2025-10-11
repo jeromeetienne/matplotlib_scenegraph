@@ -2,8 +2,8 @@
 import numpy as np
 
 # local imports
-from objects.polygons import Polygons
-from core.transform_utils import TransformUtils
+from ..objects.polygons import Polygons
+from ..core.transform_utils import TransformUtils
 
 
 class MeshParserObjManual:

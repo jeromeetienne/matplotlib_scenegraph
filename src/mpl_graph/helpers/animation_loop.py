@@ -3,9 +3,9 @@ import time
 import matplotlib.animation
 import matplotlib.artist
 import matplotlib.pyplot
-from core.object_3d import Object3D
-from cameras.camera_base import CameraBase
-from renderers.matplotlib.renderer import RendererMatplotlib
+from ..core.object_3d import Object3D
+from ..cameras.camera_base import CameraBase
+from ..renderers.matplotlib.renderer import RendererMatplotlib
 
 # do a callback type for the animation loop
 AnimationLoopCallbackType = typing.Callable[[float, float], list[Object3D]]

@@ -3,13 +3,13 @@ import matplotlib.pyplot
 import matplotlib.artist
 
 # local imports
-from core.object_3d import Object3D
-from objects.points import Points
-from objects.lines import Lines
-from objects.polygons import Polygons
-from objects.textured_mesh import TexturedMesh
-from cameras.camera_orthographic import CameraOrthographic
-from cameras.camera_base import CameraBase
+from ...core.object_3d import Object3D
+from ...objects.points import Points
+from ...objects.lines import Lines
+from ...objects.polygons import Polygons
+from ...objects.textured_mesh import TexturedMesh
+from ...cameras.camera_orthographic import CameraOrthographic
+from ...cameras.camera_base import CameraBase
 
 
 class RendererMatplotlib:
@@ -56,19 +56,19 @@ class RendererMatplotlib:
     # =============================================================================
     def _render_object(self, object3d: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         if isinstance(object3d, Points):
-            from renderers.matplotlib.renderer_points import MatplotlibRendererPoints
+            from .renderer_points import MatplotlibRendererPoints
 
             return MatplotlibRendererPoints.render(self, object3d, camera)
         elif isinstance(object3d, Lines):
-            from renderers.matplotlib.renderer_lines import MatplotlibRendererLines
+            from .renderer_lines import MatplotlibRendererLines
 
             return MatplotlibRendererLines.render(self, object3d, camera)
         elif isinstance(object3d, Polygons):
-            from renderers.matplotlib.renderer_polygons import MatplotlibRendererPolygons
+            from .renderer_polygons import MatplotlibRendererPolygons
 
             return MatplotlibRendererPolygons.render(self, object3d, camera)
         elif isinstance(object3d, TexturedMesh):
-            from renderers.matplotlib.renderer_textured_mesh import MatplotlibRendererTexturedMesh
+            from .renderer_textured_mesh import MatplotlibRendererTexturedMesh
 
             return MatplotlibRendererTexturedMesh.render(self, object3d, camera)
         elif isinstance(object3d, Object3D):

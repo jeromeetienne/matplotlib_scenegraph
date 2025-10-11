@@ -6,18 +6,18 @@ import numpy as np
 import matplotlib.image
 
 # local imports
-from helpers.mesh_parser_obj_manual import MeshParserObjManual
-from objects.points import Points
-from core.object_3d import Object3D
-from core.constants import Constants
-from core.transform_utils import TransformUtils
-from objects.textured_mesh import TexturedMesh
-from helpers.animation_loop import AnimationLoop
-from objects.polygons import Polygons
+from ..helpers.mesh_parser_obj_manual import MeshParserObjManual
+from ..objects.points import Points
+from ..core.object_3d import Object3D
+from ..core.constants import Constants
+from ..core.transform_utils import TransformUtils
+from ..objects.textured_mesh import TexturedMesh
+from ..helpers.animation_loop import AnimationLoop
+from ..objects.polygons import Polygons
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
-data_path = os.path.join(__dirname__, "../assets")
+data_path = os.path.join(__dirname__, "../../../assets")
 models_path = os.path.join(data_path, "models")
 images_path = os.path.join(data_path, "images")
 

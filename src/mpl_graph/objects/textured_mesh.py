@@ -2,7 +2,7 @@
 import numpy as np
 
 # local imports
-from core.object_3d import Object3D
+from ..core.object_3d import Object3D
 
 
 class TexturedMesh(Object3D):
