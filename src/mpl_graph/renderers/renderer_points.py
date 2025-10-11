@@ -51,7 +51,7 @@ class MatplotlibRendererPoints:
         # =============================================================================
 
         mpl_path_collection.set_offsets(offsets=vertices_2d)
-        mpl_path_collection.set_sizes([40] * len(points.vertices))  # set a default size for each point
+        mpl_path_collection.set_sizes([10] * len(points.vertices))  # set a default size for each point
         mpl_path_collection.set_color(points.color.tolist())
         # mpl_path_collection.set_edgecolor((0, 0, 0, 1))
         # mpl_path_collection.set_linewidth(2)

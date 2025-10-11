@@ -43,7 +43,7 @@ class SceneExamples:
     def addAnimatedModels(model_root: Object3D, animation_loop: AnimationLoop) -> None:
         cube_points = SceneExamples.getCubePoints()
         model_root.add_child(cube_points)
-        cube_points.scale[:] = 0.1
+        cube_points.scale[:] = 0.2
         cube_points.position[0] = -3
         cube_points.position[1] = 3
 
@@ -55,8 +55,14 @@ class SceneExamples:
 
         head_points = SceneExamples.getHeadPoints()
         model_root.add_child(head_points)
-        head_points.scale[:] = 0.1
-        head_points.position[0] = 0
+        head_points.scale[:] = 0.2
+        head_points.position[0] = 3
+        head_points.position[1] = -3
+
+        head_points = SceneExamples.getSuzannePoints()
+        model_root.add_child(head_points)
+        head_points.scale[:] = 0.2
+        head_points.position[0] = -3
         head_points.position[1] = -3
 
         def update_model_root(delta_time: float, timestamp: float) -> list[Object3D]:
@@ -86,6 +92,13 @@ class SceneExamples:
         face_indices, vertex_coords, uv_coords, normal_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "cube_meshio.obj"))
         vertex_coords = TransformUtils.normalize_vertices_to_unit_cube(vertex_coords)
         points_bunny = Points(vertex_coords, color=Constants.CYAN)
+        return points_bunny
+
+    @staticmethod
+    def getSuzannePoints() -> Points:
+        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "suzanne_meshio.obj"))
+        vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
+        points_bunny = Points(vertices_coords, color=Constants.CYAN)
         return points_bunny
 
     @staticmethod

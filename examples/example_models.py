@@ -25,7 +25,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = RendererMatplotlib()
+    renderer = RendererMatplotlib(256,256)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 

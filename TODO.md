@@ -27,13 +27,6 @@
   - MeshWireframeMaterial
   - MeshTextureMaterial
   - MeshNormalMaterial
-- Code various camera controller
-  - first do you awsd camera
-  - how to handle input events in matplotlib
-  - awsd camera 
-  - orbit camera
-  - first person camera
-- import suzanne model in .obj
 - do you handle point light, directional light
 - bug in transform
   - how to fix it ? divide and conquer
@@ -61,6 +54,13 @@
 
 
 ## Done
+- DONE import suzanne model in .obj
+- DONE Code various camera controller
+  - first do you awsd camera
+  - how to handle input events in matplotlib
+  - awsd camera 
+  - orbit camera
+  - first person camera
 - DONE remove ./matplotlib in ./renderer
   - there is only one renderer 
 - DONE move it in iits own folder - matplotlib_sc for now ?
