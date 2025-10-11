@@ -1,7 +1,5 @@
 # pip imports
-from typing_extensions import deprecated
 import numpy as np
-import matplotlib.pyplot
 
 # local imports
 from core.object_3d import Object3D

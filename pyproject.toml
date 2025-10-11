@@ -1,0 +1,20 @@
+[project]
+name = "mpl-graph"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Jerome Etienne",email = "jerome.etienne@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy (>=2.3.3,<3.0.0)",
+    "pyrr (>=0.10.3,<0.11.0)",
+    "matplotlib (>=3.10.7,<4.0.0)",
+    "meshio (>=5.3.5,<6.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
