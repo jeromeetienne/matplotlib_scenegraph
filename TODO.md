@@ -3,6 +3,8 @@
   - allow to change the color based on depth
   - simulate a fog for various effect
   - do an example of protein with fog
+- remove ./matplotlib in ./renderer
+  - there is only one renderer 
 - Do you implement geometry classes
   - you already got the .vertices in (n, 3) array
   - move that in a Geometry class ?

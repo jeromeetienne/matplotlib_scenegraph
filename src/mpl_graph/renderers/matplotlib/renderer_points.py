@@ -37,6 +37,9 @@ class MatplotlibRendererPoints:
         # Apply full transform the vertices
         # =============================================================================
 
+        # if points.name == "point 2":
+        #     breakpoint()
+
         # full_transform = points.get_world_matrix()
         full_transform = TransformUtils.compute_full_transform(camera, points)
         vertices = TransformUtils.apply_transform(points.vertices, full_transform)
@@ -48,7 +51,7 @@ class MatplotlibRendererPoints:
         # =============================================================================
 
         mpl_path_collection.set_offsets(offsets=vertices_2d)
-        mpl_path_collection.set_sizes([1] * len(points.vertices))  # set a default size for each point
+        mpl_path_collection.set_sizes([40] * len(points.vertices))  # set a default size for each point
         mpl_path_collection.set_color(points.color.tolist())
         # mpl_path_collection.set_edgecolor((0, 0, 0, 1))
         # mpl_path_collection.set_linewidth(2)

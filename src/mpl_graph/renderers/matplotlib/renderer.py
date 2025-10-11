@@ -45,9 +45,6 @@ class RendererMatplotlib:
         return changed_artists
 
     def render_object(self, object3d: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
-        # update world matrices
-        object3d.update_world_matrix()
-
         changed_artists: list[matplotlib.artist.Artist] = self._render_object(object3d, camera)
         return changed_artists
 

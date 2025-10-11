@@ -42,6 +42,9 @@ class AnimationLoop:
                 _changed_objects = callback(delta_time, timestamp)
                 changed_objects.extend(_changed_objects)
 
+            # update world matrices
+            scene.update_world_matrix()
+
             changed_artists: list[matplotlib.artist.Artist] = []
             for object in changed_objects:
                 _changed_artists = self._renderer.render_object(object, camera)
