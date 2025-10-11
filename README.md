@@ -16,7 +16,7 @@
 
 ## How to install the project
 
-Note that GSP requires Python 3.11 or higher.
+Note that this project requires Python 3.11 or higher.
 
 Potentially create a virtual environment
 
