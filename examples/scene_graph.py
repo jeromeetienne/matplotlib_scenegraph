@@ -54,13 +54,14 @@ def main():
     # =============================================================================
 
     def animate(delta_time: float, timestamp: float) -> list[Object3D]:
-        point_object_1.position[0] = np.cos(timestamp * 2) * 0.5
+        point_object_1.rotation_euler[1] = timestamp * 2
+        # point_object_1.position[0] = np.cos(timestamp * 2) * 0.5
 
-        point_object_2.position[0] = np.cos(timestamp) * 0.5
-        point_object_2.position[1] = np.sin(timestamp) * 0.5
+        # point_object_2.position[0] = np.cos(timestamp) * 0.5
+        # point_object_2.position[1] = np.sin(timestamp) * 0.5
 
-        # point_object_3.position[1] = np.cos(timestamp * 2) * 0.2 + 0.5
-        point_object_2.rotation_euler[1] = timestamp * 5
+        # # point_object_3.position[1] = np.cos(timestamp * 2) * 0.2 + 0.5
+        # point_object_2.rotation_euler[1] = timestamp * 5
 
         return [point_object_1, point_object_2, point_object_3]
 

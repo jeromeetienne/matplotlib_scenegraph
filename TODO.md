@@ -3,8 +3,8 @@
   - allow to change the color based on depth
   - simulate a fog for various effect
   - do an example of protein with fog
-- remove ./matplotlib in ./renderer
-  - there is only one renderer 
+  - it would help 
+- make a sprite class
 - Do you implement geometry classes
   - you already got the .vertices in (n, 3) array
   - move that in a Geometry class ?
@@ -27,8 +27,6 @@
   - MeshWireframeMaterial
   - MeshTextureMaterial
   - MeshNormalMaterial
-- TODO move it in iits own folder - matplotlib_sc for now ?
-  - find a good name for it
 - Code various camera controller
   - first do you awsd camera
   - how to handle input events in matplotlib
@@ -51,7 +49,6 @@
     - make an options to remove the delta rendering in the animation loop
 - load a textured plane
   - for 3d oriented images
-- make a sprite class
 - implement various geometry builder
   - box YES
   - sphere YES
@@ -61,3 +58,10 @@
   - cone
   - tube
   - torus knot
+
+
+## Done
+- DONE remove ./matplotlib in ./renderer
+  - there is only one renderer 
+- DONE move it in iits own folder - matplotlib_sc for now ?
+  - find a good name for it

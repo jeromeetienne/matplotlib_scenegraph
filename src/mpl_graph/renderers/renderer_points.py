@@ -15,7 +15,7 @@ from ..core.transform_utils import TransformUtils
 class MatplotlibRendererPoints:
     @staticmethod
     def render(renderer: "RendererMatplotlib", points: Points, camera: CameraBase) -> list[matplotlib.artist.Artist]:
-
+        print(f'Rendering Points: {points.name} with {len(points.vertices)} vertices')
         # =============================================================================
         # Create the artists if needed
         # =============================================================================
@@ -40,8 +40,8 @@ class MatplotlibRendererPoints:
         # if points.name == "point 2":
         #     breakpoint()
 
-        # full_transform = points.get_world_matrix()
-        full_transform = TransformUtils.compute_full_transform(camera, points)
+        full_transform = points.get_world_matrix()
+        # full_transform = TransformUtils.compute_full_transform(camera, points)
         vertices = TransformUtils.apply_transform(points.vertices, full_transform)
 
         vertices_2d = vertices[:, :2]  # drop z for 2D rendering
