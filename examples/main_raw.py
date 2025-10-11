@@ -13,7 +13,7 @@ import matplotlib.artist
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.renderers.matplotlib.renderer import RendererMatplotlib
+from mpl_graph.renderers.renderer import RendererMatplotlib
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 
