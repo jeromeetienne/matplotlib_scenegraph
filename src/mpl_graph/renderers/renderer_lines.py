@@ -7,10 +7,10 @@ import matplotlib.collections
 import matplotlib.lines
 
 # local imports
-from objects.lines import Lines
-from renderers.matplotlib.renderer import RendererMatplotlib
-from cameras.camera_base import CameraBase
-from core.transform_utils import TransformUtils
+from ..objects.lines import Lines
+from ..renderers.renderer import RendererMatplotlib
+from ..cameras.camera_base import CameraBase
+from ..core.transform_utils import TransformUtils
 
 
 class MatplotlibRendererLines:

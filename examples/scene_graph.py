@@ -10,7 +10,7 @@ from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.objects import points
 from mpl_graph.objects.points import Points
-from mpl_graph.renderers.matplotlib.renderer import RendererMatplotlib
+from mpl_graph.renderers.renderer import RendererMatplotlib
 from mpl_graph.helpers.animation_loop import AnimationLoop
 from mpl_graph.helpers.scene_examples import SceneExamples
 from mpl_graph.core import Constants

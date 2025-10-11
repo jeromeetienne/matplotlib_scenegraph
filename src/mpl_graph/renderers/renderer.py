@@ -3,13 +3,13 @@ import matplotlib.pyplot
 import matplotlib.artist
 
 # local imports
-from ...core.object_3d import Object3D
-from ...objects.points import Points
-from ...objects.lines import Lines
-from ...objects.polygons import Polygons
-from ...objects.textured_mesh import TexturedMesh
-from ...cameras.camera_orthographic import CameraOrthographic
-from ...cameras.camera_base import CameraBase
+from ..core.object_3d import Object3D
+from ..objects.points import Points
+from ..objects.lines import Lines
+from ..objects.polygons import Polygons
+from ..objects.textured_mesh import TexturedMesh
+from ..cameras.camera_orthographic import CameraOrthographic
+from ..cameras.camera_base import CameraBase
 
 
 class RendererMatplotlib:

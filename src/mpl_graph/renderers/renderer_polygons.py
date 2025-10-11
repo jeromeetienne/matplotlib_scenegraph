@@ -9,10 +9,10 @@ import matplotlib.patches
 import numpy as np
 
 # local imports
-from ...objects.polygons import Polygons
-from ...renderers.matplotlib.renderer import RendererMatplotlib
-from ...cameras.camera_base import CameraBase
-from ...core.transform_utils import TransformUtils
+from ..objects.polygons import Polygons
+from ..renderers.renderer import RendererMatplotlib
+from ..cameras.camera_base import CameraBase
+from ..core.transform_utils import TransformUtils
 
 
 class MatplotlibRendererPolygons:
