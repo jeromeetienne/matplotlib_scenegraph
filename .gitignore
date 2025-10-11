@@ -1,0 +1,10 @@
+# Virtual environment
+.venv/
+# compiled python files
+__pycache__/
+# macOS system files
+.DS_Store
+# pytest cache
+.pytest_cache/
+# .vscode folders
+.vscode/

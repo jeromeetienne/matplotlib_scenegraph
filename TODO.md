@@ -1,0 +1,61 @@
+- do the event in renderering
+  - src/gsp/core/visual_base.py
+  - allow to change the color based on depth
+  - simulate a fog for various effect
+  - do an example of protein with fog
+- Do you implement geometry classes
+  - you already got the .vertices in (n, 3) array
+  - move that in a Geometry class ?
+  - yeah i like it
+  - load_mesh return a Geometry
+  - .vertices
+  - .indices
+  - .normals
+  - .uvs
+- find a good API for the various materials
+  - Q. do you do a Material class like in three.js ?
+- find a good API for the various materials
+  - the material can hook on the renderer loop
+  - Q. do you do a Material class like in three.js ?
+  - copy the one from three.js
+  - LineMaterial
+  - PointMaterial
+  - SpriteMaterial
+  - MeshBasicMaterial
+  - MeshWireframeMaterial
+  - MeshTextureMaterial
+  - MeshNormalMaterial
+- TODO move it in iits own folder - matplotlib_sc for now ?
+  - find a good name for it
+- Code various camera controller
+  - first do you awsd camera
+  - how to handle input events in matplotlib
+  - awsd camera 
+  - orbit camera
+  - first person camera
+- import suzanne model in .obj
+- do you handle point light, directional light
+- bug in transform
+  - how to fix it ? divide and conquer
+  - find a test and ask AI to fix it
+  - first orthoraphic camera, then perspective camera
+  - first handle the object3d transform. local_transform, world_transform
+    - how to test that ?
+    - for translation, rotation, scale
+  - once object3d transform is fixed, then do the camera transform 
+- implement a .depth_sorting = true in renderer
+  - where object3d is sorted by their world position and then rendered
+  - NOTE: conflict with the delta rendering from the animation loop
+    - make an options to remove the delta rendering in the animation loop
+- load a textured plane
+  - for 3d oriented images
+- make a sprite class
+- implement various geometry builder
+  - box YES
+  - sphere YES
+  - plane YES
+  - torus
+  - cylinder
+  - cone
+  - tube
+  - torus knot
