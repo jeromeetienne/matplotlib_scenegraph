@@ -8,7 +8,6 @@ Generate a scene graph implementation only using the vscode open editors
   - avoid using pyrr objects like Matrix44, Quaternion, Vector3, etc.
   - NOTE: pyrr uses row-major matrices
 
-do 1. Note that i
 # 3d convention
 - the scene graph will be right handed
 - the transform ordering will be scale, then rotation, then translation
