@@ -10,23 +10,6 @@ class MeshParserMeshio:
     """
 
     @staticmethod
-    def load_texture(file_path: str) -> np.ndarray:
-        """
-        Load a texture image from file.
-
-        Arguments:
-            file_path (str): Path to the image file.
-        Returns:
-            np.ndarray: Loaded image as a numpy array.
-        """
-        texture = matplotlib.image.imread(file_path)
-        if texture.dtype != np.uint8:
-            # convert to uint8
-            texture = (texture * 255).astype(np.uint8)
-
-        return texture
-
-    @staticmethod
     def parse_obj_file(
         file_path: str,
     ) -> tuple[np.ndarray, np.ndarray, np.ndarray | None, np.ndarray | None]:
