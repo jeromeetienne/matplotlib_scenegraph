@@ -1,4 +1,14 @@
 - implement the test layer from gsp_sc
+  - require not to be interactive when i run the examples
+  - require to save the matplotlib output
+  - step 1: run all example in non interactive mode to check if there is exception
+  - step 2: save the matplotlib output and compare it to a reference image
+  - TODO in animation loop, detect EXAMPLES_TESTING
+    - if present, dont run the loop
+    - save the output in a file, based on the example name
+- move the .lines_from_obj in Lines class method
+  - `Lines.from_geometry(geometry)``
+  - same for points
 - modify the obj loader to use Geometry
   - to support 'non-meshio' obj files
 - add more geometry shapes in `GeometryShape`

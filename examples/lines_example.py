@@ -14,7 +14,7 @@ from common.animation_loop import AnimationLoop
 from mpl_graph.objects.lines import Lines
 from common.scene_examples import SceneExamples
 from mpl_graph.objects.polygons import Polygons
-from examples.common.mesh_utils import MeshUtils
+from common.mesh_utils import MeshUtils
 from mpl_graph.core.geometry import Geometry
 
 

@@ -30,44 +30,61 @@ class SceneExamples:
 
     @staticmethod
     def polygons_from_obj(file_path: str) -> Polygons:
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(file_path)
+        # TODO receive a geometry as argument instead of a file path
+        # Put it in Polygons.from_geometry(geometry)
 
-        vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
+        # parse the .obj file
+        geometry = MeshUtils.parse_obj_file_manual(file_path)
+        assert geometry.indices is not None, "The .obj file must contain face indices"
 
-        vertices = vertices_coords[faces_indices]
-        polygon_count = vertices.shape[0]
-        vertices_per_polygon = vertices.shape[1]
-        vertices = vertices.reshape(polygon_count * vertices_per_polygon, 3)
+        # Normalize the vertices to fit in a unit cube
+        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
 
-        geometry = Geometry(vertices)
-
+        # Create a polygons object
+        polygon_count = geometry.indices.shape[0]
+        vertices_per_polygon = geometry.indices.shape[1]
         polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
 
-        # polygons = Points(vertices)
+        # return the polygons
         return polygons
 
     @staticmethod
     def lines_from_obj(file_path: str) -> Lines:
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(file_path)
+        # TODO receive a geometry as argument instead of a file path
+        # Lines.from_geometry(geometry)
 
-        vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
+        # parse the .obj file
+        geometry = MeshUtils.parse_obj_file_manual(file_path)
+        assert geometry.indices is not None, "The .obj file must contain face indices"
 
-        faces_vertices = vertices_coords[faces_indices]
-        face_count = faces_vertices.shape[0]
-        vertices_per_face = faces_vertices.shape[1]
+        # Normalize the vertices to fit in a unit cube
+        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
 
-        line_vertices = np.zeros((face_count * vertices_per_face * 2, 3)).astype(np.float32)
-        for i in range(face_count):
-            for j in range(vertices_per_face):
-                vertex_start = faces_vertices[i, j]
-                vertex_end = faces_vertices[i, (j + 1) % vertices_per_face]
-                line_vertices[(i * vertices_per_face + j) * 2] = vertex_start
-                line_vertices[(i * vertices_per_face + j) * 2 + 1] = vertex_end
+        # Get info from the geometry
+        face_count = geometry.indices.shape[0]
+        vertices_per_face = geometry.indices.shape[1]
+        vertices_per_line = 2
 
-        geometry = Geometry(line_vertices)
+        # Each face has vertices_per_face edges, each edge has 2 vertices
+        line_vertices = np.zeros((face_count * vertices_per_face * vertices_per_line, 3)).astype(np.float32)
 
-        lines = Lines(geometry)
+        # Create line vertices from the mesh faces
+        for face_index in range(face_count):
+            for vertex_index in range(vertices_per_face):
 
+                indice_start = geometry.indices[face_index, vertex_index]
+                indice_end = geometry.indices[face_index, (vertex_index + 1) % vertices_per_face]
+
+                vertex_start = geometry.vertices[indice_start]
+                vertex_end = geometry.vertices[indice_end]
+
+                line_vertices[(face_index * vertices_per_face + vertex_index) * 2] = vertex_start
+                line_vertices[(face_index * vertices_per_face + vertex_index) * 2 + 1] = vertex_end
+
+        # Build the lines object
+        geometry_lines = Geometry(line_vertices)
+        lines = Lines(geometry_lines)
+        # Return the lines
         return lines
 
     @staticmethod
@@ -81,33 +98,29 @@ class SceneExamples:
 
     @staticmethod
     def getBunnyPoints() -> Points:
-        face_indices, vertex_coords, uv_coords, normal_coords = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "bunny.obj"))
-        vertex_coords = TransformUtils.normalize_vertices_to_unit_cube(vertex_coords)
-        geometry = Geometry(vertex_coords)
+        geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "bunny.obj"))
+        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
         points_bunny = Points(geometry, color=Constants.Color.PURPLE)
         return points_bunny
 
     @staticmethod
     def getCubePoints() -> Points:
-        face_indices, vertex_coords, uv_coords, normal_coords = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "cube_meshio.obj"))
-        vertex_coords = TransformUtils.normalize_vertices_to_unit_cube(vertex_coords)
-        geometry = Geometry(vertex_coords)
+        geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "cube_meshio.obj"))
+        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 
     @staticmethod
     def getSuzannePoints() -> Points:
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "suzanne_meshio.obj"))
-        vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
-        geometry = Geometry(vertices_coords)
+        geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "suzanne_meshio.obj"))
+        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 
     @staticmethod
     def getHeadPoints() -> Points:
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "head_meshio.obj"))
-        vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
-        geometry = Geometry(vertices_coords)
+        geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "head_meshio.obj"))
+        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 
@@ -121,10 +134,8 @@ class SceneExamples:
         # Load a obj model
         obj_path = os.path.join(models_path, "head_meshio.obj")
         # obj_path = os.path.join(models_path, "cube_meshio.obj")
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(obj_path)
-        assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
-
-        geometry = Geometry(vertices_coords, faces_indices, uvs_coords, normals_coords)
+        geometry = MeshUtils.parse_obj_file_manual(obj_path)
+        assert geometry.uvs is not None, "The .obj file must contain texture coordinates (vt)"
 
         # Create a textured mesh
         textured_mesh = TexturedMesh(geometry, texture)

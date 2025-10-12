@@ -14,7 +14,7 @@ from mpl_graph.objects.polygons import Polygons
 from mpl_graph.core.geometry import Geometry
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
-from examples.common.mesh_utils import MeshUtils
+from common.mesh_utils import MeshUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))

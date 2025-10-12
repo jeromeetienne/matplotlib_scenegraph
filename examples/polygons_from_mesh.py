@@ -14,7 +14,7 @@ from mpl_graph.objects.polygons import Polygons
 from mpl_graph.core.geometry import Geometry
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
-from examples.common.mesh_utils import MeshUtils
+from common.mesh_utils import MeshUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -43,8 +43,8 @@ def main():
 
     if True:
         # Load a model from an .obj file
-        # file_path = os.path.join(models_path, "cube_meshio.obj")
-        file_path = os.path.join(models_path, "suzanne_meshio.obj")
+        file_path = os.path.join(models_path, "cube_meshio.obj")
+        # file_path = os.path.join(models_path, "suzanne_meshio.obj")
 
         polygons = SceneExamples.polygons_from_obj(file_path)
         polygons.scale[:] = 0.5

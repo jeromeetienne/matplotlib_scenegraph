@@ -58,9 +58,9 @@ def main():
 
     if True:
         # Load a model from an .obj file
-        # file_path = os.path.join(models_path, "cube_meshio.obj")
-        # file_path = os.path.join(models_path, "suzanne_meshio.obj")
-        file_path = os.path.join(models_path, "suzanne.obj")
+        # file_path = os.path.join(models_path, "cube.obj")
+        file_path = os.path.join(models_path, "suzanne_meshio.obj")
+        # file_path = os.path.join(models_path, "head_meshio.obj")
 
         polygons = SceneExamples.polygons_from_obj(file_path)
         polygons.scale[:] = 0.5
