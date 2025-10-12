@@ -1,4 +1,4 @@
-- port `Geometry` everywhere in all `object3ds`
+- implement the test layer from gsp_sc
 - make a wireframe example with `Lines`
 - add more geometry shapes in `GeometryShape`
   - box
@@ -36,6 +36,7 @@
 
 
 ## Done
+- DONE port `Geometry` everywhere in all `object3ds`
 - DONE load a textured plane
   - for 3d oriented images
 - DONE rename `RendererMatplotlib` to `Renderer`

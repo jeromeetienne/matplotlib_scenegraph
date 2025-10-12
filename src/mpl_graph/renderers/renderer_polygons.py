@@ -42,7 +42,7 @@ class RendererPolygons:
         # full_transform = polygons.get_world_matrix()
         full_transform = TransformUtils.compute_full_transform(camera, polygons)
 
-        vertices_transformed = TransformUtils.apply_transform(polygons.geometry.vertices, full_transform)
+        vertices_transformed = TransformUtils.apply_transform(geometry.vertices, full_transform)
         faces_vertices = vertices_transformed.reshape(polygons.polygon_count, polygons.vertices_per_polygon, 3)  # [P, V, 3]
 
         # dispatch the post_transforming event
