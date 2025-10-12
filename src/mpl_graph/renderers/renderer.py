@@ -9,6 +9,7 @@ from ..core.object_3d import Object3D
 from ..objects.points import Points
 from ..objects.lines import Lines
 from ..objects.polygons import Polygons
+from ..objects.sprite import Sprite
 from ..objects.textured_mesh import TexturedMesh
 from ..cameras.camera_orthographic import CameraOrthographic
 from ..cameras.camera_base import CameraBase
@@ -81,6 +82,11 @@ class RendererMatplotlib:
 
             _changed_artists = MatplotlibRendererPolygons.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
+        elif isinstance(object3d, Sprite):
+            from .renderer_sprite import MatplotlibRendererSprite
+
+            _changed_artists = MatplotlibRendererSprite.render(self, object3d, camera)
+            changed_artists.extend(_changed_artists)
         elif isinstance(object3d, TexturedMesh):
             from .renderer_textured_mesh import MatplotlibRendererTexturedMesh
 
@@ -91,7 +97,7 @@ class RendererMatplotlib:
             pass
         else:
             raise NotImplementedError(f"Rendering for {type(object3d)} not implemented yet")
-        
+
         # dispatch the post_rendering event
         object3d.post_rendering.dispatch(renderer=self, camera=camera)
 

@@ -8,6 +8,7 @@ import os
 # pip imports
 import matplotlib.image
 import matplotlib.pyplot
+import numpy as np
 
 
 # local imports
@@ -17,6 +18,9 @@ from mpl_graph.helpers.mesh_parser_obj_manual import MeshParserObjManual
 from mpl_graph.renderers.renderer import RendererMatplotlib
 from mpl_graph.helpers.animation_loop import AnimationLoop
 from mpl_graph.objects.textured_mesh import TexturedMesh
+from mpl_graph.core.texture import Texture
+from mpl_graph.objects.sprite import Sprite
+from mpl_graph.objects.points import Points
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(__dirname__, "../assets")
@@ -43,28 +47,44 @@ def main():
     # Load a model
     # =============================================================================
 
+    point_count = 10
+    vertices = np.random.uniform(-1, 1, (point_count, 3))
+    colors = np.array([[1, 0, 0, 1] for i in range(point_count)])
+    points = Points(vertices, color=colors)
+    points.scale[:] = 0.5
+    scene.add_child(points)
+
+    # =============================================================================
+    # Load a model
+    # =============================================================================
+
     # def __init__(self, faces_indices: np.ndarray, vertices_coords: np.ndarray, uvs_coords: np.ndarray, texture: np.ndarray):
 
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
-    texture = matplotlib.image.imread(texture_path)
+    texture_data = matplotlib.image.imread(texture_path)
+    texture = Texture(texture_data)
 
-    # Load a textured mesh from an .obj file
-    obj_path = os.path.join(models_path, "head_meshio.obj")
-    faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(obj_path)
-    assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
-    textured_mesh = TexturedMesh(faces_indices, vertices_coords, uvs_coords, texture)
-    textured_mesh.name = "TexturedMesh"
+    sprite = Sprite(texture)
+    # sprite.extent = np.array([0.0, 0.5, 0.0, 0.5])
+    scene.add_child(sprite)
 
-    scene.add_child(textured_mesh)
+    def sprite_animation(delta_time: float, elapsed_time: float) -> list[Object3D]:
+        sprite.position[0] = np.sin(elapsed_time * 3) * 0.5
+        sprite.position[1] = np.cos(elapsed_time * 3) * 0.5
+
+        sprite.scale[0] = 0.5 + 0.1 * np.cos(elapsed_time * 2.0)
+        sprite.scale[1] = 0.5 + 0.1 * np.sin(elapsed_time * 2.0)
+
+        return [sprite]
+
+    animation_loop.add_callback(sprite_animation)
 
     # =============================================================================
     # Start the animation loop
     # =============================================================================
 
-    renderer.render(scene, camera)
-
-    matplotlib.pyplot.show()
+    animation_loop.start(scene, camera)
 
 
 if __name__ == "__main__":

@@ -9,11 +9,10 @@ from ..core.texture import Texture
 
 
 class Sprite(Object3D):
-    __slots__ = ("texture", "extent")
+    __slots__ = "texture"
 
-    def __init__(self, texture: Texture, extent: np.ndarray = np.array([0.0, 0.0, 1.0, 1.0])) -> None:
+    def __init__(self, texture: Texture) -> None:
         super().__init__()
 
         self.name = f"a {Sprite.__name__}"
         self.texture: Texture = texture
-        self.extent: np.ndarray = extent

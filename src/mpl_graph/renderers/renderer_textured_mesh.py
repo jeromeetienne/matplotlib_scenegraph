@@ -34,32 +34,9 @@ class MatplotlibRendererTexturedMesh:
                 face_uuid = f"{textured_mesh.uuid}_face_{face_index}"
                 renderer._artists[face_uuid] = axes_image
 
-        # =============================================================================
-        # Get data from object_3d
-        # =============================================================================
         faces_vertices = textured_mesh.faces_vertices.copy()
         faces_uvs = textured_mesh.faces_uvs.copy()
         texture = textured_mesh.texture
-
-        # =============================================================================
-        # Apply full transform the vertices
-        # =============================================================================
-
-        # full_transform = points.get_world_matrix()
-        full_transform = TransformUtils.compute_full_transform(camera, textured_mesh)
-        face_count = len(faces_vertices)
-        vertices_transformed = TransformUtils.apply_transform(faces_vertices.reshape(-1, 3), full_transform)
-        faces_vertices = vertices_transformed.reshape((face_count, 3, 3))
-
-        # # =============================================================================
-        # # World transform
-        # # =============================================================================
-
-        # position_world = textured_mesh.get_world_position()
-        # faces_vertices += position_world
-
-        # dispatch the post_transforming event
-        textured_mesh.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
 
         # =============================================================================
         # Compute face normals - needed for lighting and back-face culling
@@ -76,7 +53,7 @@ class MatplotlibRendererTexturedMesh:
 
         # camera_cosines is the cosine of the angle between the normal and the camera
         camera_direction = (0, 0, -1)
-        # camera_direction = camera.position - textured_mesh.position
+        # camera_direction = camera_position - mesh_position
         camera_cosines: np.ndarray = np.dot(faces_normals_unit, camera_direction)
 
         faces_hidden = camera_cosines <= 0
@@ -90,7 +67,7 @@ class MatplotlibRendererTexturedMesh:
         # Lighting
         # =============================================================================
         # light_direction = light_position - mesh_position
-        light_direction = np.array([1, 1, -1])
+        light_direction = np.array((1, 1, -1))
         light_direction_unit = light_direction / np.linalg.norm(light_direction)
         light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction_unit)
         light_intensities = (light_cosines + 1) / 2
