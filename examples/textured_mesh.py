@@ -48,7 +48,6 @@ def main():
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)
-    texture = texture.strip_alpha() if texture.has_alpha() else texture
 
     # Load a obj model
     obj_path = os.path.join(models_path, "head_meshio.obj")

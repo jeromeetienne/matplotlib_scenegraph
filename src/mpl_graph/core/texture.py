@@ -28,6 +28,10 @@ class Texture:
         """Return the height of the texture in pixels."""
         return self.data.shape[0]
 
+    def aspect_ratio(self) -> float:
+        """Return the aspect ratio of the texture (width / height)."""
+        return self.width() / self.height()
+
     def has_alpha(self) -> bool:
         """Return True if the texture has an alpha channel."""
         return self.data.shape[2] == 4

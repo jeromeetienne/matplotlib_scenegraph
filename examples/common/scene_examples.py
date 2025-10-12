@@ -12,6 +12,8 @@ from mpl_graph.core.constants import Constants
 from mpl_graph.core.transform_utils import TransformUtils
 from mpl_graph.objects.textured_mesh import TexturedMesh
 from mpl_graph.objects.polygons import Polygons
+from mpl_graph.core.geometry import Geometry
+from mpl_graph.core.texture import Texture
 
 from .animation_loop import AnimationLoop
 from .mesh_parser_obj_manual import MeshParserObjManual
@@ -78,12 +80,19 @@ class SceneExamples:
 
     @staticmethod
     def getHeadTexturedMesh() -> TexturedMesh:
-        texture_path = os.path.join(images_path, "uv-grid.png")
-        texture = matplotlib.image.imread(texture_path)
 
+        # Load a texture image
+        texture_path = os.path.join(images_path, "uv-grid.png")
+        texture = Texture.from_file(texture_path)
+
+        # Load a obj model
         obj_path = os.path.join(models_path, "head_meshio.obj")
+        # obj_path = os.path.join(models_path, "cube_meshio.obj")
         faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(obj_path)
         assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
-        textured_mesh = TexturedMesh(faces_indices, vertices_coords, uvs_coords, texture)
-        textured_mesh.name = "TexturedMesh"
+
+        geometry = Geometry(vertices_coords, faces_indices, uvs_coords, normals_coords)
+
+        # Create a textured mesh
+        textured_mesh = TexturedMesh(geometry, texture)
         return textured_mesh
