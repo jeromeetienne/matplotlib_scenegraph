@@ -11,7 +11,7 @@ import typing
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.renderers.renderer import RendererMatplotlib
+from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
 
@@ -28,7 +28,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = RendererMatplotlib(256, 256)
+    renderer = Renderer(256, 256)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 

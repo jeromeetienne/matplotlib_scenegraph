@@ -11,7 +11,7 @@ import numpy as np
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.renderers.renderer import RendererMatplotlib
+from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
 from mpl_graph.objects.points import Points
 from mpl_graph.cameras.camera_base import CameraBase
@@ -28,7 +28,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = RendererMatplotlib(256, 256)
+    renderer = Renderer(256, 256)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
@@ -44,7 +44,7 @@ def main():
     points = Points(vertices, color=colors, sizes=sizes, edge_colors=edge_colors)
     scene.add_child(points)
 
-    def post_transform_points(renderer: RendererMatplotlib, camera: CameraBase, vertices_transformed: np.ndarray) -> None:
+    def post_transform_points(renderer: Renderer, camera: CameraBase, vertices_transformed: np.ndarray) -> None:
 
         # sort inplace transformed positions by z value (3rd column). Largest z first
         sorted_indices = np.argsort(vertices_transformed[:, 2])

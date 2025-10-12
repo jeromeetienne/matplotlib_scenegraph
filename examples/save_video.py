@@ -12,7 +12,7 @@ import numpy as np
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.renderers.renderer import RendererMatplotlib
+from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.textured_mesh import TexturedMesh
 from mpl_graph.core.texture import Texture
 from mpl_graph.objects.sprite import Sprite
@@ -36,7 +36,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = RendererMatplotlib(100, 100)
+    renderer = Renderer(100, 100)
     # Create an animation loop
     video_path = os.path.join(__dirname__, "output/sprite_animation.mp4")
     video_duration = 10.0  # seconds

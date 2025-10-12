@@ -10,14 +10,14 @@ import numpy as np
 
 # local imports
 from ..objects.polygons import Polygons
-from ..renderers.renderer import RendererMatplotlib
+from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
 
 
-class MatplotlibRendererPolygons:
+class RendererPolygons:
     @staticmethod
-    def render(renderer: "RendererMatplotlib", polygons: Polygons, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", polygons: Polygons, camera: CameraBase) -> list[matplotlib.artist.Artist]:
 
         # =============================================================================
         # Create artists if needed

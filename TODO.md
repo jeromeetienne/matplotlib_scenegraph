@@ -9,6 +9,7 @@
   - .uvs
   - FIXME what to do about colors ? edge_widths? edge_colors ?
     - maybe not in geometry ? 
+- port `Geometry` everywhere in all `object3ds`
 - rename `RendererMatplotlib` to `Renderer`
 - find a good API for the various materials
   - Q. do you do a Material class like in three.js ?

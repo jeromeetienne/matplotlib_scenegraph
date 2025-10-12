@@ -10,7 +10,7 @@ import matplotlib.pyplot
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_base import CameraBase
-from mpl_graph.renderers.renderer import RendererMatplotlib
+from mpl_graph.renderers.renderer import Renderer
 
 # do a callback type for the animation loop
 AnimationLoopCallbackType = Callable[[float, float], Sequence[Object3D]]
@@ -23,7 +23,7 @@ Arguments:
 
 
 class AnimationLoop:
-    def __init__(self, renderer: RendererMatplotlib, fps: int = 30, video_duration: float = 10.0, video_path: str | None = None) -> None:
+    def __init__(self, renderer: Renderer, fps: int = 30, video_duration: float = 10.0, video_path: str | None = None) -> None:
         self._callbacks = []
         self._renderer = renderer
         self._fps = fps

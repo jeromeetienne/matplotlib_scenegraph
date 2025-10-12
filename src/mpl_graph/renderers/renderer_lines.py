@@ -8,14 +8,14 @@ import matplotlib.lines
 
 # local imports
 from ..objects.lines import Lines
-from ..renderers.renderer import RendererMatplotlib
+from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
 
 
-class MatplotlibRendererLines:
+class RendererLines:
     @staticmethod
-    def render(renderer: "RendererMatplotlib", lines: Lines, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", lines: Lines, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         line_count = len(lines.vertices) // 2
         assert line_count * 2 == len(lines.vertices), "Lines vertices length must be even"
 
@@ -45,7 +45,6 @@ class MatplotlibRendererLines:
 
         # dispatch the post_transforming event
         lines.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
-
 
         vertices_2d = vertices[:, :2]  # drop z for 2D rendering
 

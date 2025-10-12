@@ -7,14 +7,14 @@ import matplotlib.collections
 
 # local imports
 from ..objects.points import Points
-from ..renderers.renderer import RendererMatplotlib
+from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
 
 
-class MatplotlibRendererPoints:
+class RendererPoints:
     @staticmethod
-    def render(renderer: "RendererMatplotlib", points: Points, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", points: Points, camera: CameraBase) -> list[matplotlib.artist.Artist]:
 
         # =============================================================================
         # Create the artists if needed

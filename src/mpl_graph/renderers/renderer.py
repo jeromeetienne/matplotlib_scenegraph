@@ -11,11 +11,10 @@ from ..objects.lines import Lines
 from ..objects.polygons import Polygons
 from ..objects.sprite import Sprite
 from ..objects.textured_mesh import TexturedMesh
-from ..cameras.camera_orthographic import CameraOrthographic
 from ..cameras.camera_base import CameraBase
 
 
-class RendererMatplotlib:
+class Renderer:
     def __init__(self, figure_w: int = 100, figure_h: int = 100, dpi: int = 100):
         # Create a figure of 512x512 pixels
         self._figure = matplotlib.pyplot.figure(figsize=(figure_w / dpi, figure_h / dpi), dpi=dpi)
@@ -68,29 +67,29 @@ class RendererMatplotlib:
 
         # call the appropriate renderer based on the object type
         if isinstance(object3d, Points):
-            from .renderer_points import MatplotlibRendererPoints
+            from .renderer_points import RendererPoints
 
-            _changed_artists = MatplotlibRendererPoints.render(self, object3d, camera)
+            _changed_artists = RendererPoints.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Lines):
-            from .renderer_lines import MatplotlibRendererLines
+            from .renderer_lines import RendererLines
 
-            _changed_artists = MatplotlibRendererLines.render(self, object3d, camera)
+            _changed_artists = RendererLines.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Polygons):
-            from .renderer_polygons import MatplotlibRendererPolygons
+            from .renderer_polygons import RendererPolygons
 
-            _changed_artists = MatplotlibRendererPolygons.render(self, object3d, camera)
+            _changed_artists = RendererPolygons.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Sprite):
-            from .renderer_sprite import MatplotlibRendererSprite
+            from .renderer_sprite import RendererSprite
 
-            _changed_artists = MatplotlibRendererSprite.render(self, object3d, camera)
+            _changed_artists = RendererSprite.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
         elif isinstance(object3d, TexturedMesh):
-            from .renderer_textured_mesh import MatplotlibRendererTexturedMesh
+            from .renderer_textured_mesh import RendererTexturedMesh
 
-            _changed_artists = MatplotlibRendererTexturedMesh.render(self, object3d, camera)
+            _changed_artists = RendererTexturedMesh.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Object3D):
             # base class, do nothing

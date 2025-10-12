@@ -9,14 +9,14 @@ import numpy as np
 
 # local imports
 from ..objects.sprite import Sprite
-from ..renderers.renderer import RendererMatplotlib
+from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
 
 
-class MatplotlibRendererSprite:
+class RendererSprite:
     @staticmethod
-    def render(renderer: "RendererMatplotlib", sprite: Sprite, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", sprite: Sprite, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         assert sprite.texture is not None, "Sprite must have a texture"
 
         # =============================================================================
