@@ -65,7 +65,7 @@ class MatplotlibRendererTexturedMesh:
         # Lighting
         # =============================================================================
         # light_direction = light_position - mesh_position
-        light_direction = np.array((1, 1, -1))
+        light_direction = np.array((0, 0, -1))
         light_direction_unit = light_direction / np.linalg.norm(light_direction)
         light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction_unit)
         light_intensities = (light_cosines + 1) / 2
@@ -138,7 +138,8 @@ class MatplotlibRendererTexturedMesh:
         y_min = int(np.floor(uvs_pixel[:, 1].min()))
         y_max = int(np.ceil(uvs_pixel[:, 1].max()))
 
-        texture = (texture[y_min:y_max, x_min:x_max, :] * intensity).astype(np.uint8)
+        texture_region = texture[y_min:y_max, x_min:x_max, :] * 255.0 * intensity
+        texture = (texture_region).astype(np.uint8)
         extent = x_min / image_w, x_max / image_w, y_min / image_h, y_max / image_h
 
         # fake_texture = np.zeros((2, 2, 3), dtype=np.uint8)

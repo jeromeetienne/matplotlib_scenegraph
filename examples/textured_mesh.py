@@ -68,13 +68,14 @@ def main():
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)
+    texture = texture.strip_alpha() if texture.has_alpha() else texture
 
     # Load a textured mesh from an .obj file
     obj_path = os.path.join(models_path, "head_meshio.obj")
     # obj_path = os.path.join(models_path, "cube_meshio.obj")
     faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(obj_path)
     assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
-    textured_mesh = TexturedMesh(faces_indices, vertices_coords, uvs_coords, texture.data.astype(np.float32))
+    textured_mesh = TexturedMesh(faces_indices, vertices_coords, uvs_coords, texture.data)
     textured_mesh.name = "TexturedMesh"
 
     scene.add_child(textured_mesh)
