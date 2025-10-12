@@ -24,6 +24,18 @@ Arguments:
 
 class AnimationLoop:
     def __init__(self, renderer: Renderer, fps: int = 30, video_duration: float = 10.0, video_path: str | None = None) -> None:
+        """
+        A simple animation loop manager for matplotlib rendering.
+        - it is able to save a video if needed
+        - it calls registered callbacks to update the scene
+        - it re-renders only the changed objects
+
+        Arguments:
+            renderer (Renderer): The renderer to use for rendering the scene.
+            fps (int): The target frames per second for the animation loop.
+            video_duration (float): The duration of the video to save in seconds.
+            video_path (str | None): The path to save the video. If None, no video is saved.
+        """
         self._callbacks = []
         self._renderer = renderer
         self._fps = fps
@@ -31,6 +43,7 @@ class AnimationLoop:
         self._video_path = video_path
 
     def start(self, scene: Object3D, camera: CameraBase):
+        """Start the animation loop."""
         time_start = time.time()
         time_last = time_start
 
@@ -70,10 +83,13 @@ class AnimationLoop:
         matplotlib.pyplot.show(block=True)
 
     def stop(self):
+        """Stop the animation loop."""
         raise NotImplementedError()
 
     def add_callback(self, func: AnimationLoopCallbackType):
+        """Add a callback to the animation loop."""
         self._callbacks.append(func)
 
     def remove_callback(self, func: AnimationLoopCallbackType):
+        """Remove a callback from the animation loop."""
         self._callbacks.remove(func)
