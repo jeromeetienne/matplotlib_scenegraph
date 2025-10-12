@@ -1,4 +1,3 @@
-- make the texture example work again
 - Do you implement geometry classes
   - you already got the .vertices in (n, 3) array
   - move that in a Geometry class ?
@@ -51,6 +50,7 @@
 
 
 ## Done
+- DONE make the texture example work again
 - DONE move ./helpers in ./examples/common
 - DONE make a sprite class
 - DONE do the event in renderering

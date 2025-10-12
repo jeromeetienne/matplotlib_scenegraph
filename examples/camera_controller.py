@@ -2,14 +2,6 @@
 basic example of a camera controller using AWDS keys
 """
 
-# stdlib imports
-import os
-
-# pip imports
-import numpy as np
-import matplotlib.pyplot
-
-
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic

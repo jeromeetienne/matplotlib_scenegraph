@@ -55,6 +55,7 @@ class Texture:
         # read image using matplotlib
         texture_data = matplotlib.image.imread(file_path)
 
+        # convert uint8 to float32 in range [0, 1] if needed
         if texture_data.dtype == np.uint8:
             # convert to float32 in range [0, 1]
             texture_data = texture_data.astype(np.float32) / 255.0
