@@ -5,7 +5,14 @@ from ..core.constants import Constants
 
 
 class Points(Object3D):
-    __slots__ = ("vertices", "colors", "sizes", "edge_colors", "edge_widths",)
+    __slots__ = (
+        "vertices",
+        "colors",
+        "sizes",
+        "edge_colors",
+        "edge_widths",
+    )
+
     def __init__(
         self,
         vertices: np.ndarray = vector3.create(),

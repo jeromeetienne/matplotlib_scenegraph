@@ -4,13 +4,6 @@ basic example of loading and rendering animated 3D models.
 Good examples of rendering loop
 """
 
-# stdlib imports
-import os
-
-# pip imports
-import numpy as np
-
-
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
@@ -31,7 +24,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = RendererMatplotlib(256,256)
+    renderer = RendererMatplotlib(256, 256)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 

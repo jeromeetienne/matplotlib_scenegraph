@@ -6,14 +6,9 @@ from ..core.constants import Constants
 
 
 class Polygons(Object3D):
-    __slots__ = ("polygon_count", "vertices_per_polygon", "vertices", "color",)
-    def __init__(
-        self,
-        vertices: np.ndarray,
-        polygon_count: int,
-        vertices_per_polygon: int,
-        color: np.ndarray = Constants.Color.GRAY,
-    ) -> None:
+    __slots__ = ("polygon_count", "vertices_per_polygon", "vertices", "color")
+
+    def __init__(self, vertices: np.ndarray, polygon_count: int, vertices_per_polygon: int, color: np.ndarray = Constants.Color.GRAY) -> None:
         super().__init__()
 
         # sanity checks

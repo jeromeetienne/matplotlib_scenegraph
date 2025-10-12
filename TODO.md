@@ -1,5 +1,6 @@
 - make the texture example work again
 - make a sprite class
+- move scene_examples.py in ./examples/common
 - Do you implement geometry classes
   - you already got the .vertices in (n, 3) array
   - move that in a Geometry class ?

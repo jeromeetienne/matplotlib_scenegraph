@@ -6,7 +6,8 @@ from ..core.object_3d import Object3D
 
 
 class TexturedMesh(Object3D):
-    __slots__ = ("faces_vertices", "faces_uvs", "texture",)
+    __slots__ = ("faces_vertices", "faces_uvs", "texture")
+
     def __init__(self, faces_indices: np.ndarray, vertices_coords: np.ndarray, uvs_coords: np.ndarray, texture: np.ndarray):
         super().__init__()
 

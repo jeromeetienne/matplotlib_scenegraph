@@ -120,7 +120,7 @@ class MatplotlibRendererTexturedMesh:
 
             changed_artist.set_visible(True)  # make sure it's visible
             axes_image = typing.cast(matplotlib.image.AxesImage, changed_artist)
-            MatplotlibRendererTexturedMesh.update_textured_face(
+            MatplotlibRendererTexturedMesh.update_textured_triangle(
                 mpl_axes=renderer._axis,
                 axes_image=axes_image,
                 face_vertices=face_vertices,
@@ -131,11 +131,8 @@ class MatplotlibRendererTexturedMesh:
 
         return changed_artists
 
-    # =============================================================================
-    # Update the artist for a texture face
-    # =============================================================================
     @staticmethod
-    def update_textured_face(
+    def update_textured_triangle(
         mpl_axes: matplotlib.axes.Axes,
         axes_image: matplotlib.image.AxesImage,
         face_vertices: np.ndarray,
@@ -188,6 +185,9 @@ class MatplotlibRendererTexturedMesh:
         axes_image.set_transform(transform)
         axes_image.set_clip_path(path, transform)
 
+    # =============================================================================
+    # Affine transform to warp triangles
+    # =============================================================================
     @staticmethod
     def texture_coords_wrap(face_coord_1: np.ndarray, face_coord_2: np.ndarray) -> matplotlib.transforms.Affine2D | None:
         """
