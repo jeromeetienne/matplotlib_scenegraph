@@ -1,5 +1,6 @@
 - implement the test layer from gsp_sc
-- make a wireframe example with `Lines`
+- modify the obj loader to use Geometry
+  - to support 'non-meshio' obj files
 - add more geometry shapes in `GeometryShape`
   - box
   - sphere
@@ -36,6 +37,7 @@
 
 
 ## Done
+- DONE make a wireframe example with `Lines`
 - DONE port `Geometry` everywhere in all `object3ds`
 - DONE load a textured plane
   - for 3d oriented images

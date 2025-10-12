@@ -31,6 +31,9 @@ class MeshParserObjManual:
 
         vertices_coords, uvs_coords, normals_coords, faces_vertex_indices, faces_uv_indices, faces_normal_indices = MeshParserObjManual.parse_raw(file_path)
 
+        # Now we build a Geometry out of it
+        # aka indices + vertices + uvs + normals, and len(vertices) == len(uvs) == len(normals))
+
         # Sanity checks - a valid .obj file should have at least vertices and faces
         assert len(vertices_coords) > 0, "No vertices found in the .obj file."
         assert len(faces_vertex_indices) > 0, "No faces found in the .obj file."
@@ -52,6 +55,9 @@ class MeshParserObjManual:
         assert normals_coords is None or len(vertices_coords) == len(
             normals_coords
         ), f"vertex coords count is different than normal coords count. got vertex count {len(vertices_coords)} and normal count {len(normals_coords)}"
+
+        # check it is always triangles
+        assert faces_indices.shape[1] == 3, f"Only triangular faces are supported in this parser. Got faces with {faces_indices.shape[1]} vertices."
 
         # return the values
         return faces_indices, vertices_coords, uvs_coords, normals_coords

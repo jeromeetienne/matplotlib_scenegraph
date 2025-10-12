@@ -41,32 +41,21 @@ def main():
     # Add objects
     # =============================================================================
 
-    # Create a list of polygons, each polygon is a list of (x,y) points
-    # Add a z=0 to each (x, y) point to make (x, y, z)
-    vertices = (
-        np.array(
-            [
-                [(1, 1, 0), (2, 1, 0), (2, 2, 0), (1, 2, 0)],
-                [(3, 1, 0), (4, 1, 0), (4, 2, 0), (3, 2, 0)],
-                [(1, 3, 0), (2, 3, 0), (2, 4, 0), (1, 4, 0)],
-            ],
-            dtype=np.float32,
-        )
-        / 5
-    )
+    if True:
+        # Load a model from an .obj file
+        # file_path = os.path.join(models_path, "cube_meshio.obj")
+        file_path = os.path.join(models_path, "suzanne_meshio.obj")
 
-    polygon_count = vertices.shape[0]
-    vertices_per_polygon = vertices.shape[1]
-    vertices = vertices.reshape(polygon_count * vertices_per_polygon, 3)
-    geometry = Geometry(vertices=vertices)
-    quad_polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
-    scene.add_child(quad_polygons)
+        polygons = SceneExamples.polygons_from_obj(file_path)
+        polygons.scale[:] = 0.5
+        scene.add_child(polygons)
 
-    def quad_polygons_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
-        quad_polygons.position[0] = np.cos(time_stamp) * 0.5
-        return [quad_polygons]
+        def polygons_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
+            polygons.rotation_euler[1] = time_stamp
+            polygons.position[1] = np.cos(time_stamp * 3) * 1
+            return [polygons]
 
-    animation_loop.add_callback(quad_polygons_update)
+        animation_loop.add_callback(polygons_update)
 
     # =============================================================================
     # Start the animation loop

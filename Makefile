@@ -5,3 +5,6 @@ help: ## Show this help message
 
 lint: ## Run linters
 	pyright src/ examples/ tools/
+
+run_all_examples: ## Run all examples
+	python3 tools/run_all_examples.py

@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.image
 
 # local imports
+from mpl_graph.objects.lines import Lines
 from mpl_graph.objects.points import Points
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.core.constants import Constants
@@ -44,6 +45,30 @@ class SceneExamples:
 
         # polygons = Points(vertices)
         return polygons
+
+    @staticmethod
+    def lines_from_obj(file_path: str) -> Lines:
+        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(file_path)
+
+        vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
+
+        faces_vertices = vertices_coords[faces_indices]
+        face_count = faces_vertices.shape[0]
+        vertices_per_face = faces_vertices.shape[1]
+
+        line_vertices = np.zeros((face_count * vertices_per_face * 2, 3)).astype(np.float32)
+        for i in range(face_count):
+            for j in range(vertices_per_face):
+                vertex_start = faces_vertices[i, j]
+                vertex_end = faces_vertices[i, (j + 1) % vertices_per_face]
+                line_vertices[(i * vertices_per_face + j) * 2] = vertex_start
+                line_vertices[(i * vertices_per_face + j) * 2 + 1] = vertex_end
+
+        geometry = Geometry(line_vertices)
+
+        lines = Lines(geometry)
+
+        return lines
 
     @staticmethod
     def addRandomPoints(point_count: int = 1000) -> Points:
