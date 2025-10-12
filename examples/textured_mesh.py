@@ -16,7 +16,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import RendererMatplotlib
 from mpl_graph.objects.textured_mesh import TexturedMesh
 from mpl_graph.core.texture import Texture
-from mpl_graph.objects.points import Points
+from mpl_graph.core.geometry import Geometry
 from common.mesh_parser_obj_manual import MeshParserObjManual
 from common.animation_loop import AnimationLoop
 
@@ -56,8 +56,10 @@ def main():
     faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(obj_path)
     assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
 
+    geometry = Geometry(vertices_coords, faces_indices, uvs_coords, normals_coords)
+
     # Create a textured mesh
-    textured_mesh = TexturedMesh(faces_indices, vertices_coords, uvs_coords, texture)
+    textured_mesh = TexturedMesh(geometry, texture)
 
     # Add the textured mesh to the scene
     scene.add_child(textured_mesh)

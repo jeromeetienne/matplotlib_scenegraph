@@ -22,13 +22,11 @@ class MatplotlibRendererTexturedMesh:
     @staticmethod
     def render(renderer: "RendererMatplotlib", mesh: TexturedMesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
 
-        faces_vertices = mesh.vertices[mesh.indices]
-        faces_uvs = mesh.uvs[mesh.indices]
-        # texture_data = textured_mesh.texture.data
+        assert mesh.geometry.indices is not None, "The mesh geometry must have face indices to be rendered"
+        assert mesh.geometry.uvs is not None, "The mesh geometry must have texture coordinates to be rendered"
 
-        #         faces_vertices = textured_mesh.faces_vertices.copy()
-        # faces_uvs = textured_mesh.faces_uvs.copy()
-        # texture_data = textured_mesh.texture.data
+        faces_vertices = mesh.geometry.vertices[mesh.geometry.indices]
+        faces_uvs = mesh.geometry.uvs[mesh.geometry.indices]
 
         # =============================================================================
         # Create the artists if needed
