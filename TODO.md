@@ -1,9 +1,3 @@
-- do the event in renderering
-  - src/gsp/core/visual_base.py
-  - allow to change the color based on depth
-  - simulate a fog for various effect
-  - do an example of protein with fog
-  - it would help 
 - make a sprite class
 - Do you implement geometry classes
   - you already got the .vertices in (n, 3) array
@@ -54,6 +48,12 @@
 
 
 ## Done
+- DONE do the event in renderering
+  - src/gsp/core/visual_base.py
+  - allow to change the color based on depth
+  - simulate a fog for various effect
+  - do an example of protein with fog
+  - it would help 
 - DONE import suzanne model in .obj
 - DONE Code various camera controller
   - first do you awsd camera
