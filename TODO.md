@@ -1,5 +1,4 @@
 - make the texture example work again
-- make a sprite class
 - move scene_examples.py in ./examples/common
   - TODO what about the whole helpers folder
 - Do you implement geometry classes
@@ -53,6 +52,7 @@
 
 
 ## Done
+- DONE make a sprite class
 - DONE do the event in renderering
   - src/gsp/core/visual_base.py
   - allow to change the color based on depth

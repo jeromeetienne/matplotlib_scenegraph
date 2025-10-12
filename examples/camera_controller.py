@@ -1,6 +1,7 @@
 """
 basic example of a camera controller using AWDS keys
 """
+
 # stdlib imports
 import os
 
@@ -15,10 +16,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import RendererMatplotlib
 from mpl_graph.helpers.animation_loop import AnimationLoop
 from mpl_graph.helpers.scene_examples import SceneExamples
-
-# local import
 from mpl_graph.helpers.camera_controller_awds import CameraController
-
 
 
 def main():

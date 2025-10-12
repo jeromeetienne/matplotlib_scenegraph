@@ -1,6 +1,7 @@
 """
 example of using renderer events to modify point colors and sizes based on depth
 """
+
 # stdlib imports
 import os
 
@@ -16,6 +17,7 @@ from mpl_graph.helpers.animation_loop import AnimationLoop
 from mpl_graph.helpers.scene_examples import SceneExamples
 from mpl_graph.objects.points import Points
 from mpl_graph.cameras.camera_base import CameraBase
+
 
 def main():
     # =============================================================================
@@ -38,9 +40,9 @@ def main():
 
     point_count = 100
     vertices = np.random.uniform(-0.5, 0.5, (point_count, 3))
-    colors = np.array([[1., 0., 0., 1.] for i in range(point_count)])
+    colors = np.array([[1.0, 0.0, 0.0, 1.0] for i in range(point_count)])
     sizes = np.array([100.0 for i in range(point_count)])
-    edge_colors = np.array([[0., 0., 0., 0.2] for i in range(point_count)])
+    edge_colors = np.array([[0.0, 0.0, 0.0, 0.2] for i in range(point_count)])
     points = Points(vertices, color=colors, sizes=sizes, edge_colors=edge_colors)
     scene.add_child(points)
 
@@ -62,8 +64,8 @@ def main():
         z_range = z_max - z_min
 
         for vertex_index, vertex in enumerate(vertices_transformed):
-            color_component = (vertex[2] - z_min)/z_range
-            color = np.array([1.0, 1.0 - color_component, 1.0 - color_component, 1.], dtype=np.float32)
+            color_component = (vertex[2] - z_min) / z_range
+            color = np.array([1.0, 1.0 - color_component, 1.0 - color_component, 1.0], dtype=np.float32)
             points.colors[vertex_index] = color
 
     points.post_transform.subscribe(post_transform_points)
