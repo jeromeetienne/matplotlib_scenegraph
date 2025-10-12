@@ -18,9 +18,12 @@ Arguments:
 
 
 class AnimationLoop:
-    def __init__(self, renderer: RendererMatplotlib):
+    def __init__(self, renderer: RendererMatplotlib, fps: int = 30, video_duration: float = 10.0, video_path: str | None = None) -> None:
         self._callbacks = []
         self._renderer = renderer
+        self._fps = fps
+        self._video_duration = video_duration
+        self._video_path = video_path
 
     def start(self, scene: Object3D, camera: CameraBase):
         time_start = time.time()
@@ -53,7 +56,11 @@ class AnimationLoop:
             # print(f"  Number of changed artists: {len(changed_artists)}")
             return changed_artists
 
-        ani = matplotlib.animation.FuncAnimation(self._renderer.get_figure(), update_scene, frames=100, interval=1000 / 60)
+        funcAnimation = matplotlib.animation.FuncAnimation(
+            self._renderer.get_figure(), update_scene, frames=int(self._video_duration * self._fps), interval=1000 / self._fps
+        )
+        if self._video_path is not None:
+            funcAnimation.save(self._video_path, dpi=200, fps=self._fps)
 
         matplotlib.pyplot.show(block=True)
 
