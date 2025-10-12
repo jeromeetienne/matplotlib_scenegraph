@@ -15,6 +15,7 @@ from mpl_graph.core.geometry import Geometry
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
 from common.mesh_utils import MeshUtils
+from common.example_utils import ExamplesUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -75,4 +76,5 @@ def main():
 
 
 if __name__ == "__main__":
+    ExamplesUtils.preamble()
     main()

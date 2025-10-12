@@ -8,6 +8,7 @@ import matplotlib.artist
 import matplotlib.pyplot
 
 # local imports
+from common.example_utils import ExamplesUtils
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_base import CameraBase
 from mpl_graph.renderers.renderer import Renderer
@@ -49,6 +50,10 @@ class AnimationLoop:
 
         # initial render
         self._renderer.render(scene, camera)
+
+        # if we are in testing mode, exit now
+        if ExamplesUtils.postamble():
+            return
 
         # define a animation function for matplotlib
         def update_scene(frame) -> list[matplotlib.artist.Artist]:

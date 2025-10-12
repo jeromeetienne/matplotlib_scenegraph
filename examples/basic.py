@@ -3,6 +3,7 @@ basic example of rendering a rotating point cloud
 """
 
 # pip imports
+import os
 import numpy as np
 import matplotlib.pyplot
 
@@ -12,6 +13,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.points import Points
 from mpl_graph.core.geometry import Geometry
+from common.example_utils import ExamplesUtils
 
 
 def main():
@@ -36,8 +38,15 @@ def main():
 
     # Render the scene
     renderer.render(scene, camera)
+
+    # if we are in testing mode, exit now
+    if ExamplesUtils.postamble():
+        return
+
+    # show the result
     matplotlib.pyplot.show(block=True)
 
 
 if __name__ == "__main__":
+    ExamplesUtils.preamble()
     main()

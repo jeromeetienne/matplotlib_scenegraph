@@ -3,7 +3,8 @@
   - require to save the matplotlib output
   - step 1: run all example in non interactive mode to check if there is exception
   - step 2: save the matplotlib output and compare it to a reference image
-  - TODO in animation loop, detect EXAMPLES_TESTING
+  - TODO ExamplesUtils.preamble() to set random seed if MPLSG_TESTING
+  - TODO in animation loop, detect MPLSG_TESTING
     - if present, dont run the loop
     - save the output in a file, based on the example name
 - move the .lines_from_obj in Lines class method

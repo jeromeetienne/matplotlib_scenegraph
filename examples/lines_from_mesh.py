@@ -16,6 +16,7 @@ from common.scene_examples import SceneExamples
 from mpl_graph.objects.polygons import Polygons
 from common.mesh_utils import MeshUtils
 from mpl_graph.core.geometry import Geometry
+from common.example_utils import ExamplesUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -65,4 +66,5 @@ def main():
 
 
 if __name__ == "__main__":
+    ExamplesUtils.preamble()
     main()

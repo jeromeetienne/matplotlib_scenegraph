@@ -14,6 +14,7 @@ import matplotlib.artist
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
+from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 
@@ -71,8 +72,13 @@ def main():
             ax.scatter(pos[0], pos[1], s=100, label=obj.name)
             ax.text(pos[0], pos[1], obj.name, fontsize=8, ha="center", va="bottom")
 
+        # if we are in testing mode, exit now
+        if ExamplesUtils.postamble():
+            return
+
         matplotlib.pyplot.pause(1.0)
 
 
 if __name__ == "__main__":
+    ExamplesUtils.preamble()
     main()

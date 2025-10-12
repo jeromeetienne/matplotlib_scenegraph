@@ -19,6 +19,7 @@ from mpl_graph.objects.sprite import Sprite
 from mpl_graph.objects.points import Points
 from mpl_graph.core.geometry import Geometry
 from common.animation_loop import AnimationLoop
+from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(__dirname__, "../assets")
@@ -84,4 +85,5 @@ def main():
 
 
 if __name__ == "__main__":
+    ExamplesUtils.preamble()
     main()

@@ -10,13 +10,13 @@ import numpy as np
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
-from common.animation_loop import AnimationLoop
 from mpl_graph.objects.lines import Lines
-from common.scene_examples import SceneExamples
 from mpl_graph.objects.polygons import Polygons
-from common.mesh_utils import MeshUtils
 from mpl_graph.core.geometry import Geometry
-
+from common.scene_examples import SceneExamples
+from common.animation_loop import AnimationLoop
+from common.mesh_utils import MeshUtils
+from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 assets_path = os.path.join(__dirname__, "../assets")
@@ -62,4 +62,5 @@ def main():
 
 
 if __name__ == "__main__":
+    ExamplesUtils.preamble()
     main()

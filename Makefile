@@ -8,3 +8,8 @@ lint: ## Run linters
 
 run_all_examples: ## Run all examples
 	python3 tools/run_all_examples.py
+
+check_expected_output: ## Check expected output of all examples
+	python3 tools/check_expected_output.py
+
+test: lint run_all_examples check_expected_output ## Run all tests

@@ -14,6 +14,7 @@ from mpl_graph.core.texture import Texture
 from mpl_graph.core.geometry import Geometry
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
+from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(__dirname__, "../assets")
@@ -50,10 +51,8 @@ def main():
     # Load a obj model
     obj_path = os.path.join(models_path, "head_meshio.obj")
     # obj_path = os.path.join(models_path, "cube_meshio.obj")
-    faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(obj_path)
-    assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
-
-    mesh_geometry = Geometry(vertices_coords, faces_indices, uvs_coords, normals_coords)
+    mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
+    assert mesh_geometry.uvs is not None, "The .obj file must contain texture coordinates (vt)"
 
     # Create a textured mesh
     mesh = TexturedMesh(mesh_geometry, texture)
@@ -73,4 +72,5 @@ def main():
 
 
 if __name__ == "__main__":
+    ExamplesUtils.preamble()
     main()
