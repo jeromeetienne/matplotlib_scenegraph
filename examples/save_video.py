@@ -18,6 +18,7 @@ from mpl_graph.core.texture import Texture
 from mpl_graph.objects.sprite import Sprite
 from mpl_graph.objects.points import Points
 from common.animation_loop import AnimationLoop
+from mpl_graph.core.geometry import Geometry
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(__dirname__, "../assets")
@@ -50,8 +51,9 @@ def main():
 
     point_count = 10
     vertices = np.random.uniform(-1, 1, (point_count, 3))
+    geometry = Geometry(vertices)
     colors = np.array([[1, 0, 0, 1] for i in range(point_count)])
-    points = Points(vertices, color=colors)
+    points = Points(geometry, color=colors)
     points.scale[:] = 0.5
     scene.add_child(points)
 

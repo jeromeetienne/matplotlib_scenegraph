@@ -48,37 +48,42 @@ class SceneExamples:
     @staticmethod
     def addRandomPoints(point_count: int = 1000) -> Points:
         vertices = np.random.uniform(-1, 1, (point_count, 3))
+        geometry = Geometry(vertices)
         colors = np.random.uniform(0, 1, (point_count, 4))
         colors[:, 3] = 1.0  # set alpha to 1
-        random_points = Points(vertices, color=colors)
+        random_points = Points(geometry, color=colors)
         return random_points
 
     @staticmethod
     def getBunnyPoints() -> Points:
         face_indices, vertex_coords, uv_coords, normal_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "bunny.obj"))
         vertex_coords = TransformUtils.normalize_vertices_to_unit_cube(vertex_coords)
-        points_bunny = Points(vertex_coords, color=Constants.Color.PURPLE)
+        geometry = Geometry(vertex_coords)
+        points_bunny = Points(geometry, color=Constants.Color.PURPLE)
         return points_bunny
 
     @staticmethod
     def getCubePoints() -> Points:
         face_indices, vertex_coords, uv_coords, normal_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "cube_meshio.obj"))
         vertex_coords = TransformUtils.normalize_vertices_to_unit_cube(vertex_coords)
-        points_bunny = Points(vertex_coords, color=Constants.Color.CYAN)
+        geometry = Geometry(vertex_coords)
+        points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 
     @staticmethod
     def getSuzannePoints() -> Points:
         faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "suzanne_meshio.obj"))
         vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
-        points_bunny = Points(vertices_coords, color=Constants.Color.CYAN)
+        geometry = Geometry(vertices_coords)
+        points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 
     @staticmethod
     def getHeadPoints() -> Points:
         faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "head_meshio.obj"))
         vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
-        points_bunny = Points(vertices_coords, color=Constants.Color.CYAN)
+        geometry = Geometry(vertices_coords)
+        points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 
     @staticmethod

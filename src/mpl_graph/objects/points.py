@@ -1,12 +1,15 @@
-from ..core.object_3d import Object3D
-from pyrr import vector3
+# pip imports
 import numpy as np
+
+# local imports
+from ..core.object_3d import Object3D
 from ..core.constants import Constants
+from ..core.geometry import Geometry
 
 
 class Points(Object3D):
     __slots__ = (
-        "vertices",
+        "geometry",
         "colors",
         "sizes",
         "edge_colors",
@@ -15,7 +18,7 @@ class Points(Object3D):
 
     def __init__(
         self,
-        vertices: np.ndarray = vector3.create(),
+        geometry: Geometry,
         color: np.ndarray = Constants.Color.GRAY,
         sizes: np.ndarray = np.array([10.0]),
         edge_colors: np.ndarray = Constants.Color.BLACK,
@@ -23,10 +26,8 @@ class Points(Object3D):
     ) -> None:
         super().__init__()
 
-        assert vertices.ndim == 2 and vertices.shape[1] == 3, "Vertices must be a Nx3 array"
-
         self.name = f"a {Points.__name__}"
-        self.vertices: np.ndarray = vertices
+        self.geometry: Geometry = geometry
         self.colors: np.ndarray = color
         self.sizes: np.ndarray = sizes
         self.edge_colors: np.ndarray = edge_colors

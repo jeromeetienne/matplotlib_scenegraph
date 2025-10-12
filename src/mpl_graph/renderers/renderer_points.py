@@ -15,7 +15,7 @@ from ..core.transform_utils import TransformUtils
 class RendererPoints:
     @staticmethod
     def render(renderer: "Renderer", points: Points, camera: CameraBase) -> list[matplotlib.artist.Artist]:
-
+        geometry = points.geometry
         # =============================================================================
         # Create the artists if needed
         # =============================================================================
@@ -39,12 +39,12 @@ class RendererPoints:
 
         full_transform = points.get_world_matrix()
         # full_transform = TransformUtils.compute_full_transform(camera, points)
-        vertices = TransformUtils.apply_transform(points.vertices, full_transform)
+        vertices_transformed = TransformUtils.apply_transform(geometry.vertices, full_transform)
 
         # dispatch the post_transforming event
-        points.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
+        points.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
 
-        vertices_2d = vertices[:, :2]  # drop z for 2D rendering
+        vertices_2d = vertices_transformed[:, :2]  # drop z for 2D rendering
 
         # =============================================================================
         # Update the matplotlib artists data

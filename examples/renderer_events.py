@@ -14,6 +14,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
 from mpl_graph.objects.points import Points
+from mpl_graph.core.geometry import Geometry
 from mpl_graph.cameras.camera_base import CameraBase
 
 
@@ -38,10 +39,11 @@ def main():
 
     point_count = 100
     vertices = np.random.uniform(-0.5, 0.5, (point_count, 3))
+    geometry = Geometry(vertices=vertices)
     colors = np.array([[1.0, 0.0, 0.0, 1.0] for i in range(point_count)])
     sizes = np.array([100.0 for i in range(point_count)])
     edge_colors = np.array([[0.0, 0.0, 0.0, 0.2] for i in range(point_count)])
-    points = Points(vertices, color=colors, sizes=sizes, edge_colors=edge_colors)
+    points = Points(geometry, color=colors, sizes=sizes, edge_colors=edge_colors)
     scene.add_child(points)
 
     def post_transform_points(renderer: Renderer, camera: CameraBase, vertices_transformed: np.ndarray) -> None:
@@ -49,8 +51,8 @@ def main():
         # sort inplace transformed positions by z value (3rd column). Largest z first
         sorted_indices = np.argsort(vertices_transformed[:, 2])
         vertices_transformed[:] = vertices_transformed[sorted_indices]
-        # apply same sorting to points.vertices, points.colors etc... to preserve the correct association
-        points.vertices[:] = points.vertices[sorted_indices]
+        # apply same sorting to points.geometry.vertices, points.colors etc... to preserve the correct association
+        points.geometry.vertices[:] = points.geometry.vertices[sorted_indices]
         points.colors[:] = points.colors[sorted_indices]
         points.sizes[:] = points.sizes[sorted_indices]
         points.edge_colors[:] = points.edge_colors[sorted_indices]

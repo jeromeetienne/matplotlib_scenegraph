@@ -1,5 +1,6 @@
 class Event:
     def __init__(self):
+        # TODO could i use template to make it stronger typed?
         self._listeners = []
 
     def subscribe(self, callback):
