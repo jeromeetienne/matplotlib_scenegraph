@@ -4,7 +4,7 @@
 - **Purpose:** 3D scene graph and rendering system using matplotlib for visualization.
 - **Core Objects:** Points, Lines, Polygons, TexturePolygons (see `src/mpl_graph/objects/`).
 - **Rendering:** Multiple renderers for different object types (see `src/mpl_graph/renderers/`).
-- **Math:** Uses numpy and pyrr (procedural API only, row-major matrices) for all math/transformations.
+- **Math:** Uses numpy and pyrr for all math/transformations.
 - **Scene Graph:** Hierarchical, right-handed, transform order: scale → rotation → translation.
 
 ## Key Files & Structure
@@ -13,7 +13,7 @@
 - `src/mpl_graph/objects/`: Geometric primitives and mesh objects.
 - `src/mpl_graph/renderers/`: Rendering logic for each object type.
 - `examples/`: Usage demos, testbeds, and sample scenes.
-- `tmp/scene_graph_fix/`: Experimental/standalone scene graph implementation (minimal dependencies, procedural pyrr API, see its README for conventions).
+- `tmp/scene_graph_fix/`: Experimental/standalone scene graph implementation (minimal dependencies, see its README for conventions).
 
 ## Developer Workflows
 - **Install:**
@@ -28,7 +28,7 @@
 - **Build:** No build step; pure Python.
 
 ## Project Conventions
-- **Transforms:** Always use numpy arrays; rotations as quaternions (procedural pyrr API only).
+- **Transforms:** Always use numpy arrays; rotations as quaternions.
 - **No OOP pyrr:** Never use `pyrr.Matrix44`/`Quaternion` objects—use only procedural functions.
 - **Rendering:** All rendering is via matplotlib; no OpenGL or external 3D engines.
 - **Right-handed system:** All coordinates and transforms follow right-handed convention.
@@ -45,3 +45,4 @@
 - For experimental/standalone work, follow the stricter conventions in `tmp/scene_graph_fix/README.md`.
 - Do not introduce new dependencies without discussion.
 - When in doubt, check the relevant README or example for the expected pattern.
+
