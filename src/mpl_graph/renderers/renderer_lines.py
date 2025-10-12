@@ -16,8 +16,10 @@ from ..core.transform_utils import TransformUtils
 class RendererLines:
     @staticmethod
     def render(renderer: "Renderer", lines: Lines, camera: CameraBase) -> list[matplotlib.artist.Artist]:
-        line_count = len(lines.vertices) // 2
-        assert line_count * 2 == len(lines.vertices), "Lines vertices length must be even"
+        geometry = lines.geometry
+
+        line_count = len(geometry.vertices) // 2
+        assert line_count * 2 == len(geometry.vertices), "Lines vertices length must be even"
 
         # =============================================================================
         # Create artists if needed
@@ -41,7 +43,7 @@ class RendererLines:
 
         # full_transform = lines.get_world_matrix()
         full_transform = TransformUtils.compute_full_transform(camera, lines)
-        vertices = TransformUtils.apply_transform(lines.vertices, full_transform)
+        vertices = TransformUtils.apply_transform(geometry.vertices, full_transform)
 
         # dispatch the post_transforming event
         lines.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)

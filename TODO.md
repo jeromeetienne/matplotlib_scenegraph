@@ -1,4 +1,5 @@
 - port `Geometry` everywhere in all `object3ds`
+- make a wireframe example with `Lines`
 - add more geometry shapes in `GeometryShape`
   - box
   - sphere
