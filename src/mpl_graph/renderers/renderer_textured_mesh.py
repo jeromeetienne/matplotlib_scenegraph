@@ -56,8 +56,12 @@ class MatplotlibRendererTexturedMesh:
         # =============================================================================
 
         # camera_cosines is the cosine of the angle between the normal and the camera
-        camera_direction = (0, 0, -1)
-        # camera_direction = camera_position - mesh_position
+        # - if <= 0, the face is pointing away from the camera
+        # - if > 0, the face is pointing towards the camera
+        camera_position = camera.get_world_position()
+        mesh_position = mesh.get_world_position()
+        # camera_direction = (0, 0, -1)
+        camera_direction = mesh_position - camera_position
         camera_cosines: np.ndarray = np.dot(faces_normals_unit, camera_direction)
 
         faces_hidden = camera_cosines <= 0
@@ -69,7 +73,7 @@ class MatplotlibRendererTexturedMesh:
         # Lighting
         # =============================================================================
         # light_direction = light_position - mesh_position
-        light_direction = np.array((0, 0, -1))
+        light_direction = np.array((1, 1, -1))
         light_direction_unit = light_direction / np.linalg.norm(light_direction)
         light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction_unit)
         light_intensities = (light_cosines + 1) / 2

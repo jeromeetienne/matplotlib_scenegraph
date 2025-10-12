@@ -27,6 +27,7 @@ class Geometry:
             assert normals.ndim == 2 and normals.shape[1] == 3, f"normals should be of shape [N, 3], got {normals.shape}"
             assert len(normals) == len(vertices), "The number of normals must be equal to the number of vertices"
 
+        # assign attributes
         self.vertices: np.ndarray = vertices
         """array of vertex coordinates, shape (N, 3)"""
 
