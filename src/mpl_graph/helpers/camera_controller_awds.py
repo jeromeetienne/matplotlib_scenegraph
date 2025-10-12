@@ -4,20 +4,22 @@ import matplotlib.pyplot
 # local imports
 from mpl_graph.renderers.renderer import RendererMatplotlib
 from mpl_graph.core.object_3d import Object3D
+from mpl_graph.cameras.camera_base import CameraBase
 
 class CameraController:
-    def __init__(self, renderer: RendererMatplotlib, scene: Object3D, camera: Object3D):
+    def __init__(self, renderer: RendererMatplotlib, scene: Object3D, camera: CameraBase):
         self._renderer = renderer
         self._camera = camera
         self._scene = scene
         matplotlib.pyplot.rcParams['keymap.save'].remove('s')
-        self._mpl_connect_id = None
+        self._mpl_connect_id: int | None = None
 
     def start(self):
         self._mpl_connect_id = self._renderer.get_figure().canvas.mpl_connect('key_press_event', self._on_key)
 
     def stop(self):
-        self._renderer.get_figure().canvas.mpl_disconnect('key_press_event', self._mpl_connect_id)
+        if self._mpl_connect_id is not None:
+            self._renderer.get_figure().canvas.mpl_disconnect(self._mpl_connect_id)
         self._mpl_connect_id = None
 
     def _on_key(self, event):

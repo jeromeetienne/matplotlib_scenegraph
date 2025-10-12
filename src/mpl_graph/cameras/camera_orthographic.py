@@ -1,10 +1,11 @@
-from ..core.object_3d import Object3D
+# pip imports
 from pyrr import matrix44
-import numpy as np
+
+# local imports
 from ..cameras.camera_base import CameraBase
 
 
-class CameraOrthographic(Object3D, CameraBase):
+class CameraOrthographic(CameraBase):
     def __init__(self):
         super().__init__()
         self.name = f"a {CameraOrthographic.__name__}"

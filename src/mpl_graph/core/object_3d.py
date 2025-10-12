@@ -8,7 +8,7 @@ from typing import Callable
 from .random import Random
 from .event import Event
 
-PRE_RENDERING_CALLBACK = Callable[['Object3D', 'CameraBase'], None]
+PRE_RENDERING_CALLBACK = Callable[['Object3D', 'CameraBase'], None] # type: ignore
 """Callback type for pre-rendering rendering event.
 
 Arguments:
