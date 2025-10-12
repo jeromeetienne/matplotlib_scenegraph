@@ -4,12 +4,15 @@ basic example of loading and rendering animated 3D models.
 Good examples of rendering loop
 """
 
+# pip imports
+import numpy as np
+
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import RendererMatplotlib
-from mpl_graph.helpers.animation_loop import AnimationLoop
-from mpl_graph.helpers.scene_examples import SceneExamples
+from common.animation_loop import AnimationLoop
+from common.scene_examples import SceneExamples
 
 
 def main():
@@ -36,7 +39,40 @@ def main():
     # model_root.scale[:] = 0.1
     scene.add_child(model_root)
 
-    SceneExamples.addAnimatedModels(model_root, animation_loop)
+    # =============================================================================
+    # Add models to the scene
+    # =============================================================================
+
+    cube_points = SceneExamples.getCubePoints()
+    model_root.add_child(cube_points)
+    cube_points.scale[:] = 0.2
+    cube_points.position[0] = -3
+    cube_points.position[1] = 3
+
+    bunny_points = SceneExamples.getBunnyPoints()
+    model_root.add_child(bunny_points)
+    bunny_points.scale[:] = 0.2
+    bunny_points.position[0] = 3
+    bunny_points.position[1] = 3
+
+    head_points = SceneExamples.getHeadPoints()
+    model_root.add_child(head_points)
+    head_points.scale[:] = 0.2
+    head_points.position[0] = 3
+    head_points.position[1] = -3
+
+    suzanne_points = SceneExamples.getSuzannePoints()
+    model_root.add_child(suzanne_points)
+    suzanne_points.scale[:] = 0.2
+    suzanne_points.position[0] = -3
+    suzanne_points.position[1] = -3
+
+    def update_model_root(delta_time: float, timestamp: float) -> list[Object3D]:
+        range = np.sin(timestamp) * 1 + 2
+        bunny_points.position[1] = np.abs(np.cos(timestamp * 5) * range)
+        return [bunny_points]
+
+    animation_loop.add_callback(update_model_root)
 
     # =============================================================================
     # Start the animation loop

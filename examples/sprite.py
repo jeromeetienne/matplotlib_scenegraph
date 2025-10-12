@@ -7,20 +7,18 @@ import os
 
 # pip imports
 import matplotlib.image
-import matplotlib.pyplot
 import numpy as np
 
 
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.helpers.mesh_parser_obj_manual import MeshParserObjManual
 from mpl_graph.renderers.renderer import RendererMatplotlib
-from mpl_graph.helpers.animation_loop import AnimationLoop
 from mpl_graph.objects.textured_mesh import TexturedMesh
 from mpl_graph.core.texture import Texture
 from mpl_graph.objects.sprite import Sprite
 from mpl_graph.objects.points import Points
+from common.animation_loop import AnimationLoop
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 data_path = os.path.join(__dirname__, "../assets")
@@ -41,7 +39,7 @@ def main():
     # Create a renderer
     renderer = RendererMatplotlib(100, 100)
     # Create an animation loop
-    video_path = os.path.join(__dirname__, "sprite_animation.mp4")
+    video_path = os.path.join(__dirname__, "output/sprite_animation.mp4")
     video_duration = 10.0  # seconds
     print(f"Animation will be saved to: {video_path}")
     animation_loop = AnimationLoop(renderer, video_duration=video_duration, video_path=video_path)
@@ -65,8 +63,7 @@ def main():
 
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
-    texture_data = matplotlib.image.imread(texture_path)
-    texture = Texture(texture_data)
+    texture = Texture.from_file(texture_path)
 
     sprite = Sprite(texture)
     # sprite.extent = np.array([0.0, 0.5, 0.0, 0.5])

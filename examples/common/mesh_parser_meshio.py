@@ -1,3 +1,4 @@
+# pip imports
 import meshio
 import numpy as np
 import matplotlib.image

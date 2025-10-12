@@ -1,11 +1,16 @@
+# stdlib imports
 import typing
+
+# pip imports
 import time
 import matplotlib.animation
 import matplotlib.artist
 import matplotlib.pyplot
-from ..core.object_3d import Object3D
-from ..cameras.camera_base import CameraBase
-from ..renderers.renderer import RendererMatplotlib
+
+# local imports
+from mpl_graph.core.object_3d import Object3D
+from mpl_graph.cameras.camera_base import CameraBase
+from mpl_graph.renderers.renderer import RendererMatplotlib
 
 # do a callback type for the animation loop
 AnimationLoopCallbackType = typing.Callable[[float, float], list[Object3D]]
