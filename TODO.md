@@ -1,6 +1,4 @@
 - make the texture example work again
-- move scene_examples.py in ./examples/common
-  - TODO what about the whole helpers folder
 - Do you implement geometry classes
   - you already got the .vertices in (n, 3) array
   - move that in a Geometry class ?
@@ -12,6 +10,7 @@
   - .uvs
   - FIXME what to do about colors ? edge_widths? edge_colors ?
     - maybe not in geometry ? 
+- rename `RendererMatplotlib` to `Renderer`
 - find a good API for the various materials
   - Q. do you do a Material class like in three.js ?
 - find a good API for the various materials
@@ -52,6 +51,7 @@
 
 
 ## Done
+- DONE move ./helpers in ./examples/common
 - DONE make a sprite class
 - DONE do the event in renderering
   - src/gsp/core/visual_base.py

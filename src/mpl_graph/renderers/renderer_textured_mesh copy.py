@@ -34,32 +34,9 @@ class MatplotlibRendererTexturedMesh:
                 face_uuid = f"{textured_mesh.uuid}_face_{face_index}"
                 renderer._artists[face_uuid] = axes_image
 
-        # =============================================================================
-        # Get data from object_3d
-        # =============================================================================
         faces_vertices = textured_mesh.faces_vertices.copy()
         faces_uvs = textured_mesh.faces_uvs.copy()
-        texture = textured_mesh.texture
-
-        # =============================================================================
-        # Apply full transform the vertices
-        # =============================================================================
-
-        # full_transform = points.get_world_matrix()
-        full_transform = TransformUtils.compute_full_transform(camera, textured_mesh)
-        face_count = len(faces_vertices)
-        vertices_transformed = TransformUtils.apply_transform(faces_vertices.reshape(-1, 3), full_transform)
-        faces_vertices = vertices_transformed.reshape((face_count, 3, 3))
-
-        # # =============================================================================
-        # # World transform
-        # # =============================================================================
-
-        # position_world = textured_mesh.get_world_position()
-        # faces_vertices += position_world
-
-        # dispatch the post_transforming event
-        textured_mesh.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
+        texture = textured_mesh.texture_data
 
         # =============================================================================
         # Compute face normals - needed for lighting and back-face culling
@@ -76,7 +53,7 @@ class MatplotlibRendererTexturedMesh:
 
         # camera_cosines is the cosine of the angle between the normal and the camera
         camera_direction = (0, 0, -1)
-        # camera_direction = camera.position - textured_mesh.position
+        # camera_direction = camera_position - mesh_position
         camera_cosines: np.ndarray = np.dot(faces_normals_unit, camera_direction)
 
         faces_hidden = camera_cosines <= 0
@@ -90,7 +67,7 @@ class MatplotlibRendererTexturedMesh:
         # Lighting
         # =============================================================================
         # light_direction = light_position - mesh_position
-        light_direction = np.array([1, 1, -1])
+        light_direction = np.array((1, 1, -1))
         light_direction_unit = light_direction / np.linalg.norm(light_direction)
         light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction_unit)
         light_intensities = (light_cosines + 1) / 2
@@ -120,7 +97,7 @@ class MatplotlibRendererTexturedMesh:
 
             changed_artist.set_visible(True)  # make sure it's visible
             axes_image = typing.cast(matplotlib.image.AxesImage, changed_artist)
-            MatplotlibRendererTexturedMesh.update_textured_triangle(
+            MatplotlibRendererTexturedMesh.update_textured_face(
                 mpl_axes=renderer._axis,
                 axes_image=axes_image,
                 face_vertices=face_vertices,
@@ -131,8 +108,11 @@ class MatplotlibRendererTexturedMesh:
 
         return changed_artists
 
+    # =============================================================================
+    # Update the artist for a texture face
+    # =============================================================================
     @staticmethod
-    def update_textured_triangle(
+    def update_textured_face(
         mpl_axes: matplotlib.axes.Axes,
         axes_image: matplotlib.image.AxesImage,
         face_vertices: np.ndarray,
@@ -185,9 +165,6 @@ class MatplotlibRendererTexturedMesh:
         axes_image.set_transform(transform)
         axes_image.set_clip_path(path, transform)
 
-    # =============================================================================
-    # Affine transform to warp triangles
-    # =============================================================================
     @staticmethod
     def texture_coords_wrap(face_coord_1: np.ndarray, face_coord_2: np.ndarray) -> matplotlib.transforms.Affine2D | None:
         """

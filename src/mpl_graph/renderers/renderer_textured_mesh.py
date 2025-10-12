@@ -1,5 +1,6 @@
 # stdlib imports
 import typing
+from typing import Sequence
 
 # pip imports
 import matplotlib.artist
@@ -18,25 +19,32 @@ from ..core.transform_utils import TransformUtils
 
 class MatplotlibRendererTexturedMesh:
     @staticmethod
-    def render(renderer: "RendererMatplotlib", textured_mesh: TexturedMesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "RendererMatplotlib", textured_mesh: TexturedMesh, camera: CameraBase) -> Sequence[matplotlib.artist.Artist]:
+        mpl_axes: matplotlib.axes.Axes = renderer.get_axis()
+        mesh_position = textured_mesh.position.copy()
+        camera_position = camera.position.copy()
+        light_position = camera_position  # for now the light is at the camera position
+
+        assert mesh_position.shape == (3,)
+        assert camera_position.shape == (3,)
+        assert light_position.shape == (3,)
+
+        mesh = textured_mesh
+
+        faces_vertices = mesh.faces_vertices.copy()
+        faces_uvs = mesh.faces_uvs.copy()
+        texture = mesh.texture_data
 
         # =============================================================================
-        # Create the artists if needed
+        #
         # =============================================================================
-        face_uuid = f"{textured_mesh.uuid}_face_0"
-        if face_uuid not in renderer._artists:
-            # Create a list of axes images for each face
-            faces_count = len(textured_mesh.faces_vertices)
-            fake_texture = np.zeros((1, 1, 3), dtype=np.uint8)
-            for face_index in range(faces_count):
-                axes_image = renderer._axis.imshow(fake_texture, origin="lower", extent=(0, 0, 0, 0))
-                axes_image.set_visible(False)  # hide until properly positioned and sized
-                face_uuid = f"{textured_mesh.uuid}_face_{face_index}"
-                renderer._artists[face_uuid] = axes_image
-
-        faces_vertices = textured_mesh.faces_vertices.copy()
-        faces_uvs = textured_mesh.faces_uvs.copy()
-        texture = textured_mesh.texture
+        # Create a list of axes images for each face
+        axes_images: list[matplotlib.image.AxesImage] = []
+        faces_count = len(textured_mesh.faces_vertices)
+        for _ in range(faces_count):
+            fake_texture = np.zeros((2, 2, 3), dtype=np.uint8)
+            axes_image = mpl_axes.imshow(fake_texture, origin="lower", extent=(0, 0, 0, 0))
+            axes_images.append(axes_image)
 
         # =============================================================================
         # Compute face normals - needed for lighting and back-face culling
@@ -52,8 +60,8 @@ class MatplotlibRendererTexturedMesh:
         # =============================================================================
 
         # camera_cosines is the cosine of the angle between the normal and the camera
-        camera_direction = (0, 0, -1)
-        # camera_direction = camera_position - mesh_position
+        # camera_direction = (0, 0, -1)
+        camera_direction = camera_position - mesh_position
         camera_cosines: np.ndarray = np.dot(faces_normals_unit, camera_direction)
 
         faces_hidden = camera_cosines <= 0
@@ -66,8 +74,7 @@ class MatplotlibRendererTexturedMesh:
         # =============================================================================
         # Lighting
         # =============================================================================
-        # light_direction = light_position - mesh_position
-        light_direction = np.array((1, 1, -1))
+        light_direction = light_position - mesh_position
         light_direction_unit = light_direction / np.linalg.norm(light_direction)
         light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction_unit)
         light_intensities = (light_cosines + 1) / 2
@@ -85,20 +92,12 @@ class MatplotlibRendererTexturedMesh:
         # =============================================================================
         # Loop over faces and draw them
         # =============================================================================
-        changed_artists: list[matplotlib.artist.Artist] = []
         for face_index, (face_vertices, face_uvs, light_intensity, face_hidden) in enumerate(zip(faces_vertices, faces_uvs, light_intensities, faces_hidden)):
-            face_uuid = f"{textured_mesh.uuid}_face_{face_index}"
-            changed_artist = renderer._artists[face_uuid]
-            changed_artists.append(changed_artist)
-
             if face_hidden:
-                changed_artist.set_visible(False)  # make sure it's not visible
                 continue
-
-            changed_artist.set_visible(True)  # make sure it's visible
-            axes_image = typing.cast(matplotlib.image.AxesImage, changed_artist)
-            MatplotlibRendererTexturedMesh.update_textured_face(
-                mpl_axes=renderer._axis,
+            axes_image = axes_images[face_index]
+            MatplotlibRendererTexturedMesh.update_textured_triangle(
+                mpl_axes=mpl_axes,
                 axes_image=axes_image,
                 face_vertices=face_vertices,
                 face_uvs=face_uvs,
@@ -106,13 +105,10 @@ class MatplotlibRendererTexturedMesh:
                 intensity=light_intensity,
             )
 
-        return changed_artists
+        return axes_images
 
-    # =============================================================================
-    # Update the artist for a texture face
-    # =============================================================================
     @staticmethod
-    def update_textured_face(
+    def update_textured_triangle(
         mpl_axes: matplotlib.axes.Axes,
         axes_image: matplotlib.image.AxesImage,
         face_vertices: np.ndarray,
@@ -165,6 +161,9 @@ class MatplotlibRendererTexturedMesh:
         axes_image.set_transform(transform)
         axes_image.set_clip_path(path, transform)
 
+    # =============================================================================
+    # Affine transform to warp triangles
+    # =============================================================================
     @staticmethod
     def texture_coords_wrap(face_coord_1: np.ndarray, face_coord_2: np.ndarray) -> matplotlib.transforms.Affine2D | None:
         """

@@ -6,7 +6,7 @@ from ..core.object_3d import Object3D
 
 
 class TexturedMesh(Object3D):
-    __slots__ = ("faces_vertices", "faces_uvs", "texture")
+    __slots__ = ("faces_vertices", "faces_uvs", "texture_data")
 
     def __init__(self, faces_indices: np.ndarray, vertices_coords: np.ndarray, uvs_coords: np.ndarray, texture: np.ndarray):
         super().__init__()
@@ -25,7 +25,7 @@ class TexturedMesh(Object3D):
         self.name = f"a {TexturedMesh.__name__}"
         self.faces_vertices = vertices_coords[faces_indices]
         self.faces_uvs = uvs_coords[faces_indices]
-        self.texture = texture
+        self.texture_data = texture
 
         # remove the alpha channel if any
         texture = texture[::-1, ::1, :3]
