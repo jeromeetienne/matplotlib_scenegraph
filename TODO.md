@@ -1,17 +1,8 @@
-- implement the test layer from gsp_sc
-  - require not to be interactive when i run the examples
-  - require to save the matplotlib output
-  - step 1: run all example in non interactive mode to check if there is exception
-  - step 2: save the matplotlib output and compare it to a reference image
-  - TODO ExamplesUtils.preamble() to set random seed if MPLSG_TESTING
-  - TODO in animation loop, detect MPLSG_TESTING
-    - if present, dont run the loop
-    - save the output in a file, based on the example name
+- remove renderer into matplotlib render
+  - implement a json renderer to export/import scenegraph in json
 - move the .lines_from_obj in Lines class method
   - `Lines.from_geometry(geometry)``
   - same for points
-- modify the obj loader to use Geometry
-  - to support 'non-meshio' obj files
 - add more geometry shapes in `GeometryShape`
   - box
   - sphere
@@ -48,6 +39,17 @@
 
 
 ## Done
+- DONE modify the obj loader to use Geometry
+  - to support 'non-meshio' obj files
+- DONE implement the test layer from gsp_sc
+  - require not to be interactive when i run the examples
+  - require to save the matplotlib output
+  - step 1: run all example in non interactive mode to check if there is exception
+  - step 2: save the matplotlib output and compare it to a reference image
+  - TODO ExamplesUtils.preamble() to set random seed if MPLSG_TESTING
+  - TODO in animation loop, detect MPLSG_TESTING
+    - if present, dont run the loop
+    - save the output in a file, based on the example name
 - DONE make a wireframe example with `Lines`
 - DONE port `Geometry` everywhere in all `object3ds`
 - DONE load a textured plane
