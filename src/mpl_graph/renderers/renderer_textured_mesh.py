@@ -9,6 +9,8 @@ import matplotlib.axes
 import matplotlib.transforms
 import numpy as np
 
+from mpl_graph.core.texture import Texture
+
 # local imports
 from ..objects.textured_mesh import TexturedMesh
 from ..renderers.renderer import RendererMatplotlib
@@ -18,25 +20,29 @@ from ..core.transform_utils import TransformUtils
 
 class MatplotlibRendererTexturedMesh:
     @staticmethod
-    def render(renderer: "RendererMatplotlib", textured_mesh: TexturedMesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "RendererMatplotlib", mesh: TexturedMesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+
+        faces_vertices = mesh.vertices[mesh.indices]
+        faces_uvs = mesh.uvs[mesh.indices]
+        # texture_data = textured_mesh.texture.data
+
+        #         faces_vertices = textured_mesh.faces_vertices.copy()
+        # faces_uvs = textured_mesh.faces_uvs.copy()
+        # texture_data = textured_mesh.texture.data
 
         # =============================================================================
         # Create the artists if needed
         # =============================================================================
-        face_uuid = f"{textured_mesh.uuid}_face_0"
+        face_uuid = f"{mesh.uuid}_face_0"
         if face_uuid not in renderer._artists:
             # Create a list of axes images for each face
-            faces_count = len(textured_mesh.faces_vertices)
+            faces_count = len(faces_vertices)
             fake_texture = np.zeros((1, 1, 3), dtype=np.uint8)
             for face_index in range(faces_count):
                 axes_image = renderer._axis.imshow(fake_texture, origin="lower", extent=(0, 0, 0, 0))
                 axes_image.set_visible(False)  # hide until properly positioned and sized
-                face_uuid = f"{textured_mesh.uuid}_face_{face_index}"
+                face_uuid = f"{mesh.uuid}_face_{face_index}"
                 renderer._artists[face_uuid] = axes_image
-
-        faces_vertices = textured_mesh.faces_vertices.copy()
-        faces_uvs = textured_mesh.faces_uvs.copy()
-        texture = textured_mesh.texture_data
 
         # =============================================================================
         # Compute face normals - needed for lighting and back-face culling
@@ -85,7 +91,7 @@ class MatplotlibRendererTexturedMesh:
         # =============================================================================
         changed_artists: list[matplotlib.artist.Artist] = []
         for face_index, (face_vertices, face_uvs, light_intensity, face_hidden) in enumerate(zip(faces_vertices, faces_uvs, light_intensities, faces_hidden)):
-            face_uuid = f"{textured_mesh.uuid}_face_{face_index}"
+            face_uuid = f"{mesh.uuid}_face_{face_index}"
             changed_artist = renderer._artists[face_uuid]
             changed_artists.append(changed_artist)
 
@@ -100,7 +106,7 @@ class MatplotlibRendererTexturedMesh:
                 axes_image=axes_image,
                 face_vertices=face_vertices,
                 face_uvs=face_uvs,
-                texture=texture,
+                texture=mesh.texture,
                 intensity=light_intensity,
             )
 
@@ -115,7 +121,7 @@ class MatplotlibRendererTexturedMesh:
         axes_image: matplotlib.image.AxesImage,
         face_vertices: np.ndarray,
         face_uvs: np.ndarray,
-        texture: np.ndarray,
+        texture: Texture,
         intensity: np.float64,
         interpolation="none",
     ) -> None:
@@ -130,7 +136,8 @@ class MatplotlibRendererTexturedMesh:
         Image to use for texture
         """
 
-        image_w, image_h = texture.shape[:2]
+        texture_data = texture.data
+        image_w, image_h = texture_data.shape[:2]
         uvs_pixel = face_uvs * (image_w, image_h)
 
         x_min = int(np.floor(uvs_pixel[:, 0].min()))
@@ -138,8 +145,8 @@ class MatplotlibRendererTexturedMesh:
         y_min = int(np.floor(uvs_pixel[:, 1].min()))
         y_max = int(np.ceil(uvs_pixel[:, 1].max()))
 
-        texture_region = texture[y_min:y_max, x_min:x_max, :] * 255.0 * intensity
-        texture = (texture_region).astype(np.uint8)
+        texture_region = texture_data[y_min:y_max, x_min:x_max, :] * 255.0 * intensity
+        texture_region = (texture_region).astype(np.uint8)
         extent = x_min / image_w, x_max / image_w, y_min / image_h, y_max / image_h
 
         # fake_texture = np.zeros((2, 2, 3), dtype=np.uint8)
@@ -158,7 +165,7 @@ class MatplotlibRendererTexturedMesh:
             closed=True,
         )
 
-        axes_image.set_data(texture)
+        axes_image.set_data(texture_region)
         axes_image.set_interpolation(interpolation)
         axes_image.set_extent(extent)
         axes_image.set_transform(transform)
