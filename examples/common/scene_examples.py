@@ -17,7 +17,7 @@ from mpl_graph.core.geometry import Geometry
 from mpl_graph.core.texture import Texture
 from .geometry_shape import GeometryShape
 
-from .mesh_parser_obj_manual import MeshParserObjManual
+from .mesh_utils import MeshUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -30,7 +30,7 @@ class SceneExamples:
 
     @staticmethod
     def polygons_from_obj(file_path: str) -> Polygons:
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(file_path)
+        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(file_path)
 
         vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
 
@@ -48,7 +48,7 @@ class SceneExamples:
 
     @staticmethod
     def lines_from_obj(file_path: str) -> Lines:
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(file_path)
+        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(file_path)
 
         vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
 
@@ -81,7 +81,7 @@ class SceneExamples:
 
     @staticmethod
     def getBunnyPoints() -> Points:
-        face_indices, vertex_coords, uv_coords, normal_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "bunny.obj"))
+        face_indices, vertex_coords, uv_coords, normal_coords = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "bunny.obj"))
         vertex_coords = TransformUtils.normalize_vertices_to_unit_cube(vertex_coords)
         geometry = Geometry(vertex_coords)
         points_bunny = Points(geometry, color=Constants.Color.PURPLE)
@@ -89,7 +89,7 @@ class SceneExamples:
 
     @staticmethod
     def getCubePoints() -> Points:
-        face_indices, vertex_coords, uv_coords, normal_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "cube_meshio.obj"))
+        face_indices, vertex_coords, uv_coords, normal_coords = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "cube_meshio.obj"))
         vertex_coords = TransformUtils.normalize_vertices_to_unit_cube(vertex_coords)
         geometry = Geometry(vertex_coords)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
@@ -97,7 +97,7 @@ class SceneExamples:
 
     @staticmethod
     def getSuzannePoints() -> Points:
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "suzanne_meshio.obj"))
+        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "suzanne_meshio.obj"))
         vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
         geometry = Geometry(vertices_coords)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
@@ -105,7 +105,7 @@ class SceneExamples:
 
     @staticmethod
     def getHeadPoints() -> Points:
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(os.path.join(models_path, "head_meshio.obj"))
+        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "head_meshio.obj"))
         vertices_coords = TransformUtils.normalize_vertices_to_unit_cube(vertices_coords)
         geometry = Geometry(vertices_coords)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
@@ -121,7 +121,7 @@ class SceneExamples:
         # Load a obj model
         obj_path = os.path.join(models_path, "head_meshio.obj")
         # obj_path = os.path.join(models_path, "cube_meshio.obj")
-        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(obj_path)
+        faces_indices, vertices_coords, uvs_coords, normals_coords = MeshUtils.parse_obj_file_manual(obj_path)
         assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
 
         geometry = Geometry(vertices_coords, faces_indices, uvs_coords, normals_coords)

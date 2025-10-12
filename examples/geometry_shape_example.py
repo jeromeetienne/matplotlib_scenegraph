@@ -17,7 +17,7 @@ from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.textured_mesh import TexturedMesh
 from mpl_graph.core.texture import Texture
 from mpl_graph.core.geometry import Geometry
-from common.mesh_parser_obj_manual import MeshParserObjManual
+from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))

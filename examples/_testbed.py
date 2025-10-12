@@ -14,7 +14,7 @@ from common.animation_loop import AnimationLoop
 from mpl_graph.objects.lines import Lines
 from common.scene_examples import SceneExamples
 from mpl_graph.objects.polygons import Polygons
-from common.mesh_parser_obj_manual import MeshParserObjManual
+from common.mesh_utils import MeshUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -56,50 +56,11 @@ def main():
     # Random animated lines
     # =============================================================================
 
-    if False:
-        num_lines = 10
-        vertices = np.random.uniform(-1, 1, size=(num_lines * 2, 3)).astype(np.float32)
-
-        lines = Lines(vertices)
-        scene.add_child(lines)
-
-        def lines_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
-            lines.vertices = np.random.uniform(-1, 1, size=(num_lines * 2, 3)).astype(np.float32)
-            return [lines]
-
-        animation_loop.add_callback(lines_update)
-
-    if False:
-        # Create a list of polygons, each polygon is a list of (x,y) points
-        # Add a z=0 to each (x, y) point to make (x, y, z)
-        vertices = (
-            np.array(
-                [
-                    [(1, 1, 0), (2, 1, 0), (2, 2, 0), (1, 2, 0)],
-                    [(3, 1, 0), (4, 1, 0), (4, 2, 0), (3, 2, 0)],
-                    [(1, 3, 0), (2, 3, 0), (2, 4, 0), (1, 4, 0)],
-                ],
-                dtype=np.float32,
-            )
-            / 5
-        )
-
-        polygon_count = vertices.shape[0]
-        vertices_per_polygon = vertices.shape[1]
-        vertices = vertices.reshape(polygon_count * vertices_per_polygon, 3)
-        polygons = Polygons(vertices, polygon_count, vertices_per_polygon)
-        scene.add_child(polygons)
-
-        def polygons_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
-            polygons.position[0] = np.cos(time_stamp) * 0.5
-            return [polygons]
-
-        animation_loop.add_callback(polygons_update)
-
     if True:
         # Load a model from an .obj file
         # file_path = os.path.join(models_path, "cube_meshio.obj")
-        file_path = os.path.join(models_path, "suzanne_meshio.obj")
+        # file_path = os.path.join(models_path, "suzanne_meshio.obj")
+        file_path = os.path.join(models_path, "suzanne.obj")
 
         polygons = SceneExamples.polygons_from_obj(file_path)
         polygons.scale[:] = 0.5
