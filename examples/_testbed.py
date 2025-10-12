@@ -33,7 +33,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = Renderer(512, 512)
+    renderer = Renderer(100, 100)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
@@ -98,7 +98,7 @@ def main():
 
     if True:
         # Load a model from an .obj file
-        file_path = os.path.join(models_path, "cube_meshio.obj")
+        # file_path = os.path.join(models_path, "cube_meshio.obj")
         file_path = os.path.join(models_path, "suzanne_meshio.obj")
 
         polygons = SceneExamples.polygons_from_obj(file_path)

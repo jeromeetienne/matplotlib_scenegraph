@@ -10,10 +10,10 @@ class Geometry:
         Only triangular faces are supported.
 
         Arguments:
-        - vertices: array of vertex coordinates, shape (N, 3)
-        - indices: array of face indices, shape (M, 3) or None if there is no face
-        - uvs: array of texture coordinates, shape (N, 2) or None if there is no texture
-        - normals: array of normal coordinates, shape (N, 3) or None if there is no normal
+            vertices (np.ndarray): array of vertex coordinates, shape (N, 3)
+            indices (np.ndarray | None): array of face indices, shape (M, 3) or None if there is no face
+            uvs (np.ndarray | None): array of texture coordinates, shape (N, 2) or None if there is no texture
+            normals (np.ndarray | None): array of normal coordinates, shape (N, 3) or None if there is no normal
         """
 
         # sanity check - make sure we have triangular faces
