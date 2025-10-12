@@ -1,3 +1,4 @@
+- make the texture example work again
 - make a sprite class
 - Do you implement geometry classes
   - you already got the .vertices in (n, 3) array
@@ -8,6 +9,8 @@
   - .indices
   - .normals
   - .uvs
+  - FIXME what to do about colors ? edge_widths? edge_colors ?
+    - maybe not in geometry ? 
 - find a good API for the various materials
   - Q. do you do a Material class like in three.js ?
 - find a good API for the various materials
