@@ -2,12 +2,9 @@
 basic example of rendering a rotating point cloud
 """
 
-# stdlib imports
-import os
-from typing import Sequence
-
 # pip imports
 import numpy as np
+import matplotlib.pyplot
 
 # local imports
 from mpl_graph.core.object_3d import Object3D
@@ -18,24 +15,18 @@ from common.animation_loop import AnimationLoop
 
 
 def main():
-    # =============================================================================
-    # Setup the scene
-    # =============================================================================
+    # Create the scene root
     scene = Object3D()
 
+    # Create a camera
     camera = CameraOrthographic()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
     renderer = Renderer(512, 512)
-    # Create an animation loop
-    animation_loop = AnimationLoop(renderer)
 
-    # =============================================================================
     # Add points
-    # =============================================================================
-
     point_count = 1000
     vertices = np.random.uniform(-1, 1, (point_count, 3))
     colors = np.array([[1, 0, 0, 1] for i in range(point_count)])
@@ -43,18 +34,9 @@ def main():
     points.scale[:] = 0.5
     scene.add_child(points)
 
-    def update(delta_time: float, timestamp: float) -> Sequence[Object3D]:
-        points.position[0] = np.cos(timestamp * 5)
-        # points.position[1] = np.sin(timestamp * 1.75)
-
-        return [points]
-
-    animation_loop.add_callback(update)
-
-    # =============================================================================
-    # Start the animation loop
-    # =============================================================================
-    animation_loop.start(scene, camera)
+    # Render the scene
+    renderer.render(scene, camera)
+    matplotlib.pyplot.show(block=True)
 
 
 if __name__ == "__main__":

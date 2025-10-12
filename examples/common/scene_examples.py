@@ -14,8 +14,8 @@ from mpl_graph.objects.textured_mesh import TexturedMesh
 from mpl_graph.objects.polygons import Polygons
 from mpl_graph.core.geometry import Geometry
 from mpl_graph.core.texture import Texture
+from .geometry_shape import GeometryShape
 
-from .animation_loop import AnimationLoop
 from .mesh_parser_obj_manual import MeshParserObjManual
 
 

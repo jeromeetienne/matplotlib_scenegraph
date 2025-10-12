@@ -25,8 +25,16 @@ class RendererTexturedMesh:
         assert mesh.geometry.indices is not None, "The mesh geometry must have face indices to be rendered"
         assert mesh.geometry.uvs is not None, "The mesh geometry must have texture coordinates to be rendered"
 
-        faces_vertices = mesh.geometry.vertices[mesh.geometry.indices]
-        faces_uvs = mesh.geometry.uvs[mesh.geometry.indices]
+        geometry = mesh.geometry
+
+        # Get the full transform matrix for the mesh
+        transform_matrix = mesh.get_world_matrix()
+        # transform_matrix = TransformUtils.compute_full_transform(camera, mesh)
+        vertices_transformed = TransformUtils.apply_transform(geometry.vertices, transform_matrix)
+
+        # build the faces vertices and uvs arrays
+        faces_vertices = vertices_transformed[geometry.indices]
+        faces_uvs = mesh.geometry.uvs[geometry.indices]
 
         # =============================================================================
         # Create the artists if needed

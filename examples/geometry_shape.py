@@ -30,66 +30,53 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
+
+    # Create the scene root
     scene = Object3D()
 
+    # Create a camera
     camera = CameraOrthographic()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
     renderer = Renderer(256, 256)
+
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
     # =============================================================================
-    # Load a model
+    # Load a texture
     # =============================================================================
 
-    # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)
     # remove the alpha channel if any
     texture = texture.strip_alpha() if texture.has_alpha() else texture
 
-    # # Load a obj model
-    # obj_path = os.path.join(models_path, "head_meshio.obj")
-    # # obj_path = os.path.join(models_path, "cube_meshio.obj")
-    # faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(obj_path)
-    # assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
-
-    # geometry = Geometry(vertices_coords, faces_indices, uvs_coords, normals_coords)
-
-    # # Create a textured mesh
-    # textured_mesh = TexturedMesh(geometry, texture)
-
-    # # Add the textured mesh to the scene
-    # # scene.add_child(textured_mesh)
-
     # =============================================================================
-    #
+    # Add a plane with the texture
     # =============================================================================
 
     geometry_plane = GeometryShape.plane(1.0, 1.0)
-    textured_mesh_plane = TexturedMesh(geometry_plane, texture)
-    textured_mesh_plane.position[1] = 2.0
-    textured_mesh_plane.scale[:] = 0.2
-    scene.add_child(textured_mesh_plane)
+    mesh_plane = TexturedMesh(geometry_plane, texture)
+    mesh_plane.position[0] = -0.5
+    mesh_plane.scale[:] = 0.2
+    scene.add_child(mesh_plane)
 
-    def animation_plane(delta_time: float, timestamp: float) -> Sequence[Object3D]:
-        # textured_mesh_plane.rotation_euler[1] = timestamp
-        textured_mesh_plane.rotation_euler[0] = timestamp
-        # textured_mesh_plane.rotation_euler[2] = timestamp
-        return [textured_mesh_plane]
+    # =============================================================================
+    # Add a box with a texture
+    # =============================================================================
 
-    animation_loop.add_callback(animation_plane)
+    geometry_box = GeometryShape.box(1.0, 1.0, 1.0)
+    mesh_box = TexturedMesh(geometry_box, texture)
+    mesh_box.position[0] = +0.5
+    mesh_box.scale[:] = 0.5
+    scene.add_child(mesh_box)
 
     # =============================================================================
     # Start the animation loop
     # =============================================================================
-
-    # renderer.render(scene, camera)
-    # print("scene rendered")
-    # matplotlib.pyplot.show(block=True)
 
     animation_loop.start(scene, camera)
 

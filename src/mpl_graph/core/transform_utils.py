@@ -34,15 +34,15 @@ class TransformUtils:
         return full_transform
 
     @staticmethod
-    def apply_transform(vertices: np.ndarray, transform: np.ndarray) -> np.ndarray:
+    def apply_transform(vertices: np.ndarray, transform_matrix: np.ndarray) -> np.ndarray:
         # sanity checks
         assert vertices.shape[1] == 3 and vertices.ndim == 2, f"vertices should be of shape [N, 3]. Got {vertices.shape}"
-        assert transform.shape == (4, 4), f"transform should be of shape [4, 4]. Got {transform.shape}"
+        assert transform_matrix.shape == (4, 4), f"transform should be of shape [4, 4]. Got {transform_matrix.shape}"
 
         # make vertices homogeneous
         vertices_hom = np.hstack([vertices, np.ones((vertices.shape[0], 1), dtype=vertices.dtype)])  # [N, 4]
         # apply full transform to vertices
-        vertices_world_hom = vertices_hom @ transform  # [N, 4]
+        vertices_world_hom = vertices_hom @ transform_matrix  # [N, 4]
         # vertices_world_hom = vertices_hom @ transform  # [N, 4]
         # drop w for clip space
         vertices_clip = vertices_world_hom[:, :3]  # [N, 3]

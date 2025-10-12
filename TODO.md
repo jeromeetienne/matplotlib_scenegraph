@@ -1,16 +1,4 @@
-- Do you implement geometry classes
-  - you already got the .vertices in (n, 3) array
-  - move that in a Geometry class ?
-  - yeah i like it
-  - load_mesh return a Geometry
-  - .vertices
-  - .indices
-  - .normals
-  - .uvs
-  - FIXME what to do about colors ? edge_widths? edge_colors ?
-    - maybe not in geometry ? 
 - port `Geometry` everywhere in all `object3ds`
-- rename `RendererMatplotlib` to `Renderer`
 - find a good API for the various materials
   - Q. do you do a Material class like in three.js ?
 - find a good API for the various materials
@@ -25,6 +13,8 @@
   - MeshTextureMaterial
   - MeshNormalMaterial
 - do you handle point light, directional light
+- issue in object3d transform
+  - just to a rotation around Z and it fails
 - bug in transform
   - how to fix it ? divide and conquer
   - find a test and ask AI to fix it
@@ -51,6 +41,7 @@
 
 
 ## Done
+- DONE rename `RendererMatplotlib` to `Renderer`
 - DONE make the texture example work again
 - DONE move ./helpers in ./examples/common
 - DONE make a sprite class

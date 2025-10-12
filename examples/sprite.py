@@ -55,8 +55,6 @@ def main():
     # Load a model
     # =============================================================================
 
-    # def __init__(self, faces_indices: np.ndarray, vertices_coords: np.ndarray, uvs_coords: np.ndarray, texture: np.ndarray):
-
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)

@@ -37,9 +37,6 @@ class RendererPoints:
         # Apply full transform the vertices
         # =============================================================================
 
-        # if points.name == "point 2":
-        #     breakpoint()
-
         full_transform = points.get_world_matrix()
         # full_transform = TransformUtils.compute_full_transform(camera, points)
         vertices = TransformUtils.apply_transform(points.vertices, full_transform)
