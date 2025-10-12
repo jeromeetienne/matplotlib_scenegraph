@@ -1,3 +1,9 @@
+"""
+basic example of loading and rendering animated 3D models.
+
+Good examples of rendering loop
+"""
+
 # stdlib imports
 import os
 

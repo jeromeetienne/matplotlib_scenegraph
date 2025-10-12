@@ -1,3 +1,6 @@
+"""
+basic example of a camera controller using AWDS keys
+"""
 # stdlib imports
 import os
 

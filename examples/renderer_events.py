@@ -1,3 +1,6 @@
+"""
+example of using renderer events to modify point colors and sizes based on depth
+"""
 # stdlib imports
 import os
 

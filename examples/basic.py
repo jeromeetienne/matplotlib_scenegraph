@@ -1,3 +1,7 @@
+"""
+basic example of rendering a rotating point cloud
+"""
+
 # stdlib imports
 import os
 
