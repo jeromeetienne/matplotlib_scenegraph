@@ -1,6 +1,8 @@
 # pip imports
 import matplotlib.pyplot
 import matplotlib.artist
+import matplotlib.figure
+import matplotlib.axes
 
 # local imports
 from ..core.object_3d import Object3D
@@ -61,7 +63,7 @@ class RendererMatplotlib:
         changed_artists: list[matplotlib.artist.Artist] = []
 
         # dispatch the pre_rendering event
-        object3d.pre_rendering.send(renderer=self, camera=camera)
+        object3d.pre_rendering.dispatch(renderer=self, camera=camera)
 
         # call the appropriate renderer based on the object type
         if isinstance(object3d, Points):
@@ -91,7 +93,7 @@ class RendererMatplotlib:
             raise NotImplementedError(f"Rendering for {type(object3d)} not implemented yet")
         
         # dispatch the post_rendering event
-        object3d.post_rendering.send(renderer=self, camera=camera)
+        object3d.post_rendering.dispatch(renderer=self, camera=camera)
 
         # return the list of changed artists
         return changed_artists

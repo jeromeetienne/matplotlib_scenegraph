@@ -9,7 +9,7 @@ class Lines(Object3D):
     def __init__(
         self,
         vertices: np.ndarray = vector3.create(),
-        color: np.ndarray = Constants.GRAY,
+        color: np.ndarray = Constants.Color.GRAY,
     ) -> None:
         super().__init__()
 

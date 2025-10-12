@@ -35,16 +35,16 @@ def main():
     # Add objects to the scene
     # =============================================================================
 
-    point_object_1 = Points(np.array([[0, 0, 0]]), color=Constants.RED)
+    point_object_1 = Points(np.array([[0, 0, 0]]), color=Constants.Color.RED)
     point_object_1.name = "point 1"
     scene.add_child(point_object_1)
 
-    point_object_2 = Points(np.array([[0.0, 0, 0]]), color=Constants.GREEN)
+    point_object_2 = Points(np.array([[0.0, 0, 0]]), color=Constants.Color.GREEN)
     point_object_2.name = "point 2"
     point_object_2.position[0] = 0.4
     point_object_1.add_child(point_object_2)
 
-    point_object_3 = Points(np.array([[0, 0, 0]]), color=Constants.BLUE)
+    point_object_3 = Points(np.array([[0, 0, 0]]), color=Constants.Color.BLUE)
     point_object_3.name = "point 3"
     point_object_3.position[1] = 0.2
     point_object_2.add_child(point_object_3)

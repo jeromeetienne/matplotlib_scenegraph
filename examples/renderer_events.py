@@ -25,7 +25,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = RendererMatplotlib(100, 100)
+    renderer = RendererMatplotlib(256, 256)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
@@ -33,34 +33,37 @@ def main():
     # Load a model
     # =============================================================================
 
-    point_count = 1000
-    vertices = np.random.uniform(-1, 1, (point_count, 3))
-    colors = np.array([[1, 0, 0, 1] for i in range(point_count)])
-    points = Points(vertices, color=colors)
-    points.scale[:] = 0.5
+    point_count = 100
+    vertices = np.random.uniform(-0.5, 0.5, (point_count, 3))
+    colors = np.array([[1., 0., 0., 1.] for i in range(point_count)])
+    sizes = np.array([100.0 for i in range(point_count)])
+    edge_colors = np.array([[0., 0., 0., 0.2] for i in range(point_count)])
+    points = Points(vertices, color=colors, sizes=sizes, edge_colors=edge_colors)
     scene.add_child(points)
 
     def post_transform_points(renderer: RendererMatplotlib, camera: CameraBase, vertices_transformed: np.ndarray) -> None:
-        
-        print(f'Post-transform event: {points.name} with {len(points.vertices)} vertices')
 
-        # Sort points by depth (z value) for proper rendering order
-        indices = np.argsort(-vertices_transformed[:, 2])
-        vertices_transformed[:] = vertices_transformed[indices]
+        # sort inplace transformed positions by z value (3rd column). Largest z first
+        sorted_indices = np.argsort(vertices_transformed[:, 2])
+        vertices_transformed[:] = vertices_transformed[sorted_indices]
+        # apply same sorting to points.vertices, points.colors etc... to preserve the correct association
+        points.vertices[:] = points.vertices[sorted_indices]
+        points.colors[:] = points.colors[sorted_indices]
+        points.sizes[:] = points.sizes[sorted_indices]
+        points.edge_colors[:] = points.edge_colors[sorted_indices]
+        # points.edge_widths[:] = points.edge_widths[sorted_indices]
 
-        # NOTE: Trick to force the static typing of points.vertices/sizes/colors to np.ndarray (and never TransformChain)
-        # points.vertices = typing.cast(np.ndarray, points.vertices)
+        # get the min and max y values
+        z_min = vertices_transformed[:, 2].min()
+        z_max = vertices_transformed[:, 2].max()
+        z_range = z_max - z_min
 
-        y_min = vertices_transformed.min(axis=0)
-        y_max = vertices_transformed.max(axis=0)
-        y_range = y_max - y_min
+        for vertex_index, vertex in enumerate(vertices_transformed):
+            color_component = (vertex[2] - z_min)/z_range
+            color = np.array([1.0, 1.0 - color_component, 1.0 - color_component, 1.], dtype=np.float32)
+            points.colors[vertex_index] = color
 
-        for vertex_index, vertex in enumerate(points.vertices):
-            color_component = (vertex[1] - y_min)/y_range
-            color = (color_component, 0, 1 - color_component, 1)
-            points.color[vertex_index] = color
-
-    points.post_transform.connect(post_transform_points)
+    points.post_transform.subscribe(post_transform_points)
 
     def update_points(delta_time: float, timestamp: float) -> list[Object3D]:
         points.rotation_euler[0] = timestamp

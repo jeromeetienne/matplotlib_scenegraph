@@ -1,7 +1,10 @@
-from core.object_3d import Object3D
+# pip imports
 from pyrr import matrix44
 import numpy as np
-from cameras.camera_base import CameraBase
+
+# local imports
+from ..core.object_3d import Object3D
+from .camera_base import CameraBase
 
 
 class CameraPerspective(Object3D, CameraBase):

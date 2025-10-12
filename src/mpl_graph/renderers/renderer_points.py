@@ -45,7 +45,7 @@ class MatplotlibRendererPoints:
         vertices = TransformUtils.apply_transform(points.vertices, full_transform)
 
         # dispatch the post_transforming event
-        points.post_rendering.send(renderer=renderer, camera=camera, vertices_transformed=vertices)
+        points.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
 
         vertices_2d = vertices[:, :2]  # drop z for 2D rendering
 
@@ -54,9 +54,9 @@ class MatplotlibRendererPoints:
         # =============================================================================
 
         mpl_path_collection.set_offsets(offsets=vertices_2d)
-        mpl_path_collection.set_sizes([10] * len(points.vertices))  # set a default size for each point
-        mpl_path_collection.set_color(points.color.tolist())
-        # mpl_path_collection.set_edgecolor((0, 0, 0, 1))
-        # mpl_path_collection.set_linewidth(2)
+        mpl_path_collection.set_sizes(points.sizes.tolist())  # set a default size for each point
+        mpl_path_collection.set_color(points.colors.tolist())
+        mpl_path_collection.set_edgecolor(points.edge_colors.tolist())
+        mpl_path_collection.set_linewidth(points.edge_widths.tolist())
 
         return [mpl_path_collection]

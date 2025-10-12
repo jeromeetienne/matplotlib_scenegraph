@@ -2,11 +2,11 @@
 from pyrr import vector3, matrix44
 from math import atan2
 import numpy as np
-import blinker
 from typing import Callable
 
 # local imports
 from .random import Random
+from .event import Event
 
 PRE_RENDERING_CALLBACK = Callable[['Object3D', 'CameraBase'], None]
 """Callback type for pre-rendering rendering event.
@@ -33,6 +33,13 @@ Arguments:
 
 
 class Object3D:
+    __slots__ = (
+        "uuid", "name",
+        "position", "rotation_euler", "scale",
+        "parent", "_children",
+        "_local_matrix", "_world_matrix",
+        "pre_rendering", "post_transform", "post_rendering",)
+
     def __init__(self) -> None:
         self.uuid = Random.random_uuid()
         self.name = f"a {Object3D.__name__}"
@@ -47,10 +54,10 @@ class Object3D:
         self._local_matrix = matrix44.create_identity(dtype=np.float32)
         self._world_matrix = matrix44.create_identity(dtype=np.float32)
 
-        self.pre_rendering = blinker.Signal()
+        self.pre_rendering = Event()
         """Event triggered before rendering the visual."""
 
-        self.post_transform = blinker.Signal()
+        self.post_transform = Event()
         """
         Event triggered after applying 3d transformations to the visual.
 
@@ -60,7 +67,7 @@ class Object3D:
         - transformed_positions: The numpy array of transformed positions (shape: n x 3).
         """
 
-        self.post_rendering = blinker.Signal()
+        self.post_rendering = Event()
         """Event triggered after rendering the visual."""
 
 

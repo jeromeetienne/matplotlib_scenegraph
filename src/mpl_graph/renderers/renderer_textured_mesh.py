@@ -60,7 +60,7 @@ class MatplotlibRendererTexturedMesh:
         # faces_vertices += position_world
 
         # dispatch the post_transforming event
-        textured_mesh.post_rendering.send(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
+        textured_mesh.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
 
 
         # =============================================================================

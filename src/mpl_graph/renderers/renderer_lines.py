@@ -44,7 +44,7 @@ class MatplotlibRendererLines:
         vertices = TransformUtils.apply_transform(lines.vertices, full_transform)
 
         # dispatch the post_transforming event
-        lines.post_rendering.send(renderer=renderer, camera=camera, vertices_transformed=vertices)
+        lines.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
 
 
         vertices_2d = vertices[:, :2]  # drop z for 2D rendering
