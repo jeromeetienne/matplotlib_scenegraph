@@ -41,7 +41,10 @@ def main():
     # Create a renderer
     renderer = RendererMatplotlib(100, 100)
     # Create an animation loop
-    animation_loop = AnimationLoop(renderer)
+    video_path = os.path.join(__dirname__, "sprite_animation.mp4")
+    video_duration = 10.0  # seconds
+    print(f"Animation will be saved to: {video_path}")
+    animation_loop = AnimationLoop(renderer, video_duration=video_duration, video_path=video_path)
 
     # =============================================================================
     # Load a model
