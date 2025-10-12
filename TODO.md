@@ -1,4 +1,9 @@
 - port `Geometry` everywhere in all `object3ds`
+- add more geometry shapes in `GeometryShape`
+  - box
+  - sphere
+  - plane
+  - cylinder
 - find a good API for the various materials
   - Q. do you do a Material class like in three.js ?
 - find a good API for the various materials
@@ -27,20 +32,11 @@
   - where object3d is sorted by their world position and then rendered
   - NOTE: conflict with the delta rendering from the animation loop
     - make an options to remove the delta rendering in the animation loop
-- load a textured plane
-  - for 3d oriented images
-- implement various geometry builder
-  - box YES
-  - sphere YES
-  - plane YES
-  - torus
-  - cylinder
-  - cone
-  - tube
-  - torus knot
 
 
 ## Done
+- DONE load a textured plane
+  - for 3d oriented images
 - DONE rename `RendererMatplotlib` to `Renderer`
 - DONE make the texture example work again
 - DONE move ./helpers in ./examples/common

@@ -65,16 +65,6 @@ def main():
     scene.add_child(mesh_plane)
 
     # =============================================================================
-    # Add a box with a texture
-    # =============================================================================
-
-    geometry_box = GeometryShape.box(1.0, 1.0, 1.0)
-    mesh_box = TexturedMesh(geometry_box, texture)
-    mesh_box.position[0] = +0.5
-    mesh_box.scale[:] = 0.5
-    scene.add_child(mesh_box)
-
-    # =============================================================================
     # Start the animation loop
     # =============================================================================
 

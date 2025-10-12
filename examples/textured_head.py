@@ -4,13 +4,8 @@ basic example of rendering a rotating point cloud
 
 # stdlib imports
 import os
-from typing import Sequence
-
-# pip imports
-import matplotlib.pyplot
 
 # local imports
-from common.geometry_shape import GeometryShape
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
@@ -30,16 +25,17 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
-    scene = Object3D()
-
-    camera = CameraOrthographic()
-    scene.add_child(camera)
-    camera.position[2] = 5.0
 
     # Create a renderer
     renderer = Renderer(256, 256)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
+    # Create the scene root
+    scene = Object3D()
+    # Create a camera and add it to the scene
+    camera = CameraOrthographic()
+    scene.add_child(camera)
+    camera.position[2] = 5.0
 
     # =============================================================================
     # Load a model
@@ -51,37 +47,19 @@ def main():
     # remove the alpha channel if any
     texture = texture.strip_alpha() if texture.has_alpha() else texture
 
-    # # Load a obj model
-    # obj_path = os.path.join(models_path, "head_meshio.obj")
-    # # obj_path = os.path.join(models_path, "cube_meshio.obj")
-    # faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(obj_path)
-    # assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
+    # Load a obj model
+    obj_path = os.path.join(models_path, "head_meshio.obj")
+    # obj_path = os.path.join(models_path, "cube_meshio.obj")
+    faces_indices, vertices_coords, uvs_coords, normals_coords = MeshParserObjManual.parse_obj_file(obj_path)
+    assert uvs_coords is not None, "The .obj file must contain texture coordinates (vt)"
 
-    # geometry = Geometry(vertices_coords, faces_indices, uvs_coords, normals_coords)
+    mesh_geometry = Geometry(vertices_coords, faces_indices, uvs_coords, normals_coords)
 
-    # # Create a textured mesh
-    # textured_mesh = TexturedMesh(geometry, texture)
+    # Create a textured mesh
+    mesh = TexturedMesh(mesh_geometry, texture)
 
-    # # Add the textured mesh to the scene
-    # # scene.add_child(textured_mesh)
-
-    # =============================================================================
-    #
-    # =============================================================================
-
-    geometry_plane = GeometryShape.plane(1.0, 1.0)
-    textured_mesh_plane = TexturedMesh(geometry_plane, texture)
-    textured_mesh_plane.position[1] = 2.0
-    textured_mesh_plane.scale[:] = 0.2
-    scene.add_child(textured_mesh_plane)
-
-    def animation_plane(delta_time: float, timestamp: float) -> Sequence[Object3D]:
-        # textured_mesh_plane.rotation_euler[1] = timestamp
-        textured_mesh_plane.rotation_euler[0] = timestamp
-        # textured_mesh_plane.rotation_euler[2] = timestamp
-        return [textured_mesh_plane]
-
-    animation_loop.add_callback(animation_plane)
+    # Add the textured mesh to the scene
+    scene.add_child(mesh)
 
     # =============================================================================
     # Start the animation loop
