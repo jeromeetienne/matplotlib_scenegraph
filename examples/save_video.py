@@ -6,9 +6,7 @@ basic example of rendering a rotating point cloud
 import os
 
 # pip imports
-import matplotlib.image
 import numpy as np
-
 
 # local imports
 from mpl_graph.core.object_3d import Object3D
@@ -39,10 +37,14 @@ def main():
     # Create a renderer
     renderer = RendererMatplotlib(100, 100)
     # Create an animation loop
-    animation_loop = AnimationLoop(renderer)
+    video_path = os.path.join(__dirname__, "output/sprite_animation.mp4")
+    video_duration = 10.0  # seconds
+    print(f"Animation will be saved to: {video_path}")
+    animation_loop = AnimationLoop(renderer, video_duration=video_duration, video_path=video_path)
+    # TODO how can i stop whenever the video is done
 
     # =============================================================================
-    # Load a model
+    # Add a point cloud
     # =============================================================================
 
     point_count = 10
@@ -52,30 +54,16 @@ def main():
     points.scale[:] = 0.5
     scene.add_child(points)
 
-    # =============================================================================
-    # Load a model
-    # =============================================================================
+    def points_animation(delta_time: float, elapsed_time: float) -> list[Object3D]:
+        points.position[0] = np.sin(elapsed_time * 3) * 0.5
+        points.position[1] = np.cos(elapsed_time * 3) * 0.5
 
-    # def __init__(self, faces_indices: np.ndarray, vertices_coords: np.ndarray, uvs_coords: np.ndarray, texture: np.ndarray):
+        points.scale[0] = 0.5 + 0.1 * np.cos(elapsed_time * 2.0)
+        points.scale[1] = 0.5 + 0.1 * np.sin(elapsed_time * 2.0)
 
-    # Load a texture image
-    texture_path = os.path.join(images_path, "uv-grid.png")
-    texture = Texture.from_file(texture_path)
+        return [points]
 
-    sprite = Sprite(texture)
-    # sprite.extent = np.array([0.0, 0.5, 0.0, 0.5])
-    scene.add_child(sprite)
-
-    def sprite_animation(delta_time: float, elapsed_time: float) -> list[Object3D]:
-        sprite.position[0] = np.sin(elapsed_time * 3) * 0.5
-        sprite.position[1] = np.cos(elapsed_time * 3) * 0.5
-
-        sprite.scale[0] = 0.5 + 0.1 * np.cos(elapsed_time * 2.0)
-        sprite.scale[1] = 0.5 + 0.1 * np.sin(elapsed_time * 2.0)
-
-        return [sprite]
-
-    animation_loop.add_callback(sprite_animation)
+    animation_loop.add_callback(points_animation)
 
     # =============================================================================
     # Start the animation loop
