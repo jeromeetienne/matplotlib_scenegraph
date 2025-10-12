@@ -1,5 +1,6 @@
 # stdlib imports
 import os
+from typing import Sequence
 
 # pip imports
 import numpy as np
@@ -53,7 +54,7 @@ def main():
     # Make an animation function
     # =============================================================================
 
-    def animate(delta_time: float, timestamp: float) -> list[Object3D]:
+    def animate(delta_time: float, timestamp: float) -> Sequence[Object3D]:
         point_object_1.rotation_euler[1] = timestamp * 2
         # point_object_1.position[0] = np.cos(timestamp * 2) * 0.5
 

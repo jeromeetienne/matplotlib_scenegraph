@@ -2,6 +2,9 @@
 example of using renderer events to modify point colors and sizes based on depth
 """
 
+# stdlib imports
+from typing import Sequence
+
 # pip imports
 import numpy as np
 
@@ -65,7 +68,7 @@ def main():
 
     points.post_transform.subscribe(post_transform_points)
 
-    def update_points(delta_time: float, timestamp: float) -> list[Object3D]:
+    def update_points(delta_time: float, timestamp: float) -> Sequence[Object3D]:
         points.rotation_euler[0] = timestamp
         return [points]
 

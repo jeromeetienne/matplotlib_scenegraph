@@ -1,5 +1,5 @@
 # stdlib imports
-import typing
+from typing import Callable, Sequence
 
 # pip imports
 import time
@@ -13,7 +13,7 @@ from mpl_graph.cameras.camera_base import CameraBase
 from mpl_graph.renderers.renderer import RendererMatplotlib
 
 # do a callback type for the animation loop
-AnimationLoopCallbackType = typing.Callable[[float, float], list[Object3D]]
+AnimationLoopCallbackType = Callable[[float, float], Sequence[Object3D]]
 """A simple animation loop manager for matplotlib rendering.
 
 Arguments:

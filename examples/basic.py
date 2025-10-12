@@ -4,6 +4,7 @@ basic example of rendering a rotating point cloud
 
 # stdlib imports
 import os
+from typing import Sequence
 
 # pip imports
 import numpy as np
@@ -32,7 +33,7 @@ def main():
     animation_loop = AnimationLoop(renderer)
 
     # =============================================================================
-    # Load a model
+    # Add points
     # =============================================================================
 
     point_count = 1000
@@ -42,9 +43,10 @@ def main():
     points.scale[:] = 0.5
     scene.add_child(points)
 
-    def update(delta_time: float, timestamp: float) -> list[Object3D]:
+    def update(delta_time: float, timestamp: float) -> Sequence[Object3D]:
         points.position[0] = np.cos(timestamp * 5)
-        points.position[1] = np.sin(timestamp * 1.75)
+        # points.position[1] = np.sin(timestamp * 1.75)
+
         return [points]
 
     animation_loop.add_callback(update)

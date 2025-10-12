@@ -1,5 +1,6 @@
 # stdlib imports
 import os
+from typing import Sequence
 
 # pip imports
 import numpy as np
@@ -44,7 +45,7 @@ def main():
         head_points = SceneExamples.getHeadPoints()
         scene.add_child(head_points)
 
-        def head_points_update(delta_time: float, time_stamp: float) -> list[Object3D]:
+        def head_points_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
             head_points.position[0] = np.cos(time_stamp) * 0.5
             head_points.scale[:] = np.cos(time_stamp) * 0.5 + 1.5
             return [head_points]
@@ -62,7 +63,7 @@ def main():
         lines = Lines(vertices)
         scene.add_child(lines)
 
-        def lines_update(delta_time: float, time_stamp: float) -> list[Object3D]:
+        def lines_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
             lines.vertices = np.random.uniform(-1, 1, size=(num_lines * 2, 3)).astype(np.float32)
             return [lines]
 
@@ -89,7 +90,7 @@ def main():
         polygons = Polygons(vertices, polygon_count, vertices_per_polygon)
         scene.add_child(polygons)
 
-        def polygons_update(delta_time: float, time_stamp: float) -> list[Object3D]:
+        def polygons_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
             polygons.position[0] = np.cos(time_stamp) * 0.5
             return [polygons]
 
@@ -104,7 +105,7 @@ def main():
         polygons.scale[:] = 0.5
         scene.add_child(polygons)
 
-        def polygons_update(delta_time: float, time_stamp: float) -> list[Object3D]:
+        def polygons_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
             polygons.rotation_euler[1] = time_stamp
             polygons.position[1] = np.cos(time_stamp * 3) * 1
             return [polygons]

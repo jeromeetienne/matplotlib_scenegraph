@@ -46,7 +46,7 @@ def main():
     random_points.scale[:] = 0.5
     scene.add_child(random_points)
 
-    # def update(delta_time: float, timestamp: float) -> list[Object3D]:
+    # def update(delta_time: float, timestamp: float) -> Sequence[Object3D]:
     #     random_points.position[0] = np.cos(timestamp * 5)
     #     random_points.position[1] = np.sin(timestamp * 1.75)
     #     return [random_points]

@@ -6,6 +6,7 @@ Good examples of rendering loop
 
 # pip imports
 import numpy as np
+import typing
 
 # local imports
 from mpl_graph.core.object_3d import Object3D
@@ -67,7 +68,7 @@ def main():
     suzanne_points.position[0] = -3
     suzanne_points.position[1] = -3
 
-    def update_model_root(delta_time: float, timestamp: float) -> list[Object3D]:
+    def update_model_root(delta_time: float, timestamp: float) -> typing.Sequence[Object3D]:
         range = np.sin(timestamp) * 1 + 2
         bunny_points.position[1] = np.abs(np.cos(timestamp * 5) * range)
         return [bunny_points]
