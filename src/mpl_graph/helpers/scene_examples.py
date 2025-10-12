@@ -74,10 +74,10 @@ class SceneExamples:
 
     @staticmethod
     def addRandomPoints(point_count: int = 1000) -> Points:
-        points = np.random.uniform(-1, 1, (point_count, 3))
+        vertices = np.random.uniform(-1, 1, (point_count, 3))
         colors = np.random.uniform(0, 1, (point_count, 4))
         colors[:, 3] = 1.0  # set alpha to 1
-        random_points = Points(points, color=colors)
+        random_points = Points(vertices, color=colors)
         return random_points
 
     @staticmethod

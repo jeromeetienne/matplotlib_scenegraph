@@ -29,6 +29,12 @@ class RendererMatplotlib:
         self._axis.set_ylim(-1, 1)
         self._artists: dict[str, matplotlib.artist.Artist] = {}
 
+    def get_figure(self) -> matplotlib.figure.Figure:
+        return self._figure
+
+    def get_axis(self) -> matplotlib.axes.Axes:
+        return self._axis
+
     def render(self, scene: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         # update world matrices
         scene.update_world_matrix()
@@ -52,25 +58,40 @@ class RendererMatplotlib:
     # Private functions
     # =============================================================================
     def _render_object(self, object3d: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+        changed_artists: list[matplotlib.artist.Artist] = []
+
+        # dispatch the pre_rendering event
+        object3d.pre_rendering.send(renderer=self, camera=camera)
+
+        # call the appropriate renderer based on the object type
         if isinstance(object3d, Points):
             from .renderer_points import MatplotlibRendererPoints
 
-            return MatplotlibRendererPoints.render(self, object3d, camera)
+            _changed_artists = MatplotlibRendererPoints.render(self, object3d, camera)
+            changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Lines):
             from .renderer_lines import MatplotlibRendererLines
 
-            return MatplotlibRendererLines.render(self, object3d, camera)
+            _changed_artists = MatplotlibRendererLines.render(self, object3d, camera)
+            changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Polygons):
             from .renderer_polygons import MatplotlibRendererPolygons
 
-            return MatplotlibRendererPolygons.render(self, object3d, camera)
+            _changed_artists = MatplotlibRendererPolygons.render(self, object3d, camera)
+            changed_artists.extend(_changed_artists)
         elif isinstance(object3d, TexturedMesh):
             from .renderer_textured_mesh import MatplotlibRendererTexturedMesh
 
-            return MatplotlibRendererTexturedMesh.render(self, object3d, camera)
+            _changed_artists = MatplotlibRendererTexturedMesh.render(self, object3d, camera)
+            changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Object3D):
             # base class, do nothing
-            return []
+            pass
         else:
             raise NotImplementedError(f"Rendering for {type(object3d)} not implemented yet")
-        return []
+        
+        # dispatch the post_rendering event
+        object3d.post_rendering.send(renderer=self, camera=camera)
+
+        # return the list of changed artists
+        return changed_artists

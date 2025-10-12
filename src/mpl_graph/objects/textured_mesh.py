@@ -20,6 +20,8 @@ class TexturedMesh(Object3D):
         # copy the arguments
         # TODO to change in .triangle_count  and reshape vertices to (M, 3, 3)
         # - store .vertices and .uvs as (N, 3) and (N, 2)
+
+        self.name = f"a {TexturedMesh.__name__}"
         self.faces_vertices = vertices_coords[faces_indices]
         self.faces_uvs = uvs_coords[faces_indices]
         self.texture = texture

@@ -14,10 +14,10 @@ class CameraController:
         self._mpl_connect_id = None
 
     def start(self):
-        self._mpl_connect_id = self._renderer._figure.canvas.mpl_connect('key_press_event', self._on_key)
+        self._mpl_connect_id = self._renderer.get_figure().canvas.mpl_connect('key_press_event', self._on_key)
 
     def stop(self):
-        self._renderer._figure.canvas.mpl_disconnect('key_press_event', self._mpl_connect_id)
+        self._renderer.get_figure().canvas.mpl_disconnect('key_press_event', self._mpl_connect_id)
         self._mpl_connect_id = None
 
     def _on_key(self, event):

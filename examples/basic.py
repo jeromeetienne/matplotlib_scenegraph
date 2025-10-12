@@ -11,7 +11,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import RendererMatplotlib
 from mpl_graph.helpers.animation_loop import AnimationLoop
 from mpl_graph.helpers.scene_examples import SceneExamples
-
+from mpl_graph.objects.points import Points
 
 def main():
     # =============================================================================
@@ -32,14 +32,17 @@ def main():
     # Load a model
     # =============================================================================
 
-    random_points = SceneExamples.addRandomPoints(1000)
-    random_points.scale[:] = 0.5
-    scene.add_child(random_points)
+    point_count = 1000
+    vertices = np.random.uniform(-1, 1, (point_count, 3))
+    colors = np.array([[1, 0, 0, 1] for i in range(point_count)])
+    points = Points(vertices, color=colors)
+    points.scale[:] = 0.5
+    scene.add_child(points)
 
     def update(delta_time: float, timestamp: float) -> list[Object3D]:
-        random_points.position[0] = np.cos(timestamp * 5)
-        random_points.position[1] = np.sin(timestamp * 1.75)
-        return [random_points]
+        points.position[0] = np.cos(timestamp * 5)
+        points.position[1] = np.sin(timestamp * 1.75)
+        return [points]
 
     animation_loop.add_callback(update)
 

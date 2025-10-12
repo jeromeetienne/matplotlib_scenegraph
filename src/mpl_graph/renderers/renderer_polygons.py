@@ -45,6 +45,9 @@ class MatplotlibRendererPolygons:
         vertices_transformed = TransformUtils.apply_transform(polygons.vertices, full_transform)
         faces_vertices = vertices_transformed.reshape(polygons.polygon_count, polygons.vertices_per_polygon, 3)  # [P, V, 3]
 
+        # dispatch the post_transforming event
+        polygons.post_rendering.send(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
+
         # Sort polygons by depth (painter's algorithm)
         sort_faces = False
         if sort_faces:

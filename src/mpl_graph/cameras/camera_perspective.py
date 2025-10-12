@@ -7,6 +7,7 @@ from cameras.camera_base import CameraBase
 class CameraPerspective(Object3D, CameraBase):
     def __init__(self):
         super().__init__()
+        self.name = f"a {CameraPerspective.__name__}"
         self.fovy = 50.0  # degrees
         self.aspect = 1.0  # width / height
         self.near = 0.001  # near clipping plane

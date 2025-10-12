@@ -14,5 +14,6 @@ class Points(Object3D):
 
         assert vertices.ndim == 2 and vertices.shape[1] == 3, "Vertices must be a Nx3 array"
 
+        self.name = f"a {Points.__name__}"
         self.vertices: np.ndarray = vertices
         self.color: np.ndarray = color

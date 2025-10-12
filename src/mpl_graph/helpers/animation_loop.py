@@ -53,9 +53,9 @@ class AnimationLoop:
             # print(f"  Number of changed artists: {len(changed_artists)}")
             return changed_artists
 
-        ani = matplotlib.animation.FuncAnimation(self._renderer._figure, update_scene, frames=100, interval=1000 / 60)
+        ani = matplotlib.animation.FuncAnimation(self._renderer.get_figure(), update_scene, frames=100, interval=1000 / 60)
 
-        matplotlib.pyplot.show()
+        matplotlib.pyplot.show(block=True)
 
     def stop(self):
         raise NotImplementedError()

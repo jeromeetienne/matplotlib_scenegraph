@@ -59,6 +59,10 @@ class MatplotlibRendererTexturedMesh:
         # position_world = textured_mesh.get_world_position()
         # faces_vertices += position_world
 
+        # dispatch the post_transforming event
+        textured_mesh.post_rendering.send(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
+
+
         # =============================================================================
         # Compute face normals - needed for lighting and back-face culling
         # =============================================================================

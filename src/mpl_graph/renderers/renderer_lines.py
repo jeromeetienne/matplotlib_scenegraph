@@ -43,6 +43,10 @@ class MatplotlibRendererLines:
         full_transform = TransformUtils.compute_full_transform(camera, lines)
         vertices = TransformUtils.apply_transform(lines.vertices, full_transform)
 
+        # dispatch the post_transforming event
+        lines.post_rendering.send(renderer=renderer, camera=camera, vertices_transformed=vertices)
+
+
         vertices_2d = vertices[:, :2]  # drop z for 2D rendering
 
         vertices_2d = vertices_2d.reshape((line_count, 2, 2))  # reshape to (line_count, 2 endpoints, 2 coords)

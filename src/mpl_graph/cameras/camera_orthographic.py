@@ -7,6 +7,7 @@ from ..cameras.camera_base import CameraBase
 class CameraOrthographic(Object3D, CameraBase):
     def __init__(self):
         super().__init__()
+        self.name = f"a {CameraOrthographic.__name__}"
         self.left = -1.0
         self.right = 1.0
         self.bottom = -1.0

@@ -21,6 +21,7 @@ class Polygons(Object3D):
         assert vertices_per_polygon > 2, f"vertices_per_polygon should be > 2. Got {vertices_per_polygon}"
         assert len(vertices) == polygon_count * vertices_per_polygon, f"The number of vertices must be equal to polygon_count * vertices_per_polygon"
 
+        self.name = f"a {Polygons.__name__}"
         self.polygon_count: int = polygon_count
         """number of polygons."""
         self.vertices_per_polygon: int = vertices_per_polygon

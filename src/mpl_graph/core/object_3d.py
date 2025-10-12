@@ -2,13 +2,41 @@
 from pyrr import vector3, matrix44
 from math import atan2
 import numpy as np
+import blinker
+from typing import Callable
+
+# local imports
 from .random import Random
+
+PRE_RENDERING_CALLBACK = Callable[['Object3D', 'CameraBase'], None]
+"""Callback type for pre-rendering rendering event.
+
+Arguments:
+- renderer: The renderer instance performing the rendering.
+- camera: The camera used for rendering.
+"""
+POST_TRANSFORM_CALLBACK = Callable[[np.ndarray], None]
+"""Callback type for post-transform rendering event.
+
+Arguments:
+- renderer: The renderer instance performing the rendering.
+- camera: The camera used for rendering.
+- transformed_positions: The numpy array of transformed positions (shape: n x 3).
+"""
+POST_RENDERING_CALLBACK = Callable[[], None]
+"""Callback type for post-rendering rendering event.
+
+Arguments:
+- renderer: The renderer instance performing the rendering.
+- camera: The camera used for rendering.
+"""
 
 
 class Object3D:
     def __init__(self) -> None:
         self.uuid = Random.random_uuid()
-        self.name = "an object3D"
+        self.name = f"a {Object3D.__name__}"
+
         self.position = vector3.create(0.0, 0.0, 0.0)
         self.rotation_euler = vector3.create(0.0, 0.0, 0.0)  # Euler XYZ, radians
         self.scale = vector3.create(1.0, 1.0, 1.0)
@@ -18,6 +46,23 @@ class Object3D:
 
         self._local_matrix = matrix44.create_identity(dtype=np.float32)
         self._world_matrix = matrix44.create_identity(dtype=np.float32)
+
+        self.pre_rendering = blinker.Signal()
+        """Event triggered before rendering the visual."""
+
+        self.post_transform = blinker.Signal()
+        """
+        Event triggered after applying 3d transformations to the visual.
+
+        Arguments sent to subscribers:
+        - renderer: The renderer instance performing the rendering.
+        - camera: The camera used for rendering.
+        - transformed_positions: The numpy array of transformed positions (shape: n x 3).
+        """
+
+        self.post_rendering = blinker.Signal()
+        """Event triggered after rendering the visual."""
+
 
     # =============================================================================
     # add/remove child
