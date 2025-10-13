@@ -3,7 +3,7 @@ from pyrr import vector3
 import numpy as np
 from ..core.object_3d import Object3D
 from ..core.constants import Constants
-from ..geometry.geometry import Geometry
+from ..geometry import Geometry, MeshGeometry
 
 
 class Lines(Object3D):
@@ -20,7 +20,7 @@ class Lines(Object3D):
         self.color: np.ndarray = color
 
     @staticmethod
-    def from_mesh_geometry(mesh_geometry: Geometry) -> "Lines":
+    def from_mesh_geometry(mesh_geometry: MeshGeometry) -> "Lines":
         """
         Create a Lines object from a mesh Geometry (with faces).
         Each edge of each face will become a line segment.

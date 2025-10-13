@@ -3,7 +3,7 @@ import numpy as np
 import meshio
 
 # local imports
-from mpl_graph.geometry import Geometry
+from mpl_graph.geometry import MeshGeometry
 from mpl_graph.objects.polygons import Polygons
 from mpl_graph.core.transform_utils import TransformUtils
 
@@ -18,7 +18,7 @@ class MeshUtils:
     # =============================================================================
 
     @staticmethod
-    def parse_obj_file_manual(file_path: str) -> Geometry:
+    def parse_obj_file_manual(file_path: str) -> MeshGeometry:
         """
         Parse a Wavefront .obj file and extract vertex, texture, and normal coordinates.
 
@@ -69,61 +69,10 @@ class MeshUtils:
             normals
         ), f"vertex coords count is different than normal coords count. got vertex count {len(vertices)} and normal count {len(normals)}"
 
-        geometry = Geometry(vertices, indices, uvs, normals)
+        mesh_geometry = MeshGeometry(vertices, indices, uvs, normals)
 
         # return the values
-        return geometry
-
-    # @staticmethod
-    # def parse_obj_file_manual_old(
-    #     file_path: str,
-    # ) -> tuple[np.ndarray, np.ndarray, np.ndarray | None, np.ndarray | None]:
-    #     """
-    #     Parse a Wavefront .obj file and extract vertex, texture, and normal coordinates.
-
-    #     Arguments:
-    #         file_path (str): Path to the .obj file.
-
-    #     Returns:
-    #         tuple: A tuple containing:
-    #             - vertices_coords (np.ndarray): Array of vertex coordinates. Shape (N, 3).
-    #             - faces_indices (np.ndarray): Array of face indices. Shape (M, 3).
-    #             - uvs_coords (np.ndarray | None): Array of texture coordinates (if available). Shape (N, 2) or None.
-    #             - normals_coords (np.ndarray | None): Array of normal coordinates (if available). Shape (N, 3) or None.
-    #     """
-
-    #     vertices_coords, uvs_coords, normals_coords, faces_vertex_indices, faces_uv_indices, faces_normal_indices = MeshUtils.parse_obj_plain(file_path)
-
-    #     # Now we build a Geometry out of it
-    #     # aka indices + vertices + uvs + normals, and len(vertices) == len(uvs) == len(normals))
-
-    #     # Sanity checks - a valid .obj file should have at least vertices and faces
-    #     assert len(vertices_coords) > 0, "No vertices found in the .obj file."
-    #     assert len(faces_vertex_indices) > 0, "No faces found in the .obj file."
-    #     # TODO add more checks
-
-    #     # TODO process the data to ensure len(vertices) == len(uvs) == len(normals)
-
-    #     faces_indices = faces_vertex_indices
-    #     vertices_coords = vertices_coords
-    #     uvs_coords = uvs_coords
-    #     normals_coords = normals_coords
-
-    #     # sanity checks
-    #     assert len(faces_indices) > 0, "No indices found after processing the .obj file."
-    #     assert len(vertices_coords) > 0, "No vertices found after processing the .obj file."
-    #     assert uvs_coords is None or len(vertices_coords) == len(
-    #         uvs_coords
-    #     ), f"vertex coords count is different than uv coords count. got vertex count {len(vertices_coords)} and uv count {len(uvs_coords)}"
-    #     assert normals_coords is None or len(vertices_coords) == len(
-    #         normals_coords
-    #     ), f"vertex coords count is different than normal coords count. got vertex count {len(vertices_coords)} and normal count {len(normals_coords)}"
-
-    #     # check it is always triangles
-    #     assert faces_indices.shape[1] == 3, f"Only triangular faces are supported in this parser. Got faces with {faces_indices.shape[1]} vertices."
-
-    #     # return the values
-    #     return faces_indices, vertices_coords, uvs_coords, normals_coords
+        return mesh_geometry
 
     # =============================================================================
     #

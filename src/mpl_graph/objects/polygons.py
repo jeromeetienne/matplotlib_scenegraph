@@ -1,9 +1,11 @@
+# pip imports
 from matplotlib import lines
 from pyrr import vector3
 import numpy as np
-from ..core.object_3d import Object3D
-from ..core.constants import Constants
-from ..geometry.geometry import Geometry
+
+# local imports
+from ..core import Constants, Object3D
+from ..geometry import Geometry, MeshGeometry
 
 
 class Polygons(Object3D):
@@ -35,9 +37,9 @@ class Polygons(Object3D):
         self.color: np.ndarray = color
 
     @staticmethod
-    def from_mesh_geometry(geometry: Geometry) -> "Polygons":
+    def from_mesh_geometry(geometry: MeshGeometry) -> "Polygons":
         """
-        Create a Polygons object from a mesh Geometry (with faces).
+        Create a Polygons object from a mesh MeshGeometry (with faces).
         Each face of the mesh will become a polygon.
         """
         # sanity check

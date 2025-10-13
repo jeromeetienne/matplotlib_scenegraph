@@ -66,9 +66,9 @@ class SceneExamples:
         # Load a obj model
         obj_path = os.path.join(models_path, "head_meshio.obj")
         # obj_path = os.path.join(models_path, "cube_meshio.obj")
-        geometry = MeshUtils.parse_obj_file_manual(obj_path)
-        assert geometry.uvs is not None, "The .obj file must contain texture coordinates (vt)"
+        mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
+        assert mesh_geometry.uvs is not None, "The .obj file must contain texture coordinates (vt)"
 
         # Create a textured mesh
-        textured_mesh = TexturedMesh(geometry, texture)
+        textured_mesh = TexturedMesh(mesh_geometry, texture)
         return textured_mesh

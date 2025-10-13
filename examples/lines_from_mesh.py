@@ -48,14 +48,14 @@ def main():
     file_path = os.path.join(models_path, "suzanne_meshio.obj")
 
     # parse the .obj file
-    geometry = MeshUtils.parse_obj_file_manual(file_path)
-    assert geometry.indices is not None, "The .obj file must contain face indices"
+    mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)
+    assert mesh_geometry.indices is not None, "The .obj file must contain face indices"
 
     # Normalize the vertices to fit in a unit cube
-    geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+    mesh_geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(mesh_geometry.vertices)
 
     # Build the lines object
-    lines = Lines.from_mesh_geometry(geometry)
+    lines = Lines.from_mesh_geometry(mesh_geometry)
     lines.scale[:] = 0.5
     scene.add_child(lines)
 

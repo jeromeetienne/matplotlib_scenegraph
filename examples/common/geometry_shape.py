@@ -2,12 +2,12 @@
 import numpy as np
 
 # local imports
-from mpl_graph.geometry import Geometry, GeometryUtils
+from mpl_graph.geometry import Geometry, GeometryUtils, MeshGeometry
 
 
-class GeometryShape(Geometry):
+class GeometryShape:
     @staticmethod
-    def plane(width: float = 1.0, height: float = 1.0) -> Geometry:
+    def plane(width: float = 1.0, height: float = 1.0) -> MeshGeometry:
         half_width = width / 2.0
         half_height = height / 2.0
         vertices = np.array(
@@ -40,12 +40,12 @@ class GeometryShape(Geometry):
                 [0.0, 0.0, 1.0],
             ]
         )
-        geometry = Geometry(vertices, faces_indices, uvs_coords, normals_coords)
-        geometry = GeometryUtils.expand_vertices(geometry)
-        return geometry
+        mesh_geometry = MeshGeometry(vertices, faces_indices, uvs_coords, normals_coords)
+        mesh_geometry = GeometryUtils.expand_vertices(mesh_geometry)
+        return mesh_geometry
 
     @staticmethod
-    def box(width: float = 1.0, height: float = 1.0, depth: float = 1.0) -> Geometry:
+    def box(width: float = 1.0, height: float = 1.0, depth: float = 1.0) -> MeshGeometry:
         half_w = width / 2.0
         half_h = height / 2.0
         half_d = depth / 2.0
@@ -112,13 +112,13 @@ class GeometryShape(Geometry):
         )
         normals_coords = normals_coords / np.linalg.norm(normals_coords, axis=1, keepdims=True)
 
-        geometry = Geometry(vertices, faces_indices, uvs_coords, normals_coords)
+        mesh_geometry = MeshGeometry(vertices, faces_indices, uvs_coords, normals_coords)
         # Expand the vertices
-        geometry = GeometryUtils.expand_vertices(geometry)
-        return geometry
+        mesh_geometry = GeometryUtils.expand_vertices(mesh_geometry)
+        return mesh_geometry
 
     @staticmethod
-    def grid(width: float = 1.0, depth: float = 1.0, rows: int = 10, columns: int = 10) -> Geometry:
+    def grid(width: float = 1.0, depth: float = 1.0, rows: int = 10, columns: int = 10) -> MeshGeometry:
         vertices = []
         faces_indices = []
         uvs_coords = []
@@ -150,7 +150,7 @@ class GeometryShape(Geometry):
 
         faces_indices = np.array(faces_indices).astype(np.uint32)
 
-        geometry = Geometry(vertices, faces_indices, uvs_coords, normals_coords)
+        mesh_geometry = MeshGeometry(vertices, faces_indices, uvs_coords, normals_coords)
         # Expand the vertices
-        geometry = GeometryUtils.expand_vertices(geometry)
-        return geometry
+        mesh_geometry = GeometryUtils.expand_vertices(mesh_geometry)
+        return mesh_geometry

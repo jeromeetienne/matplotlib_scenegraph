@@ -3,6 +3,7 @@ import numpy as np
 
 # local imports
 from .geometry import Geometry
+from .mesh_geometry import MeshGeometry
 
 
 class GeometryUtils:
@@ -55,21 +56,21 @@ class GeometryUtils:
         return vertices_normalized
 
     @staticmethod
-    def is_expanded(geometry: Geometry) -> bool:
+    def is_expanded(mesh_geometry: MeshGeometry) -> bool:
         # - this means that vertices, uv, normals are not shared between faces
         # - so len(vertices) == len(uvs) == len(normals) == 3 * len(faces)
-        if geometry.indices is None:
+        if mesh_geometry.indices is None:
             return False
-        if len(geometry.vertices) != 3 * len(geometry.indices):
+        if len(mesh_geometry.vertices) != 3 * len(mesh_geometry.indices):
             return False
-        if geometry.uvs is not None and len(geometry.vertices) != 3 * len(geometry.uvs):
+        if mesh_geometry.uvs is not None and len(mesh_geometry.vertices) != 3 * len(mesh_geometry.uvs):
             return False
-        if geometry.normals is not None and len(geometry.vertices) != 3 * len(geometry.normals):
+        if mesh_geometry.normals is not None and len(mesh_geometry.vertices) != 3 * len(mesh_geometry.normals):
             return False
         return True
 
     @staticmethod
-    def expand_vertices(src_geometry: Geometry) -> Geometry:
+    def expand_vertices(src_geometry: MeshGeometry) -> MeshGeometry:
 
         # sanity checks
         assert src_geometry.indices is not None, f"The geometry must have faces."
@@ -94,5 +95,5 @@ class GeometryUtils:
             normals
         ), f"vertex coords count is different than normal coords count. got vertex count {len(vertices)} and normal count {len(normals)}"
 
-        dst_geometry = Geometry(vertices, indices, uvs, normals)
+        dst_geometry = MeshGeometry(vertices, indices, uvs, normals)
         return dst_geometry
