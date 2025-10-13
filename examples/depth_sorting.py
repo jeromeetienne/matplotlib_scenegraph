@@ -17,7 +17,7 @@ from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.points import Points
 from mpl_graph.objects.lines import Lines
-from mpl_graph.core.geometry import Geometry
+from mpl_graph.geometry.geometry import Geometry
 from mpl_graph.core.constants import Constants
 from mpl_graph.objects import Polygons
 from common.geometry_shape import GeometryShape

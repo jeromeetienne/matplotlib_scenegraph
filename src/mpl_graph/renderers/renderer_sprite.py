@@ -12,6 +12,7 @@ from ..objects.sprite import Sprite
 from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
+from ..geometry.geometry_utils import GeometryUtils
 
 
 class RendererSprite:
@@ -42,8 +43,8 @@ class RendererSprite:
         vertices = np.array([sprite.position])
 
         # full_transform = sprite.get_world_matrix()
-        full_transform = TransformUtils.compute_full_transform(camera, sprite)
-        vertices = TransformUtils.apply_transform(vertices, full_transform)
+        full_transform = TransformUtils.compute_mvp_matrix(camera, sprite)
+        vertices = GeometryUtils.apply_transform(vertices, full_transform)
 
         # dispatch the post_transforming event
         sprite.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)

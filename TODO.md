@@ -1,17 +1,30 @@
 - bug in geometryShape
   - vertices are still reused . it makes `Polygons` to fail
+  - `GeometryUtils.expand_vertices(geometry)`
   - make a function to clone the vertices if needed
   - take it from the .obj loader
+- TODO should i make a `MeshGeometry` class which inherit from `Geometry` ?
+  - `GeometryShape` is only producing `MeshGeometry` it should be made obvious
+  - `Geometry` Would store only the vertices. no face, no uv, no normals
+  - `Lines` and `Points` and `Polygons` are using geometry
+  - `MeshGeometry`
+- DONE apply transform to transform mesh
+  - in `GeometryUtils.apply_transform(geometry, matrix4)`
+- do a backface culling for polygons
+  - front, back, both
+  - in `Constants`
 - publish event as staticTypeEvent
   - an minimal event system which support static type checking
+- make an object `Text`
 - do a geometry animation/morphing
   - you give it an object, and a target_geometry
   - it will interpolate the geometry vertices
+- do a "capitain blood" flying in the montain
+  - https://youtu.be/CeNKepH2ut4?t=224
 - make a histogram animated
   - add the axes with the ticks and labels
   - do a 2d figure with lines and bars
   - do a 3d figure with 3d bars
-- apply transform to transform mesh
 - remove all the ' @ ' for the matrix multiplication
   - use np.matmul or the `@` operator
 - find a good API for the various materials

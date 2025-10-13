@@ -3,7 +3,7 @@ import numpy as np
 import meshio
 
 # local imports
-from mpl_graph.core.geometry import Geometry
+from mpl_graph.geometry import Geometry
 from mpl_graph.objects.polygons import Polygons
 from mpl_graph.core.transform_utils import TransformUtils
 

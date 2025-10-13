@@ -3,20 +3,11 @@ import os
 
 # pip imports
 import numpy as np
-import matplotlib.image
 
 # local imports
-from mpl_graph.objects.lines import Lines
-from mpl_graph.objects.points import Points
-from mpl_graph.core.object_3d import Object3D
-from mpl_graph.core.constants import Constants
-from mpl_graph.core.transform_utils import TransformUtils
-from mpl_graph.objects.textured_mesh import TexturedMesh
-from mpl_graph.objects.polygons import Polygons
-from mpl_graph.core.geometry import Geometry
-from mpl_graph.core.texture import Texture
-from .geometry_shape import GeometryShape
-
+from mpl_graph.core import Constants, Texture
+from mpl_graph.geometry import Geometry, GeometryUtils
+from mpl_graph.objects import Points, TexturedMesh
 from .mesh_utils import MeshUtils
 
 
@@ -40,28 +31,28 @@ class SceneExamples:
     @staticmethod
     def getBunnyPoints() -> Points:
         geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "bunny.obj"))
-        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+        geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
         points_bunny = Points(geometry, color=Constants.Color.PURPLE)
         return points_bunny
 
     @staticmethod
     def getCubePoints() -> Points:
         geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "cube_meshio.obj"))
-        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+        geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 
     @staticmethod
     def getSuzannePoints() -> Points:
         geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "suzanne_meshio.obj"))
-        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+        geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 
     @staticmethod
     def getHeadPoints() -> Points:
         geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "head_meshio.obj"))
-        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+        geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
         points_bunny = Points(geometry, color=Constants.Color.CYAN)
         return points_bunny
 

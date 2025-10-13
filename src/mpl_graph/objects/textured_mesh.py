@@ -4,7 +4,7 @@ import numpy as np
 # local imports
 from ..core.object_3d import Object3D
 from ..core.texture import Texture
-from ..core.geometry import Geometry
+from ..geometry.geometry import Geometry
 
 
 class TexturedMesh(Object3D):

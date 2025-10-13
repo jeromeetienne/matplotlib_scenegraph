@@ -3,7 +3,7 @@ from pyrr import vector3
 import numpy as np
 from ..core.object_3d import Object3D
 from ..core.constants import Constants
-from ..core.geometry import Geometry
+from ..geometry.geometry import Geometry
 
 
 class Lines(Object3D):

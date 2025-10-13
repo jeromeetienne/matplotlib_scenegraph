@@ -11,6 +11,7 @@ from ..objects.lines import Lines
 from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
+from ..geometry.geometry_utils import GeometryUtils
 
 
 class RendererLines:
@@ -42,8 +43,8 @@ class RendererLines:
         # =============================================================================
 
         # full_transform = lines.get_world_matrix()
-        full_transform = TransformUtils.compute_full_transform(camera, lines)
-        vertices = TransformUtils.apply_transform(geometry.vertices, full_transform)
+        full_transform = TransformUtils.compute_mvp_matrix(camera, lines)
+        vertices = GeometryUtils.apply_transform(geometry.vertices, full_transform)
 
         # dispatch the post_transforming event
         lines.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)

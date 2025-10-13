@@ -12,7 +12,7 @@ from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.points import Points
-from mpl_graph.core.geometry import Geometry
+from mpl_graph.geometry.geometry import Geometry
 from common.example_utils import ExamplesUtils
 
 

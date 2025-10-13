@@ -16,6 +16,7 @@ from mpl_graph.objects.lines import Lines
 from common.example_utils import ExamplesUtils
 from common.animation_loop import AnimationLoop
 from common.mesh_utils import MeshUtils
+from mpl_graph.geometry import GeometryUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -51,7 +52,7 @@ def main():
     assert geometry.indices is not None, "The .obj file must contain face indices"
 
     # Normalize the vertices to fit in a unit cube
-    geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+    geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
 
     # Build the lines object
     lines = Lines.from_mesh_geometry(geometry)

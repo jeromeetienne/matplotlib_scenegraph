@@ -5,6 +5,8 @@ import typing
 import matplotlib.artist
 import matplotlib.collections
 
+from mpl_graph.geometry.geometry_utils import GeometryUtils
+
 # local imports
 from ..objects.points import Points
 from ..renderers.renderer import Renderer
@@ -38,11 +40,11 @@ class RendererPoints:
         # =============================================================================
 
         # full_transform = points.get_world_matrix()
-        full_transform = TransformUtils.compute_full_transform(camera, points)
-        vertices_transformed = TransformUtils.apply_transform(geometry.vertices, full_transform)
+        full_transform = TransformUtils.compute_mvp_matrix(camera, points)
+        vertices_transformed = GeometryUtils.apply_transform(geometry.vertices, full_transform)
 
         # dispatch the post_transforming event
-        points.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
+        points.post_transform.dispatch(vertices_transformed)
 
         vertices_2d = vertices_transformed[:, :2]  # drop z for 2D rendering
 

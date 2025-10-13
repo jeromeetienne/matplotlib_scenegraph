@@ -2,7 +2,7 @@
 import numpy as np
 
 # local imports
-from mpl_graph.core.geometry import Geometry
+from mpl_graph.geometry.geometry import Geometry
 
 
 class GeometryShape(Geometry):

@@ -16,7 +16,7 @@ from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
 from mpl_graph.objects.points import Points
-from mpl_graph.core.geometry import Geometry
+from mpl_graph.geometry.geometry import Geometry
 from mpl_graph.cameras.camera_base import CameraBase
 
 

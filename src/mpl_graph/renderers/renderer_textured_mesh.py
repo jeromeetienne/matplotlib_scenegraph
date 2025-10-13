@@ -16,6 +16,7 @@ from ..objects.textured_mesh import TexturedMesh
 from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
+from ..geometry.geometry_utils import GeometryUtils
 
 
 class RendererTexturedMesh:
@@ -30,7 +31,7 @@ class RendererTexturedMesh:
         # Get the full transform matrix for the mesh
         transform_matrix = mesh.get_world_matrix()
         # transform_matrix = TransformUtils.compute_full_transform(camera, mesh)
-        vertices_transformed = TransformUtils.apply_transform(geometry.vertices, transform_matrix)
+        vertices_transformed = GeometryUtils.apply_transform(geometry.vertices, transform_matrix)
 
         # build the faces vertices and uvs arrays
         faces_vertices = vertices_transformed[geometry.indices]

@@ -13,6 +13,7 @@ from ..objects.polygons import Polygons
 from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
+from ..geometry.geometry_utils import GeometryUtils
 
 
 class RendererPolygons:
@@ -40,9 +41,8 @@ class RendererPolygons:
         # =============================================================================
 
         # full_transform = polygons.get_world_matrix()
-        full_transform = TransformUtils.compute_full_transform(camera, polygons)
-
-        vertices_transformed = TransformUtils.apply_transform(geometry.vertices, full_transform)
+        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, polygons)
+        vertices_transformed = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
         faces_vertices = vertices_transformed.reshape(polygons.polygon_count, polygons.vertices_per_polygon, 3)  # [P, V, 3]
 
         # dispatch the post_transforming event

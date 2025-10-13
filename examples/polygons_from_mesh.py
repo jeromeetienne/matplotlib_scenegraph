@@ -13,7 +13,8 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects import Polygons
-from mpl_graph.core import Geometry, TransformUtils
+from mpl_graph.core import TransformUtils
+from mpl_graph.geometry import Geometry, GeometryUtils
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
 from common.mesh_utils import MeshUtils
@@ -51,7 +52,7 @@ def main():
     geometry = MeshUtils.parse_obj_file_manual(file_path)
 
     # Normalize the vertices to fit in a unit cube
-    geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+    geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
 
     # Create a polygons object
     polygons = Polygons.from_mesh_geometry(geometry)

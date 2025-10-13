@@ -4,7 +4,7 @@ import numpy as np
 # local imports
 from ..core.object_3d import Object3D
 from ..core.constants import Constants
-from ..core.geometry import Geometry
+from ..geometry.geometry import Geometry
 
 
 class Points(Object3D):

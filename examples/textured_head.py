@@ -11,7 +11,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.textured_mesh import TexturedMesh
 from mpl_graph.core.texture import Texture
-from mpl_graph.core.geometry import Geometry
+from mpl_graph.geometry.geometry import Geometry
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
