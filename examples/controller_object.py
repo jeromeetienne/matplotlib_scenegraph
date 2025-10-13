@@ -1,75 +1,65 @@
+"""
+basic example of a camera controller using AWDS keys
+"""
+
 # stdlib imports
 import os
 from typing import Sequence
-import time
 
 # pip imports
 import numpy as np
 
-
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
+from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects.polygons import Polygons
-from mpl_graph.core.geometry import Geometry
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
-from common.mesh_utils import MeshUtils
+from common.camera_controller_awds import ObjectControllerWasd
 from common.example_utils import ExamplesUtils
-
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 assets_path = os.path.join(__dirname__, "../assets")
 models_path = os.path.join(assets_path, "models")
+images_path = os.path.join(assets_path, "images")
 
 
 def main():
+    print(f"Controls the object with AWDS keys")
     # =============================================================================
     # Setup the scene
     # =============================================================================
     scene = Object3D()
 
-    camera = CameraOrthographic()
+    camera = CameraPerspective()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = Renderer(100, 100)
+    renderer = Renderer(512, 512)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
     # =============================================================================
-    # Add objects
+    # Add random points
     # =============================================================================
 
-    # Create a list of polygons, each polygon is a list of (x,y) points
-    # Add a z=0 to each (x, y) point to make (x, y, z)
-    vertices = (
-        np.array(
-            [
-                [(1, 1, 0), (2, 1, 0), (2, 2, 0), (1, 2, 0)],
-                [(3, 1, 0), (4, 1, 0), (4, 2, 0), (3, 2, 0)],
-                [(1, 3, 0), (2, 3, 0), (2, 4, 0), (1, 4, 0)],
-            ],
-            dtype=np.float32,
-        )
-        / 5
-    )
+    random_points = SceneExamples.addRandomPoints(1000)
+    random_points.scale[:] = 0.5
+    scene.add_child(random_points)
 
-    polygon_count = vertices.shape[0]
-    vertices_per_polygon = vertices.shape[1]
-    vertices = vertices.reshape(polygon_count * vertices_per_polygon, 3)
-    geometry = Geometry(vertices=vertices)
-    quad_polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
-    scene.add_child(quad_polygons)
+    # =============================================================================
+    # Add a controller on random_points
+    # =============================================================================
+    object_controller = ObjectControllerWasd(renderer, random_points)
+    object_controller.start()
 
-    def quad_polygons_update(delta_time: float) -> Sequence[Object3D]:
-        present = time.time()
-        quad_polygons.position[0] = np.cos(present) * 0.5
-        return [quad_polygons]
+    def update_controller(delta_time: float) -> Sequence[Object3D]:
+        object_controller.update(delta_time)
+        return [random_points]
 
-    animation_loop.add_callback(quad_polygons_update)
+    animation_loop.add_callback(update_controller)
 
     # =============================================================================
     # Start the animation loop

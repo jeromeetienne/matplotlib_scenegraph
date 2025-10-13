@@ -5,6 +5,7 @@ Good examples of rendering loop
 """
 
 # pip imports
+import time
 import numpy as np
 import typing
 
@@ -69,9 +70,10 @@ def main():
     suzanne_points.position[0] = -3
     suzanne_points.position[1] = -3
 
-    def update_model_root(delta_time: float, timestamp: float) -> typing.Sequence[Object3D]:
-        range = np.sin(timestamp) * 1 + 2
-        bunny_points.position[1] = np.abs(np.cos(timestamp * 5) * range)
+    def update_model_root(delta_time: float) -> typing.Sequence[Object3D]:
+        present = time.time()
+        range = np.sin(present) * 1 + 2
+        bunny_points.position[1] = np.abs(np.cos(present * 5) * range)
         return [bunny_points]
 
     animation_loop.add_callback(update_model_root)

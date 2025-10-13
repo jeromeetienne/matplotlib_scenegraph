@@ -18,14 +18,14 @@ from ..core.object_3d import Object3D
 class TransformUtils:
     @staticmethod
     def compute_full_transform(camera: CameraBase, object3d: Object3D) -> np.ndarray:
-        camera_position = camera.get_world_position()
-        camera_target = np.array([0.0, 0.0, 0.0], dtype=np.float32)
-        camera_up = np.array([0.0, -1.0, 0.0], dtype=np.float32)
-        camera_matrix = matrix44.create_look_at(eye=camera_position, target=camera_target, up=camera_up)
+        # # Custom camera matrix (look at) - put it in Object3D
+        # camera_position = camera.get_world_position()
+        # camera_target = np.array([0.0, 0.0, 0.0], dtype=np.float32)
+        # camera_up = np.array([0.0, -1.0, 0.0], dtype=np.float32)
+        # camera_matrix = matrix44.create_look_at(eye=camera_position, target=camera_target, up=camera_up)
+        # view_matrix = matrix44.inverse(camera_matrix)
 
-        # View matrix is inverse of camera world matrix
-        view_matrix = matrix44.inverse(camera_matrix)
-        # view_matrix = camera.get_view_matrix()
+        view_matrix = camera.get_view_matrix()
         model_matrix = object3d.get_world_matrix()
         projection_matrix = camera.get_projection_matrix()
 

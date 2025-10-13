@@ -14,12 +14,11 @@ from mpl_graph.cameras.camera_base import CameraBase
 from mpl_graph.renderers.renderer import Renderer
 
 # do a callback type for the animation loop
-AnimationLoopCallbackType = Callable[[float, float], Sequence[Object3D]]
+AnimationLoopCallbackType = Callable[[float], Sequence[Object3D]]
 """A simple animation loop manager for matplotlib rendering.
 
 Arguments:
     delta_time (float): Time elapsed since the last frame in milliseconds.
-    timestamp (float): Total time elapsed since the start of the animation in milliseconds.
 """
 
 
@@ -56,12 +55,14 @@ class AnimationLoop:
             return
 
         # define a animation function for matplotlib
-        def update_scene(frame) -> list[matplotlib.artist.Artist]:
+        def mpl_update_scene(frame) -> list[matplotlib.artist.Artist]:
+            # TODO put this function non local, self._mpl_update_scene
             nonlocal time_last, time_start
             present = time.time()
             timestamp = present - time_start
-            delta_time = timestamp - time_last
+            delta_time = present - time_last
             time_last = present
+            # print(f"AnimationLoop.mpl_update_scene: frame={frame}, timestamp={timestamp}, delta_time={delta_time}")
 
             changed_objects: list[Object3D] = []
             for callback in self._callbacks:
@@ -80,7 +81,7 @@ class AnimationLoop:
             return changed_artists
 
         funcAnimation = matplotlib.animation.FuncAnimation(
-            self._renderer.get_figure(), update_scene, frames=int(self._video_duration * self._fps), interval=1000 / self._fps
+            self._renderer.get_figure(), mpl_update_scene, frames=int(self._video_duration * self._fps), interval=1000 / self._fps
         )
         if self._video_path is not None:
             funcAnimation.save(self._video_path, dpi=200, fps=self._fps)

@@ -5,6 +5,7 @@ basic example of rendering a rotating point cloud
 # stdlib imports
 import os
 from typing import Sequence
+import time
 
 # pip imports
 import numpy as np
@@ -66,12 +67,14 @@ def main():
     # sprite.extent = np.array([0.0, 0.5, 0.0, 0.5])
     scene.add_child(sprite)
 
-    def sprite_animation(delta_time: float, timestamp: float) -> Sequence[Object3D]:
-        sprite.position[0] = np.sin(timestamp * 3) * 0.5
-        sprite.position[1] = np.cos(timestamp * 3) * 0.5
+    def sprite_animation(delta_time: float) -> Sequence[Object3D]:
+        present = time.time()
 
-        sprite.scale[0] = 0.5 + 0.1 * np.cos(timestamp * 2.0)
-        sprite.scale[1] = 0.5 + 0.1 * np.sin(timestamp * 2.0)
+        sprite.position[0] = np.sin(present * 3) * 0.5
+        sprite.position[1] = np.cos(present * 3) * 0.5
+
+        sprite.scale[0] = 0.5 + 0.1 * np.cos(present * 2.0)
+        sprite.scale[1] = 0.5 + 0.1 * np.sin(present * 2.0)
 
         return [sprite]
 

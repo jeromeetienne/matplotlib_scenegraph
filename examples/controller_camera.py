@@ -2,23 +2,37 @@
 basic example of a camera controller using AWDS keys
 """
 
+# stdlib imports
+import os
+from typing import Sequence
+
+# pip imports
+import numpy as np
+
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
+from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
-from common.camera_controller_awds import CameraController
+from common.camera_controller_awds import ObjectControllerWasd
 from common.example_utils import ExamplesUtils
+
+__dirname__ = os.path.dirname(os.path.abspath(__file__))
+assets_path = os.path.join(__dirname__, "../assets")
+models_path = os.path.join(assets_path, "models")
+images_path = os.path.join(assets_path, "images")
 
 
 def main():
+    print(f"Controls the camera with AWDS keys")
     # =============================================================================
     # Setup the scene
     # =============================================================================
     scene = Object3D()
 
-    camera = CameraOrthographic()
+    camera = CameraPerspective()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
@@ -27,9 +41,21 @@ def main():
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
-    # Add a camera controller
-    camera_controller = CameraController(renderer, scene, camera)
-    camera_controller.start()
+    # =============================================================================
+    # Add a controller on camera
+    # =============================================================================
+    object_controller = ObjectControllerWasd(renderer, camera)
+    object_controller.start()
+
+    # update the camera on each frame
+    def update_camera(delta_time: float) -> Sequence[Object3D]:
+        has_moved = object_controller.update(delta_time)
+
+        # we need to rerender the whole scene if the camera moved
+        changed_objects = scene.traverse() if has_moved else []
+        return changed_objects
+
+    animation_loop.add_callback(update_camera)
 
     # =============================================================================
     # Load a model
@@ -38,13 +64,6 @@ def main():
     random_points = SceneExamples.addRandomPoints(1000)
     random_points.scale[:] = 0.5
     scene.add_child(random_points)
-
-    # def update(delta_time: float, timestamp: float) -> Sequence[Object3D]:
-    #     random_points.position[0] = np.cos(timestamp * 5)
-    #     random_points.position[1] = np.sin(timestamp * 1.75)
-    #     return [random_points]
-
-    # animation_loop.add_callback(update)
 
     # =============================================================================
     # Start the animation loop

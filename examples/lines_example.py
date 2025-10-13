@@ -1,21 +1,18 @@
 # stdlib imports
 import os
 from typing import Sequence
+import time
 
 # pip imports
 import numpy as np
-
 
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.lines import Lines
-from mpl_graph.objects.polygons import Polygons
 from mpl_graph.core.geometry import Geometry
-from common.scene_examples import SceneExamples
 from common.animation_loop import AnimationLoop
-from common.mesh_utils import MeshUtils
 from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -49,7 +46,7 @@ def main():
         lines = Lines(geometry)
         scene.add_child(lines)
 
-        def lines_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
+        def lines_update(delta_time: float) -> Sequence[Object3D]:
             lines.geometry.vertices = np.random.uniform(-1, 1, size=(num_lines * 2, 3)).astype(np.float32)
             return [lines]
 

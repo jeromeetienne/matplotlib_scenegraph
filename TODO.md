@@ -1,13 +1,24 @@
-- remove renderer into matplotlib render
-  - implement a json renderer to export/import scenegraph in json
+- animation loop decorator..
+  - to avoid the weird `animation_loop.add_callback(lines_update)` all the time
+- animation loop remove the timestamp absolute
+  - it look weird, cant find a good name
+- DONE camera controller for awsd - advice for smoothness
+  - must have a function in animation loop, else you do repeat from keyboard
+  - you get a angular speed in seconds, position speed in seconds.
+  - you read keyboard and maintain a {lateral: [-1,0,+1], vertical: [-1,0,+1], depth: [-1,0,+1], rotation_y: [-1,0,+1]}
+  - in animation function, you use this and the world_matrix to update the camera 
 - move the .lines_from_obj in Lines class method
   - `Lines.from_geometry(geometry)``
   - same for points
+- transform fixed ? it seems so
+  - clean it
+- apply transform to transform mesh
 - add more geometry shapes in `GeometryShape`
   - box
   - sphere
   - plane
   - cylinder
+  - grid - very useful for reference
 - animation loop decorator..
   - to avoid the weird `animation_loop.add_callback(lines_update)` all the time
 - find a good API for the various materials
@@ -26,6 +37,8 @@
 - do you handle point light, directional light
 - issue in object3d transform
   - just to a rotation around Z and it fails
+- remove renderer into matplotlib render
+  - implement a json renderer to export/import scenegraph in json ?
 - bug in transform
   - how to fix it ? divide and conquer
   - find a test and ask AI to fix it

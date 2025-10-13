@@ -1,6 +1,7 @@
 # stdlib imports
 import os
 from typing import Sequence
+import time
 
 # pip imports
 import numpy as np
@@ -50,9 +51,10 @@ def main():
         polygons.scale[:] = 0.5
         scene.add_child(polygons)
 
-        def polygons_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
-            polygons.rotation_euler[1] = time_stamp
-            polygons.position[1] = np.cos(time_stamp * 3) * 1
+        def polygons_update(delta_time: float) -> Sequence[Object3D]:
+            present = time.time()
+            polygons.rotation_euler[1] = present
+            polygons.position[1] = np.cos(present * 3) * 1
             return [polygons]
 
         animation_loop.add_callback(polygons_update)

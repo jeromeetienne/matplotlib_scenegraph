@@ -1,5 +1,6 @@
 # stdlib imports
 import os
+from time import time
 from typing import Sequence
 
 # pip imports
@@ -63,18 +64,19 @@ def main():
     # Make an animation function
     # =============================================================================
 
-    def animate(delta_time: float, timestamp: float) -> Sequence[Object3D]:
-        # point_object_1.rotation_euler[2] = timestamp * 2
-        point_object_1.position[2] = np.cos(timestamp * 10) * 4
+    def animate(delta_time: float) -> Sequence[Object3D]:
+        present = time.time()
+        # point_object_1.rotation_euler[2] = present * 2
+        point_object_1.position[2] = np.cos(present * 10) * 4
         point_object_1.scale[:] = 1.5
 
-        # point_object_2.position[0] = np.cos(timestamp) * 0.5
-        # point_object_2.position[1] = np.sin(timestamp) * 0.5
-        # point_object_2.rotation_euler[2] = timestamp * 5
+        # point_object_2.position[0] = np.cos(present) * 0.5
+        # point_object_2.position[1] = np.sin(present) * 0.5
+        # point_object_2.rotation_euler[2] = present * 5
         point_object_2.scale[:] = 0.5
 
-        # point_object_3.position[1] = np.cos(timestamp * 2) * 0.2 + 0.2
-        # point_object_2.rotation_euler[1] = timestamp * 5
+        # point_object_3.position[1] = np.cos(present * 2) * 0.2 + 0.2
+        # point_object_2.rotation_euler[1] = present * 5
 
         return [point_object_1, point_object_2, point_object_3]
 
@@ -90,7 +92,8 @@ def main():
     scene.add_child(lines)
 
     # @animation_loop.decorator
-    def lines_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
+    def lines_update(delta_time: float) -> Sequence[Object3D]:
+        time_stamp = time.time()
         lines.rotation_euler[1] = time_stamp
         lines.position[2] = np.cos(time_stamp * 3) * 1
         return [lines]
