@@ -31,9 +31,19 @@ class ExamplesUtils:
     @staticmethod
     def postamble():
         """
-        If in testing mode, save the current matplotlib.pyplot figure to the output directory
-        and return True to indicate that the calling script should exit.
-        Otherwise, return False to indicate that the calling script should continue.
+        If in testing mode, save the current matplotlib.pyplot figure to the output directory.
+        else do nothing.
+
+        Returns:
+        - should_exit (bool): True if the calling script should exit after saving the image,
+          False otherwise.
+
+        Usage:
+        ```python
+        should_exit = ExamplesUtils.postamble()
+        if should_exit:
+            sys.exit(0)
+        ```
         """
         should_exit = False
 

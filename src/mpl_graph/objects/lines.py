@@ -16,3 +16,39 @@ class Lines(Object3D):
         self.name = f"a {Lines.__name__}"
         self.geometry: Geometry = geometry
         self.color: np.ndarray = color
+
+    @staticmethod
+    def from_mesh_geometry(geometry: Geometry) -> "Lines":
+        """
+        Create a Lines object from a mesh Geometry (with faces).
+        Each edge of each face will become a line segment.
+        """
+        # sanity check
+        assert geometry.indices is not None, "The mesh geometry MUST contain face indices"
+
+        # Get info from the geometry
+        face_count = geometry.indices.shape[0]
+        vertices_per_face = geometry.indices.shape[1]
+        vertices_per_line = 2
+
+        # Each face has vertices_per_face edges, each edge has 2 vertices
+        line_vertices = np.zeros((face_count * vertices_per_face * vertices_per_line, 3)).astype(np.float32)
+
+        # Create line vertices from the mesh faces
+        for face_index in range(face_count):
+            for vertex_index in range(vertices_per_face):
+
+                indice_start = geometry.indices[face_index, vertex_index]
+                indice_end = geometry.indices[face_index, (vertex_index + 1) % vertices_per_face]
+
+                vertex_start = geometry.vertices[indice_start]
+                vertex_end = geometry.vertices[indice_end]
+
+                line_vertices[(face_index * vertices_per_face + vertex_index) * 2] = vertex_start
+                line_vertices[(face_index * vertices_per_face + vertex_index) * 2 + 1] = vertex_end
+
+        # Build the lines object
+        geometry_lines = Geometry(line_vertices)
+        lines = Lines(geometry_lines)
+
+        return lines

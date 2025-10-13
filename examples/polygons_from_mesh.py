@@ -13,6 +13,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.polygons import Polygons
 from mpl_graph.core.geometry import Geometry
+from mpl_graph.core.transform_utils import TransformUtils
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
 from common.mesh_utils import MeshUtils
@@ -42,22 +43,27 @@ def main():
     # Add objects
     # =============================================================================
 
-    if True:
-        # Load a model from an .obj file
-        file_path = os.path.join(models_path, "cube_meshio.obj")
-        # file_path = os.path.join(models_path, "suzanne_meshio.obj")
+    # Load a model from an .obj file
+    file_path = os.path.join(models_path, "cube_meshio.obj")
+    # file_path = os.path.join(models_path, "suzanne_meshio.obj")
 
-        polygons = SceneExamples.polygons_from_obj(file_path)
-        polygons.scale[:] = 0.5
-        scene.add_child(polygons)
+    # parse the .obj file
+    geometry = MeshUtils.parse_obj_file_manual(file_path)
 
-        def polygons_update(delta_time: float) -> Sequence[Object3D]:
-            present = time.time()
-            polygons.rotation_euler[1] = present
-            polygons.position[1] = np.cos(present * 3) * 1
-            return [polygons]
+    # Normalize the vertices to fit in a unit cube
+    geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
 
-        animation_loop.add_callback(polygons_update)
+    # Create a polygons object
+    polygons = Polygons.from_mesh_geometry(geometry)
+    polygons.scale[:] = 0.5
+    scene.add_child(polygons)
+
+    @animation_loop.decorator
+    def polygons_update(delta_time: float) -> Sequence[Object3D]:
+        present = time.time()
+        polygons.rotation_euler[1] = present
+        polygons.position[1] = np.cos(present * 3) * 1
+        return [polygons]
 
     # =============================================================================
     # Start the animation loop

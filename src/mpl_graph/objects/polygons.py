@@ -33,3 +33,18 @@ class Polygons(Object3D):
         """Geometry object containing the vertices."""
 
         self.color: np.ndarray = color
+
+    @staticmethod
+    def from_mesh_geometry(geometry: Geometry) -> "Polygons":
+        """
+        Create a Polygons object from a mesh Geometry (with faces).
+        Each face of the mesh will become a polygon.
+        """
+        # sanity check
+        assert geometry.indices is not None, "The mesh geometry MUST contain face indices"
+        # Create a polygons object
+        polygon_count = geometry.indices.shape[0]
+        vertices_per_polygon = geometry.indices.shape[1]
+        polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
+
+        return polygons

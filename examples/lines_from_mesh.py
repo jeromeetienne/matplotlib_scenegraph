@@ -11,13 +11,11 @@ import numpy as np
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
-from common.animation_loop import AnimationLoop
+from mpl_graph.core.transform_utils import TransformUtils
 from mpl_graph.objects.lines import Lines
-from common.scene_examples import SceneExamples
-from mpl_graph.objects.polygons import Polygons
-from common.mesh_utils import MeshUtils
-from mpl_graph.core.geometry import Geometry
 from common.example_utils import ExamplesUtils
+from common.animation_loop import AnimationLoop
+from common.mesh_utils import MeshUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -48,7 +46,15 @@ def main():
     # file_path = os.path.join(models_path, "cube_meshio.obj")
     file_path = os.path.join(models_path, "suzanne_meshio.obj")
 
-    lines = SceneExamples.lines_from_obj(file_path)
+    # parse the .obj file
+    geometry = MeshUtils.parse_obj_file_manual(file_path)
+    assert geometry.indices is not None, "The .obj file must contain face indices"
+
+    # Normalize the vertices to fit in a unit cube
+    geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+
+    # Build the lines object
+    lines = Lines.from_mesh_geometry(geometry)
     lines.scale[:] = 0.5
     scene.add_child(lines)
 

@@ -3,6 +3,7 @@ from pyrr import vector3, matrix44
 from math import atan2
 import numpy as np
 from typing import Callable
+import math
 
 # local imports
 from .random import Random
@@ -107,7 +108,10 @@ class Object3D:
     # =============================================================================
     def update_local_matrix(self) -> None:
         scale_m = matrix44.create_from_scale(self.scale, dtype=np.float32)
-        new_rotation_euler = np.array([self.rotation_euler[0], self.rotation_euler[2], self.rotation_euler[1]], dtype=np.float32)
+        # REQUIRED: % (math.pi*2) is needed because matrix44.create_from_eulers() doesnt handle angles > 2pi correctly... OOPSSAAA
+        new_rotation_euler = np.array(
+            [self.rotation_euler[0] % (math.pi * 2), self.rotation_euler[2] % (math.pi * 2), self.rotation_euler[1] % (math.pi * 2)], dtype=np.float32
+        )
         rot_m = matrix44.create_from_eulers(new_rotation_euler, dtype=np.float32)
         trans_m = matrix44.create_from_translation(self.position, dtype=np.float32)
 

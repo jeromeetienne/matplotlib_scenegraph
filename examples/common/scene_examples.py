@@ -28,64 +28,40 @@ images_path = os.path.join(data_path, "images")
 
 class SceneExamples:
 
-    @staticmethod
-    def polygons_from_obj(file_path: str) -> Polygons:
-        # TODO receive a geometry as argument instead of a file path
-        # Put it in Polygons.from_geometry(geometry)
+    # @staticmethod
+    # def polygons_from_obj(file_path: str) -> Polygons:
+    #     # TODO receive a geometry as argument instead of a file path
+    #     # Put it in Polygons.from_geometry(geometry)
 
-        # parse the .obj file
-        geometry = MeshUtils.parse_obj_file_manual(file_path)
-        assert geometry.indices is not None, "The .obj file must contain face indices"
+    #     # parse the .obj file
+    #     geometry = MeshUtils.parse_obj_file_manual(file_path)
+    #     assert geometry.indices is not None, "The .obj file must contain face indices"
 
-        # Normalize the vertices to fit in a unit cube
-        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+    #     # Normalize the vertices to fit in a unit cube
+    #     geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
 
-        # Create a polygons object
-        polygon_count = geometry.indices.shape[0]
-        vertices_per_polygon = geometry.indices.shape[1]
-        polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
+    #     # Create a polygons object
+    #     polygon_count = geometry.indices.shape[0]
+    #     vertices_per_polygon = geometry.indices.shape[1]
+    #     polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
 
-        # return the polygons
-        return polygons
+    #     # return the polygons
+    #     return polygons
 
-    @staticmethod
-    def lines_from_obj(file_path: str) -> Lines:
-        # TODO receive a geometry as argument instead of a file path
-        # Lines.from_geometry(geometry)
+    # @staticmethod
+    # def lines_from_obj(file_path: str) -> Lines:
+    #     # parse the .obj file
+    #     geometry = MeshUtils.parse_obj_file_manual(file_path)
+    #     assert geometry.indices is not None, "The .obj file must contain face indices"
 
-        # parse the .obj file
-        geometry = MeshUtils.parse_obj_file_manual(file_path)
-        assert geometry.indices is not None, "The .obj file must contain face indices"
+    #     # Normalize the vertices to fit in a unit cube
+    #     geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
 
-        # Normalize the vertices to fit in a unit cube
-        geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+    #     # Build the lines object
+    #     lines = Lines.from_mesh_geometry(geometry)
 
-        # Get info from the geometry
-        face_count = geometry.indices.shape[0]
-        vertices_per_face = geometry.indices.shape[1]
-        vertices_per_line = 2
-
-        # Each face has vertices_per_face edges, each edge has 2 vertices
-        line_vertices = np.zeros((face_count * vertices_per_face * vertices_per_line, 3)).astype(np.float32)
-
-        # Create line vertices from the mesh faces
-        for face_index in range(face_count):
-            for vertex_index in range(vertices_per_face):
-
-                indice_start = geometry.indices[face_index, vertex_index]
-                indice_end = geometry.indices[face_index, (vertex_index + 1) % vertices_per_face]
-
-                vertex_start = geometry.vertices[indice_start]
-                vertex_end = geometry.vertices[indice_end]
-
-                line_vertices[(face_index * vertices_per_face + vertex_index) * 2] = vertex_start
-                line_vertices[(face_index * vertices_per_face + vertex_index) * 2 + 1] = vertex_end
-
-        # Build the lines object
-        geometry_lines = Geometry(line_vertices)
-        lines = Lines(geometry_lines)
-        # Return the lines
-        return lines
+    #     # Return the lines
+    #     return lines
 
     @staticmethod
     def addRandomPoints(point_count: int = 1000) -> Points:
