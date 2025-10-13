@@ -1,6 +1,3 @@
-- move the .lines_from_obj in Lines class method
-  - `Lines.from_mesh_geometry(geometry)`
-  - same for points
 - transform fixed ? it seems so
   - clean it
 - apply transform to transform mesh
@@ -41,6 +38,9 @@
 
 
 ## Done
+- DONE move the .lines_from_obj in Lines class method
+  - `Lines.from_mesh_geometry(geometry)`
+  - same for points
 - DONE issue in object3d transform
   - just to a rotation around Z and it fails
 - DONE animation loop decorator..
