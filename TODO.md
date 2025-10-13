@@ -7,6 +7,10 @@
 - do a backface culling for polygons
   - front, back, both
   - in `Constants`
+- there is a depth sorting inside the object3d sometime
+  - and sometime there is a depth sorting at the face level
+  - how can they interact ?
+  - zorder = distance from the camera... period
 - publish event as staticTypeEvent
   - an minimal event system which support static type checking
 - make an object `Text`

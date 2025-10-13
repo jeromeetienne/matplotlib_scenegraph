@@ -17,7 +17,7 @@ from ..cameras.camera_base import CameraBase
 class Renderer:
     __slot__ = "depth_sorting"
 
-    def __init__(self, figure_w: int = 100, figure_h: int = 100, dpi: int = 100, /, depth_sorting: bool = True) -> None:
+    def __init__(self, figure_w: int = 100, figure_h: int = 100, dpi: int = 100, /, depth_sorting: bool = False) -> None:
         # Create a figure of 512x512 pixels
         self._figure = matplotlib.pyplot.figure(figsize=(figure_w / dpi, figure_h / dpi), dpi=dpi)
 
@@ -64,7 +64,6 @@ class Renderer:
     # Private functions
     # =============================================================================
     def _render_object(self, object3d: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
-        changed_artists: list[matplotlib.artist.Artist] = []
 
         # =============================================================================
         # Dispatch pre_rendering Event
@@ -76,6 +75,7 @@ class Renderer:
         # =============================================================================
         # Render the object based on its type
         # =============================================================================
+        changed_artists: list[matplotlib.artist.Artist] = []
 
         # call the appropriate renderer based on the object type
         if isinstance(object3d, Points):
@@ -120,9 +120,11 @@ class Renderer:
             object_position = object3d.get_world_position()
             euclidian_distance = ((camera_position - object_position) ** 2).sum() ** 0.5
             # set zorder based on distance (larger distance -> smaller zorder)
-            zorder = -euclidian_distance
+            object_zorder = -euclidian_distance
             for artist in changed_artists:
-                artist.set_zorder(zorder)
+                # TODO make the per artist zorder to work with the per object3d zorder
+                # - both are additive... should be doable
+                artist.set_zorder(object_zorder)
 
         # =============================================================================
         # Dispatch post_rendering Event

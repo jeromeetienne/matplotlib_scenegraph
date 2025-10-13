@@ -2,6 +2,7 @@
 from matplotlib import lines
 from pyrr import vector3
 import numpy as np
+import typing
 
 # local imports
 from ..core import Constants, Object3D
@@ -9,9 +10,17 @@ from ..geometry import Geometry, MeshGeometry
 
 
 class Polygons(Object3D):
-    __slots__ = ("polygon_count", "vertices_per_polygon", "geometry", "color")
+    __slots__ = ("polygon_count", "vertices_per_polygon", "geometry", "color", "face_sorting", "face_culling")
 
-    def __init__(self, geometry: Geometry, polygon_count: int, vertices_per_polygon: int, color: np.ndarray = Constants.Color.GRAY) -> None:
+    def __init__(
+        self,
+        geometry: Geometry,
+        polygon_count: int,
+        vertices_per_polygon: int,
+        color: np.ndarray = Constants.Color.GRAY,
+        face_sorting: bool = False,
+        face_culling: Constants.FaceCulling = Constants.FaceCulling.BothSides,
+    ) -> None:
         """
         Create a Polygons object.
         - able to have multiple polygons with shared vertices
@@ -27,12 +36,18 @@ class Polygons(Object3D):
         assert len(geometry.vertices) == polygon_count * vertices_per_polygon, f"The number of vertices must be equal to polygon_count * vertices_per_polygon"
 
         self.name = f"a {Polygons.__name__}"
+        """name of the object."""
+
         self.polygon_count: int = polygon_count
         """number of polygons."""
         self.vertices_per_polygon: int = vertices_per_polygon
         """number of vertices per polygon."""
         self.geometry: Geometry = geometry
         """Geometry object containing the vertices."""
+        self.face_sorting: bool = face_sorting
+        """Whether to sort faces by depth (painter's algorithm)."""
+        self.face_culling: Constants.FaceCulling = face_culling
+        """Whether to cull faces based on their orientation relative to the camera."""
 
         self.color: np.ndarray = color
 

@@ -26,17 +26,17 @@ class RendererPolygons:
         # Create artists if needed
         # =============================================================================
         if polygons.uuid not in renderer._artists:
-            mpl_poly_collection = matplotlib.collections.PolyCollection([], clip_on=False, snap=False)
-            mpl_poly_collection.set_visible(False)  # hide until properly positioned and sized
-            renderer._axis.add_collection(mpl_poly_collection)
-            renderer._artists[polygons.uuid] = mpl_poly_collection
+            mpl_path_collection = matplotlib.collections.PatchCollection([])
+            mpl_path_collection.set_visible(False)  # hide until properly positioned and sized
+            renderer._axis.add_collection(mpl_path_collection)
+            renderer._artists[polygons.uuid] = mpl_path_collection
 
         # =============================================================================
         # Get the mpl_artist
         # =============================================================================
 
-        mpl_poly_collection = typing.cast(matplotlib.collections.PolyCollection, renderer._artists[polygons.uuid])
-        mpl_poly_collection.set_visible(True)
+        mpl_path_collection = typing.cast(matplotlib.collections.PatchCollection, renderer._artists[polygons.uuid])
+        mpl_path_collection.set_visible(True)
 
         # =============================================================================
         # Apply full transform the vertices
@@ -77,9 +77,6 @@ class RendererPolygons:
             # no face hidden - all False
             faces_hidden = np.zeros(shape=(len(faces_vertices),), dtype=bool)
 
-        # log how many faces are visible
-        print(f"Rendering {np.sum(~faces_hidden)} visible faces out of {polygons.polygon_count} polygons")
-
         # remove hidden faces
         faces_vertices = faces_vertices[~faces_hidden]
 
@@ -96,6 +93,10 @@ class RendererPolygons:
             depth_sorted_indices = np.argsort(faces_depth)
             # apply the sorting to faces_vertices and faces_hidden
             faces_vertices = faces_vertices[depth_sorted_indices]
+            # faces_hidden = faces_hidden[depth_sorted_indices]
+
+        # visible_face_count = np.sum(~faces_hidden)
+        # print(f"Rendering {visible_face_count} visible faces out of {polygons.polygon_count} polygons")
 
         # =============================================================================
         # Switch vertices to 2d
@@ -107,11 +108,26 @@ class RendererPolygons:
         # Update all the artists
         # =============================================================================
 
-        # update the PathCollection with the new patches
-        mpl_poly_collection.set_verts(typing.cast(list, vertices_2d))
-        mpl_poly_collection.set_facecolor(typing.cast(list, polygons.color))
-        mpl_poly_collection.set_facecolor((0.5, 0.5, 0.5, 1))
-        mpl_poly_collection.set_edgecolor((0, 0, 0, 0.3))
-        mpl_poly_collection.set_linewidth(0.5)
+        # Create a polygon patch for each set of coordinates
+        mpl_patches_polygons: list[matplotlib.patches.Polygon] = []
+        for face_index, coords in enumerate(vertices_2d):
+            # if faces_hidden[face_index]:
+            #     # add a dummy polygon that will be hidden later
+            #     # mpl_patch_polygon = matplotlib.patches.Polygon([[0, 0], [0, 0], [0, 0]], closed=True)
+            #     # mpl_patch_polygon.set_visible(False)
+            #     # mpl_patches_polygons.append(mpl_patch_polygon)
+            #     continue
+            mpl_patch_polygon = matplotlib.patches.Polygon(coords, closed=True)
+            # mpl_patch_polygon.set_visible(True)
+            mpl_patches_polygons.append(mpl_patch_polygon)
 
-        return [mpl_poly_collection]
+        # mpl_patches_polygons = [matplotlib.patches.Polygon(coords, closed=True) for coords in vertices_2d]
+
+        # update the PathCollection with the new patches
+        mpl_path_collection.set_paths(mpl_patches_polygons)
+        mpl_path_collection.set_facecolor(polygons.color.tolist())
+        mpl_path_collection.set_facecolor((0.5, 0.5, 0.5, 1))
+        mpl_path_collection.set_edgecolor((0, 0, 0, 0.3))
+        mpl_path_collection.set_linewidth(0.5)
+
+        return [mpl_path_collection]

@@ -1,9 +1,18 @@
+# stdlib imports
+from enum import Enum
+
 # pip imports
 import numpy as np
 from pyrr import vector3, vector4
 
 
 class Constants:
+
+    class FaceCulling(Enum):
+        FrontSide = 0
+        BackSide = 1
+        BothSides = 2
+
     class Color:
         WHITE = vector4.create(1.0, 1.0, 1.0, 1.0)
         BLACK = vector4.create(0.0, 0.0, 0.0, 1.0)

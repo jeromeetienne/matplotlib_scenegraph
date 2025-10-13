@@ -15,10 +15,13 @@ from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects import Polygons
 from mpl_graph.core import TransformUtils
 from mpl_graph.geometry import Geometry, GeometryUtils
+from mpl_graph.core.constants import Constants
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
 from common.mesh_utils import MeshUtils
 from common.example_utils import ExamplesUtils
+from common.geometry_shape import GeometryShape
+from common.fps_monitor import FpsMonitor
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 assets_path = os.path.join(__dirname__, "../assets")
@@ -31,39 +34,48 @@ def main():
     # =============================================================================
     scene = Object3D()
 
-    camera = CameraPerspective()
+    # camera = CameraPerspective()
+    camera = CameraOrthographic()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
     renderer = Renderer(512, 512)
     # Create an animation loop
-    animation_loop = AnimationLoop(renderer)
+    animation_loop = AnimationLoop(renderer, fps=60)
 
     # =============================================================================
     # Add objects
     # =============================================================================
 
     # Load a model from an .obj file
-    # file_path = os.path.join(models_path, "cube_meshio.obj")
-    file_path = os.path.join(models_path, "suzanne.obj")
+    file_path = os.path.join(models_path, "bunny.obj")
+    # file_path = os.path.join(models_path, "head.obj")
+    # file_path = os.path.join(models_path, "cube.obj")
+    # file_path = os.path.join(models_path, "suzanne.obj")
 
     # parse the .obj file
-    geometry = MeshUtils.parse_obj_file_manual(file_path)
+    mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)
 
     # Normalize the vertices to fit in a unit cube
-    geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+    mesh_geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(mesh_geometry.vertices)
 
     # Create a polygons object
-    polygons = Polygons.from_mesh_geometry(geometry)
-    # polygons.scale[:] = 0/
+    polygons = Polygons.from_mesh_geometry(mesh_geometry)
+    polygons.face_culling = Constants.FaceCulling.FrontSide
+    polygons.face_sorting = True
+    polygons.scale[:] = 1
     scene.add_child(polygons)
+
+    fps_monitor = FpsMonitor()
 
     @animation_loop.decorator
     def polygons_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
-        polygons.rotation_euler[1] = present
-        polygons.position[1] = np.cos(present * 3) * 1
+        polygons.rotation_euler[1] += delta_time
+
+        fps_monitor.print_fps()
+        # polygons.position[2] = np.cos(present * 3) * 1
         return [polygons]
 
     # =============================================================================
