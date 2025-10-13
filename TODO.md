@@ -2,10 +2,13 @@
   - vertices are still reused . it makes `Polygons` to fail
   - make a function to clone the vertices if needed
   - take it from the .obj loader
-- do a geometry animation
+- do a geometry animation/morphing
   - you give it an object, and a target_geometry
   - it will interpolate the geometry vertices
 - make a histogram animated
+  - add the axes with the ticks and labels
+  - do a 2d figure with lines and bars
+  - do a 3d figure with 3d bars
 - apply transform to transform mesh
 - remove all the ' @ ' for the matrix multiplication
   - use np.matmul or the `@` operator
