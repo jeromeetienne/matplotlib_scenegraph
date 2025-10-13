@@ -67,6 +67,7 @@ def main():
     # sprite.extent = np.array([0.0, 0.5, 0.0, 0.5])
     scene.add_child(sprite)
 
+    @animation_loop.decorator
     def sprite_animation(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
 
@@ -77,8 +78,6 @@ def main():
         sprite.scale[1] = 0.5 + 0.1 * np.sin(present * 2.0)
 
         return [sprite]
-
-    animation_loop.add_callback(sprite_animation)
 
     # =============================================================================
     # Start the animation loop
