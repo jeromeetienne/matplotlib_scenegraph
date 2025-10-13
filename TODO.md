@@ -4,9 +4,6 @@
   - make a function to clone the vertices if needed
   - take it from the .obj loader
 - FIXME the notion of expanded geometry is unclear. figure it out
-- do a backface culling for polygons
-  - front, back, both
-  - in `Constants`
 - there is a depth sorting inside the object3d sometime
   - and sometime there is a depth sorting at the face level
   - how can they interact ?
@@ -48,6 +45,9 @@
 
 
 ## Done
+- DONE do a backface culling for polygons
+  - front, back, both
+  - in `Constants`
 - DONE should i make a `MeshGeometry` class which inherit from `Geometry` ?
   - `GeometryShape` is only producing `MeshGeometry` it should be made obvious
   - `Geometry` Would store only the vertices. no face, no uv, no normals
