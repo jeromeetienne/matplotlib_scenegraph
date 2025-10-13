@@ -23,6 +23,8 @@ Arguments:
 
 
 class AnimationLoop:
+    __slots__ = ("_callbacks", "_renderer", "_fps", "_video_duration", "_video_path", "_time_last_update", "_scene", "_camera")
+
     def __init__(self, renderer: Renderer, fps: int = 30, video_duration: float = 10.0, video_path: str | None = None) -> None:
         """
         A simple animation loop manager for matplotlib rendering.
@@ -41,6 +43,9 @@ class AnimationLoop:
         self._fps = fps
         self._video_duration = video_duration
         self._video_path = video_path
+        self._time_last_update = None
+        self._scene: Object3D | None = None
+        self._camera: CameraBase | None = None
 
     # =============================================================================
     # .start/.stop
@@ -48,8 +53,10 @@ class AnimationLoop:
 
     def start(self, scene: Object3D, camera: CameraBase):
         """Start the animation loop."""
-        time_start = time.time()
-        time_last = time_start
+
+        self._scene = scene
+        self._camera = camera
+        self._time_last_update = time.time()
 
         # initial render
         self._renderer.render(scene, camera)
@@ -58,35 +65,8 @@ class AnimationLoop:
         if ExamplesUtils.postamble():
             return
 
-        # define a animation function for matplotlib
-        def mpl_update_scene(frame) -> list[matplotlib.artist.Artist]:
-            # TODO put this function non local, self._mpl_update_scene
-            nonlocal time_last, time_start
-            present = time.time()
-            timestamp = present - time_start
-            delta_time = present - time_last
-            time_last = present
-            # print(f"AnimationLoop.mpl_update_scene: frame={frame}, timestamp={timestamp}, delta_time={delta_time}")
-
-            changed_objects: list[Object3D] = []
-            for callback in self._callbacks:
-                _changed_objects = callback(delta_time)
-                changed_objects.extend(_changed_objects)
-
-            # update world matrices
-            scene.update_world_matrix()
-
-            changed_artists: list[matplotlib.artist.Artist] = []
-            for object in changed_objects:
-                # needed to update the attributes of the object3D, like position, rotation, scale, etc.
-                _changed_artists = self._renderer.render_object(object, camera)
-                changed_artists.extend(_changed_artists)
-
-            # print(f"  Number of changed artists: {len(changed_artists)}")
-            return changed_artists
-
         funcAnimation = matplotlib.animation.FuncAnimation(
-            self._renderer.get_figure(), mpl_update_scene, frames=int(self._video_duration * self._fps), interval=1000 / self._fps
+            self._renderer.get_figure(), self._mpl_update_scene, frames=int(self._video_duration * self._fps), interval=1000 / self._fps
         )
         if self._video_path is not None:
             funcAnimation.save(self._video_path, dpi=200, fps=self._fps)
@@ -94,6 +74,10 @@ class AnimationLoop:
         matplotlib.pyplot.show(block=True)
 
     def stop(self):
+        self._scene = None
+        self._camera = None
+        self._time_last_update = None
+
         """Stop the animation loop."""
         raise NotImplementedError()
 
@@ -132,3 +116,33 @@ class AnimationLoop:
             return result
 
         return wrapper
+
+    # define a animation function for matplotlib
+    def _mpl_update_scene(self, frame) -> list[matplotlib.artist.Artist]:
+        # sanity checks
+        assert self._scene is not None, "Scene is not set"
+        assert self._camera is not None, "Camera is not set"
+
+        # compute delta time
+        present = time.time()
+        delta_time = (present - self._time_last_update) if self._time_last_update is not None else (1 / self._fps)
+        self._time_last_update = present
+
+        # notify all callbacks
+        changed_objects: list[Object3D] = []
+        for callback in self._callbacks:
+            _changed_objects = callback(delta_time)
+            changed_objects.extend(_changed_objects)
+
+        # update world matrices
+        self._scene.update_world_matrix()
+
+        # render only the changed objects
+        changed_artists: list[matplotlib.artist.Artist] = []
+        for object in changed_objects:
+            # needed to update the attributes of the object3D, like position, rotation, scale, etc.
+            _changed_artists = self._renderer.render_object(object, self._camera)
+            changed_artists.extend(_changed_artists)
+
+        # print(f"  Number of changed artists: {len(changed_artists)}")
+        return changed_artists
