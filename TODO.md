@@ -8,8 +8,6 @@
   - `Geometry` Would store only the vertices. no face, no uv, no normals
   - `Lines` and `Points` and `Polygons` are using geometry
   - `MeshGeometry`
-- DONE apply transform to transform mesh
-  - in `GeometryUtils.apply_transform(geometry, matrix4)`
 - do a backface culling for polygons
   - front, back, both
   - in `Constants`
@@ -50,6 +48,8 @@
 
 
 ## Done
+- DONE apply transform to transform mesh
+  - in `GeometryUtils.apply_transform(geometry, matrix4)`
 - FIXED bug in transform
   - how to fix it ? divide and conquer
   - find a test and ask AI to fix it

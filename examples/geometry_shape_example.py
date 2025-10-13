@@ -7,13 +7,12 @@ import os
 from typing import Sequence
 
 # local imports
-from mpl_graph.core.object_3d import Object3D
+from mpl_graph.core import Object3D, Constants
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects.lines import Lines
-from mpl_graph.core.texture import Texture
-from mpl_graph.core.constants import Constants
+from mpl_graph.objects import Lines, Polygons
+from mpl_graph.geometry import GeometryUtils
 from common.geometry_shape import GeometryShape
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -55,25 +54,25 @@ def main():
     scene.add_child(plane_lines)
 
     geometry_box = GeometryShape.box(1.0, 1.0, 1.0)
-    box_lines = Lines.from_mesh_geometry(geometry_box)
-    box_lines.position[0] = 1
-    box_lines.position[1] = 0.7
-    scene.add_child(box_lines)
+    box_polygons = Polygons.from_mesh_geometry(geometry_box)
+    box_polygons.position[0] = 1
+    box_polygons.position[1] = 0.7
+    scene.add_child(box_polygons)
 
     geometry_grid = GeometryShape.grid(5.0, 5.0)
     grid_lines = Lines.from_mesh_geometry(geometry_grid)
     grid_lines.color = Constants.Color.CYAN
     grid_lines.position[1] = 0
-    grid_lines.position[2] = -0.01  # to ensure the grid is behind the other objects
+    grid_lines.position[2] = -0.01  # trick to ensure the grid is behind the other objects
     scene.add_child(grid_lines)
 
     @animation_loop.decorator
     def box_update(delta_time: float) -> Sequence[Object3D]:
-        box_lines.rotation_euler[1] += 0.2 * delta_time
+        box_polygons.rotation_euler[1] += 0.2 * delta_time
         plane_lines.rotation_euler[1] += 0.2 * delta_time
         # grid_lines.rotation_euler[0] += 0.2 * delta_time
 
-        return [box_lines, plane_lines, grid_lines]
+        return [box_polygons, plane_lines, grid_lines]
 
     # =============================================================================
     # Start the animation loop

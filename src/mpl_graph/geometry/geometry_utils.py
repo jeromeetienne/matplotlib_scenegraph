@@ -55,7 +55,27 @@ class GeometryUtils:
         return vertices_normalized
 
     @staticmethod
+    def is_expanded(geometry: Geometry) -> bool:
+        # - this means that vertices, uv, normals are not shared between faces
+        # - so len(vertices) == len(uvs) == len(normals) == 3 * len(faces)
+        if geometry.indices is None:
+            return False
+        if len(geometry.vertices) != 3 * len(geometry.indices):
+            return False
+        if geometry.uvs is not None and len(geometry.vertices) != 3 * len(geometry.uvs):
+            return False
+        if geometry.normals is not None and len(geometry.vertices) != 3 * len(geometry.normals):
+            return False
+        return True
+
+    @staticmethod
     def expand_vertices(src_geometry: Geometry) -> Geometry:
+
+        # sanity checks
+        assert src_geometry.indices is not None, f"The geometry must have faces."
+        assert src_geometry.indices.shape[1] == 3, f"Only triangular faces are supported, got faces with {src_geometry.indices.shape[1]} vertices."
+        assert np.issubdtype(src_geometry.indices.dtype, np.integer), f"Indices must be of integer type, got {src_geometry.indices.dtype}."
+
         vertices = src_geometry.vertices[src_geometry.indices].reshape(-1, 3)
         uvs = src_geometry.uvs[src_geometry.indices].reshape(-1, 2) if src_geometry.uvs is not None else None
         normals = src_geometry.normals[src_geometry.indices].reshape(-1, 3) if src_geometry.normals is not None else None

@@ -2,7 +2,7 @@
 import numpy as np
 
 # local imports
-from mpl_graph.geometry.geometry import Geometry
+from mpl_graph.geometry import Geometry, GeometryUtils
 
 
 class GeometryShape(Geometry):
@@ -41,6 +41,7 @@ class GeometryShape(Geometry):
             ]
         )
         geometry = Geometry(vertices, faces_indices, uvs_coords, normals_coords)
+        geometry = GeometryUtils.expand_vertices(geometry)
         return geometry
 
     @staticmethod
@@ -112,6 +113,8 @@ class GeometryShape(Geometry):
         normals_coords = normals_coords / np.linalg.norm(normals_coords, axis=1, keepdims=True)
 
         geometry = Geometry(vertices, faces_indices, uvs_coords, normals_coords)
+        # Expand the vertices
+        geometry = GeometryUtils.expand_vertices(geometry)
         return geometry
 
     @staticmethod
@@ -145,7 +148,9 @@ class GeometryShape(Geometry):
                 faces_indices.append([top_left, bottom_left, top_right])
                 faces_indices.append([top_right, bottom_left, bottom_right])
 
-        faces_indices = np.array(faces_indices).astype(np.float32)
+        faces_indices = np.array(faces_indices).astype(np.uint32)
 
         geometry = Geometry(vertices, faces_indices, uvs_coords, normals_coords)
+        # Expand the vertices
+        geometry = GeometryUtils.expand_vertices(geometry)
         return geometry
