@@ -4,33 +4,48 @@ from math import atan2
 import numpy as np
 from typing import Callable
 import math
+from typing import Protocol
 
 # local imports
 from .random import Random
 from .event import Event
 
-PRE_RENDERING_CALLBACK = Callable[["Object3D", "CameraBase"], None]  # type: ignore
-"""Callback type for pre-rendering rendering event.
 
-Arguments:
-- renderer: The renderer instance performing the rendering.
-- camera: The camera used for rendering.
-"""
-POST_TRANSFORM_CALLBACK = Callable[[np.ndarray], None]
-"""Callback type for post-transform rendering event.
+# We can define the expected function signature using a Protocol for clarity.
+class PreRenderingCallback(Protocol):
+    def __call__(self, object_3d: "Object3D", camera: "CameraBase") -> None: ...  # type: ignore
 
-Arguments:
-- renderer: The renderer instance performing the rendering.
-- camera: The camera used for rendering.
-- transformed_positions: The numpy array of transformed positions (shape: n x 3).
-"""
-POST_RENDERING_CALLBACK = Callable[[], None]
-"""Callback type for post-rendering rendering event.
 
-Arguments:
-- renderer: The renderer instance performing the rendering.
-- camera: The camera used for rendering.
-"""
+class PostTransformCallback(Protocol):
+    def __call__(self, vertices_transformed: np.ndarray) -> None: ...  # type: ignore
+
+
+class PostRenderingCallback(Protocol):
+    def __call__(self) -> None: ...  # type: ignore
+
+
+# PRE_RENDERING_CALLBACK = Callable[["Object3D", "CameraBase"], None]  # type: ignore
+# """Callback type for pre-rendering rendering event.
+
+# Arguments:
+# - renderer: The renderer instance performing the rendering.
+# - camera: The camera used for rendering.
+# """
+# POST_TRANSFORM_CALLBACK = Callable[[np.ndarray], None]
+# """Callback type for post-transform rendering event.
+
+# Arguments:
+# - renderer: The renderer instance performing the rendering.
+# - camera: The camera used for rendering.
+# - transformed_positions: The numpy array of transformed positions (shape: n x 3).
+# """
+# POST_RENDERING_CALLBACK = Callable[[], None]
+# """Callback type for post-rendering rendering event.
+
+# Arguments:
+# - renderer: The renderer instance performing the rendering.
+# - camera: The camera used for rendering.
+# """
 
 
 class Object3D:
@@ -68,10 +83,10 @@ class Object3D:
         self._local_matrix = matrix44.create_identity(dtype=np.float32)
         self._world_matrix = matrix44.create_identity(dtype=np.float32)
 
-        self.pre_rendering = Event()
+        self.pre_rendering = Event[PreRenderingCallback]()
         """Event triggered before rendering the visual."""
 
-        self.post_transform = Event()
+        self.post_transform = Event[PostTransformCallback]()
         """
         Event triggered after applying 3d transformations to the visual.
 
@@ -81,7 +96,7 @@ class Object3D:
         - transformed_positions: The numpy array of transformed positions (shape: n x 3).
         """
 
-        self.post_rendering = Event()
+        self.post_rendering = Event[PostRenderingCallback]()
         """Event triggered after rendering the visual."""
 
     # =============================================================================

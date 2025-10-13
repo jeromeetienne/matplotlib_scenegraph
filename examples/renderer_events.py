@@ -48,7 +48,8 @@ def main():
     points = Points(geometry, color=colors, sizes=sizes, edge_colors=edge_colors)
     scene.add_child(points)
 
-    def post_transform_points(renderer: Renderer, camera: CameraBase, vertices_transformed: np.ndarray) -> None:
+    @points.post_transform.subscriber
+    def post_transform_points(vertices_transformed: np.ndarray) -> None:
 
         # sort inplace transformed positions by z value (3rd column). Largest z first
         sorted_indices = np.argsort(vertices_transformed[:, 2])
@@ -70,7 +71,7 @@ def main():
             color = np.array([1.0, 1.0 - color_component, 1.0 - color_component, 1.0], dtype=np.float32)
             points.colors[vertex_index] = color
 
-    points.post_transform.subscribe(post_transform_points)
+    # points.post_transform.subscribe(post_transform_points)
 
     def update_points(delta_time: float) -> Sequence[Object3D]:
         present = time.time()

@@ -2,6 +2,8 @@
   - vertices are still reused . it makes `Polygons` to fail
   - make a function to clone the vertices if needed
   - take it from the .obj loader
+- publish event as staticTypeEvent
+  - an minimal event system which support static type checking
 - do a geometry animation/morphing
   - you give it an object, and a target_geometry
   - it will interpolate the geometry vertices
