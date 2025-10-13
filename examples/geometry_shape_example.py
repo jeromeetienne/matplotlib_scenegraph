@@ -64,6 +64,7 @@ def main():
     grid_lines = Lines.from_mesh_geometry(geometry_grid)
     grid_lines.color = Constants.Color.CYAN
     grid_lines.position[1] = 0
+    grid_lines.position[2] = -0.01  # to ensure the grid is behind the other objects
     scene.add_child(grid_lines)
 
     @animation_loop.decorator

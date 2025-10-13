@@ -78,6 +78,7 @@ class AnimationLoop:
 
             changed_artists: list[matplotlib.artist.Artist] = []
             for object in changed_objects:
+                # needed to update the attributes of the object3D, like position, rotation, scale, etc.
                 _changed_artists = self._renderer.render_object(object, camera)
                 changed_artists.extend(_changed_artists)
 

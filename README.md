@@ -31,3 +31,11 @@ To install the project itself, you can use pip:
 pip install -e .
 ```
 
+# Makefile
+
+A Makefile is provided to help with common tasks:
+- `make help`: Show available make commands
+- `make test`: Run all the tests
+- `make lint`: Run linting checks
+- `make run_all_examples`: Run all example scripts to ensure they run without exceptions
+- `make check_expected_output`: Check if the output of examples matches expected output

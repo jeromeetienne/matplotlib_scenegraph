@@ -39,7 +39,7 @@ def main():
     animation_loop = AnimationLoop(renderer)
 
     # =============================================================================
-    # Build your scene
+    # animation callback with .add_callback()
     # =============================================================================
 
     # Add points
@@ -62,7 +62,7 @@ def main():
     animation_loop.add_callback(update_points)
 
     # =============================================================================
-    # Add some lines
+    # animation callback with decorator
     # =============================================================================
 
     lines_count = 10

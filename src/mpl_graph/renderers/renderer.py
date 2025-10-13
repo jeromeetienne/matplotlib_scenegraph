@@ -15,9 +15,15 @@ from ..cameras.camera_base import CameraBase
 
 
 class Renderer:
-    def __init__(self, figure_w: int = 100, figure_h: int = 100, dpi: int = 100):
+    __slot__ = "depth_sorting"
+
+    def __init__(self, figure_w: int = 100, figure_h: int = 100, dpi: int = 100, /, depth_sorting: bool = True) -> None:
         # Create a figure of 512x512 pixels
         self._figure = matplotlib.pyplot.figure(figsize=(figure_w / dpi, figure_h / dpi), dpi=dpi)
+
+        self.depth_sorting = depth_sorting
+        """Whether to enable depth sorting based on camera distance at the object3D level.
+        This affects the `zorder` of the matplotlib artists created for each object3D."""
 
         # Create an axis that fills the whole figure
         self._axis = self._figure.add_axes((0, 0, 1, 1), frameon=False)
@@ -31,6 +37,10 @@ class Renderer:
         self._axis.set_ylim(-1, 1)
         self._artists: dict[str, matplotlib.artist.Artist] = {}
 
+    # =============================================================================
+    # Public Function
+    # =============================================================================
+
     def get_figure(self) -> matplotlib.figure.Figure:
         return self._figure
 
@@ -40,9 +50,6 @@ class Renderer:
     def render(self, scene: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         # update world matrices
         scene.update_world_matrix()
-
-        # render from back to front
-        # (not implemented here, just a placeholder comment)
 
         # render objects
         changed_artists: list[matplotlib.artist.Artist] = []
@@ -62,8 +69,16 @@ class Renderer:
     def _render_object(self, object3d: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         changed_artists: list[matplotlib.artist.Artist] = []
 
+        # =============================================================================
+        # Dispatch pre_rendering Event
+        # =============================================================================
+
         # dispatch the pre_rendering event
         object3d.pre_rendering.dispatch(renderer=self, camera=camera)
+
+        # =============================================================================
+        # Render the object based on its type
+        # =============================================================================
 
         # call the appropriate renderer based on the object type
         if isinstance(object3d, Points):
@@ -96,6 +111,25 @@ class Renderer:
             pass
         else:
             raise NotImplementedError(f"Rendering for {type(object3d)} not implemented yet")
+
+        # =============================================================================
+        # honor .depth_sorting
+        # =============================================================================
+
+        # update `artists.zorder` based on camera distance if depth sorting is enabled
+        if self.depth_sorting:
+            # compute distance from camera to object3d
+            camera_position = camera.get_world_position()
+            object_position = object3d.get_world_position()
+            euclidian_distance = ((camera_position - object_position) ** 2).sum() ** 0.5
+            # set zorder based on distance (larger distance -> smaller zorder)
+            zorder = -euclidian_distance
+            for artist in changed_artists:
+                artist.set_zorder(zorder)
+
+        # =============================================================================
+        # Dispatch post_rendering Event
+        # =============================================================================
 
         # dispatch the post_rendering event
         object3d.post_rendering.dispatch(renderer=self, camera=camera)

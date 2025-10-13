@@ -1,12 +1,12 @@
-- transform fixed ? it seems so
-  - clean it
+- bug in geometryShape
+  - vertices are still reused . it makes `Polygons` to fail
+  - make a function to clone the vertices if needed
+  - take it from the .obj loader
+- do a geometry animation
+  - you give it an object, and a target_geometry
+  - it will interpolate the geometry vertices
+- make a histogram animated
 - apply transform to transform mesh
-- add more geometry shapes in `GeometryMeshShape`
-  - box DONE
-  - sphere
-  - plane DONE
-  - cylinder
-  - grid - very useful for reference
 - remove all the ' @ ' for the matrix multiplication
   - use np.matmul or the `@` operator
 - find a good API for the various materials
@@ -25,14 +25,6 @@
 - do you handle point light, directional light
 - implement a `.serialization` ? to/from json ?
   - could easily be done
-- bug in transform
-  - how to fix it ? divide and conquer
-  - find a test and ask AI to fix it
-  - first orthoraphic camera, then perspective camera
-  - first handle the object3d transform. local_transform, world_transform
-    - how to test that ?
-    - for translation, rotation, scale
-  - once object3d transform is fixed, then do the camera transform 
 - implement a .depth_sorting = true in renderer
   - where object3d is sorted by their world position and then rendered
   - NOTE: conflict with the delta rendering from the animation loop
@@ -40,6 +32,22 @@
 
 
 ## Done
+- FIXED bug in transform
+  - how to fix it ? divide and conquer
+  - find a test and ask AI to fix it
+  - first orthoraphic camera, then perspective camera
+  - first handle the object3d transform. local_transform, world_transform
+    - how to test that ?
+    - for translation, rotation, scale
+  - once object3d transform is fixed, then do the camera transform 
+- DONE transform fixed ? it seems so
+  - clean it
+- DONE add more geometry shapes in `GeometryMeshShape`
+  - box DONE
+  - sphere
+  - plane DONE
+  - cylinder
+  - grid - very useful for reference
 - DONE move the .lines_from_obj in Lines class method
   - `Lines.from_mesh_geometry(geometry)`
   - same for points

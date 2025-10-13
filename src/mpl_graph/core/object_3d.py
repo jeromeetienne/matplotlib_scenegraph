@@ -160,6 +160,7 @@ class Object3D:
         return vector3.create(sx, sy, sz)  # type: ignore
 
     def get_world_rotation_euler(self) -> np.ndarray:
+        # TODO use library to do that... you dont want complex math in your code...
         rot_m = self._world_matrix[:3, :3]
         sy = np.sqrt(rot_m[0, 0] ** 2 + rot_m[1, 0] ** 2)
 
