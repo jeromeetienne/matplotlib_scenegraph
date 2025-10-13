@@ -18,6 +18,7 @@ class RendererLines:
     @staticmethod
     def render(renderer: "Renderer", lines: Lines, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         geometry = lines.geometry
+        material = lines.material
 
         line_count = len(geometry.vertices) // 2
         assert line_count * 2 == len(geometry.vertices), "Lines vertices length must be even"
@@ -52,8 +53,8 @@ class RendererLines:
         vertices_2d = vertices[:, :2]  # drop z for 2D rendering
 
         vertices_2d = vertices_2d.reshape((line_count, 2, 2))  # reshape to (line_count, 2 endpoints, 2 coords)
-        segments = vertices_2d.tolist()
-        mpl_line_collection.set_segments(segments)
-        mpl_line_collection.set_color(lines.color.tolist())
+
+        mpl_line_collection.set_segments(typing.cast(list, vertices_2d))
+        mpl_line_collection.set_color(typing.cast(list, material.color))
 
         return [mpl_line_collection]

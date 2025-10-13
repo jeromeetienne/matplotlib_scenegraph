@@ -3,7 +3,7 @@ import numpy as np
 
 
 class Geometry:
-    def __init__(self, vertices: np.ndarray):
+    def __init__(self, vertices: np.ndarray = np.zeros((0, 3)).astype(np.float32)) -> None:
         """
         A class representing a 3D geometry with vertices.
 

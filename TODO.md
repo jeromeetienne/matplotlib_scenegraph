@@ -1,3 +1,5 @@
+- make an object `Text`
+  - https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b
 - bug in geometryShape
   - vertices are still reused . it makes `Polygons` to fail
   - `GeometryUtils.expand_vertices(geometry)`
@@ -10,7 +12,6 @@
   - zorder = distance from the camera... period
 - publish event as staticTypeEvent
   - an minimal event system which support static type checking
-- make an object `Text`
 - do a geometry animation/morphing
   - you give it an object, and a target_geometry
   - it will interpolate the geometry vertices

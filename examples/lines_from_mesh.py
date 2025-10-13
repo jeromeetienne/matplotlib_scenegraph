@@ -8,11 +8,11 @@ import numpy as np
 
 
 # local imports
-from mpl_graph.core.object_3d import Object3D
+from mpl_graph.core import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.core.transform_utils import TransformUtils
-from mpl_graph.objects.lines import Lines
+from mpl_graph.renderers import Renderer
+from mpl_graph.objects import Lines
+from mpl_graph.materials import LineMaterial
 from common.example_utils import ExamplesUtils
 from common.animation_loop import AnimationLoop
 from common.mesh_utils import MeshUtils
@@ -55,6 +55,7 @@ def main():
     mesh_geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(mesh_geometry.vertices)
 
     # Build the lines object
+    material = LineMaterial(color=Constants.Color.GRAY)
     lines = Lines.from_mesh_geometry(mesh_geometry)
     lines.scale[:] = 0.5
     scene.add_child(lines)

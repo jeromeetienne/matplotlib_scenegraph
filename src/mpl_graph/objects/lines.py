@@ -4,12 +4,18 @@ import numpy as np
 from ..core.object_3d import Object3D
 from ..core.constants import Constants
 from ..geometry import Geometry, MeshGeometry
+from ..materials.line_material import LineMaterial
 
 
 class Lines(Object3D):
-    __slots__ = ("geometry", "color")
+    __slots__ = ("geometry", "material")
 
-    def __init__(self, geometry: Geometry, color: np.ndarray = Constants.Color.GRAY) -> None:
+    def __init__(self, geometry: Geometry = Geometry(), material: LineMaterial = LineMaterial()) -> None:
+        """
+        Create a Lines object.
+        - each line segment has 2 vertices
+        - the number of vertices in the geometry must be even
+        """
         super().__init__()
 
         # sanity checks
@@ -17,7 +23,7 @@ class Lines(Object3D):
 
         self.name = f"a {Lines.__name__}"
         self.geometry: Geometry = geometry
-        self.color: np.ndarray = color
+        self.material: LineMaterial = material
 
     @staticmethod
     def from_mesh_geometry(mesh_geometry: MeshGeometry) -> "Lines":
