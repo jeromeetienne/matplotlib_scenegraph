@@ -1,10 +1,10 @@
 - move the .lines_from_obj in Lines class method
-  - `Lines.from_geometry(geometry)``
+  - `Lines.from_mesh_geometry(geometry)`
   - same for points
 - transform fixed ? it seems so
   - clean it
 - apply transform to transform mesh
-- add more geometry shapes in `GeometryShape`
+- add more geometry shapes in `GeometryMeshShape`
   - box
   - sphere
   - plane
@@ -24,10 +24,8 @@
   - MeshTextureMaterial
   - MeshNormalMaterial
 - do you handle point light, directional light
-- issue in object3d transform
-  - just to a rotation around Z and it fails
-- remove renderer into matplotlib render
-  - implement a json renderer to export/import scenegraph in json ?
+- implement a `.serialization` ? to/from json ?
+  - could easily be done
 - bug in transform
   - how to fix it ? divide and conquer
   - find a test and ask AI to fix it
@@ -43,6 +41,8 @@
 
 
 ## Done
+- DONE issue in object3d transform
+  - just to a rotation around Z and it fails
 - DONE animation loop decorator..
   - to avoid the weird `animation_loop.add_callback(lines_update)` all the time
 - DONE animation loop remove the timestamp absolute

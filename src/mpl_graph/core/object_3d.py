@@ -53,11 +53,16 @@ class Object3D:
         self.name = f"a {Object3D.__name__}"
 
         self.position = vector3.create(0.0, 0.0, 0.0)
+        """Position vector (x, y, z) in local space."""
         self.rotation_euler = vector3.create(0.0, 0.0, 0.0)  # Euler XYZ, radians
+        """Rotation euler angles (rx, ry, rz) in local space, in radians."""
         self.scale = vector3.create(1.0, 1.0, 1.0)
+        """Scale vector (sx, sy, sz) in local space."""
 
         self.parent: Object3D | None = None
+        """Parent Object3D instance or None."""
         self._children: list[Object3D] = []
+        """List of child Object3D instances."""
 
         self._local_matrix = matrix44.create_identity(dtype=np.float32)
         self._world_matrix = matrix44.create_identity(dtype=np.float32)
