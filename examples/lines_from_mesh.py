@@ -44,22 +44,20 @@ def main():
     # Random animated lines
     # =============================================================================
 
-    if True:
-        # Load a model from an .obj file
-        # file_path = os.path.join(models_path, "cube_meshio.obj")
-        file_path = os.path.join(models_path, "suzanne_meshio.obj")
+    # Load a model from an .obj file
+    # file_path = os.path.join(models_path, "cube_meshio.obj")
+    file_path = os.path.join(models_path, "suzanne_meshio.obj")
 
-        lines = SceneExamples.lines_from_obj(file_path)
-        lines.scale[:] = 0.5
-        scene.add_child(lines)
+    lines = SceneExamples.lines_from_obj(file_path)
+    lines.scale[:] = 0.5
+    scene.add_child(lines)
 
-        def lines_update(delta_time: float) -> Sequence[Object3D]:
-            present = time.time()
-            lines.rotation_euler[1] = present
-            lines.position[1] = np.cos(present * 3) * 1
-            return [lines]
-
-        animation_loop.add_callback(lines_update)
+    @animation_loop.decorator
+    def lines_update(delta_time: float) -> Sequence[Object3D]:
+        present = time.time()
+        lines.rotation_euler[1] = present
+        lines.position[1] = np.cos(present * 3) * 1
+        return [lines]
 
     # =============================================================================
     # Start the animation loop

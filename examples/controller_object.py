@@ -55,11 +55,10 @@ def main():
     object_controller = ObjectControllerWasd(renderer, random_points)
     object_controller.start()
 
+    @animation_loop.decorator
     def update_controller(delta_time: float) -> Sequence[Object3D]:
         object_controller.update(delta_time)
         return [random_points]
-
-    animation_loop.add_callback(update_controller)
 
     # =============================================================================
     # Start the animation loop

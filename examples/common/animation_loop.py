@@ -109,13 +109,16 @@ class AnimationLoop:
         self._callbacks.remove(func)
 
     def decorator(self, func: AnimationLoopCallbackType) -> AnimationLoopCallbackType:
-        """A decorator to add a callback to the animation loop. NOTE: this callback will never be removed.
+        """A decorator to add a callback to the animation loop.
 
         Usage:
             ```python
                 @animation_loop.decorator
                 def my_callback(delta_time: float) -> Sequence[Object3D]:
                     ...
+
+                # later, if needed
+                animation_loop.remove_callback(my_callback)
             ```
         """
 

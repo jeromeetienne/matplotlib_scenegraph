@@ -39,18 +39,16 @@ def main():
     # Random animated lines
     # =============================================================================
 
-    if True:
-        num_lines = 10
-        vertices = np.random.uniform(-1, 1, size=(num_lines * 2, 3)).astype(np.float32)
-        geometry = Geometry(vertices=vertices)
-        lines = Lines(geometry)
-        scene.add_child(lines)
+    lines_count = 10
+    vertices = np.random.uniform(-1, 1, size=(lines_count * 2, 3)).astype(np.float32)
+    geometry = Geometry(vertices=vertices)
+    lines = Lines(geometry)
+    scene.add_child(lines)
 
-        def lines_update(delta_time: float) -> Sequence[Object3D]:
-            lines.geometry.vertices = np.random.uniform(-1, 1, size=(num_lines * 2, 3)).astype(np.float32)
-            return [lines]
-
-        animation_loop.add_callback(lines_update)
+    @animation_loop.decorator
+    def lines_update(delta_time: float) -> Sequence[Object3D]:
+        lines.geometry.vertices = np.random.uniform(-1, 1, size=(lines_count * 2, 3)).astype(np.float32)
+        return [lines]
 
     # =============================================================================
     # Start the animation loop
