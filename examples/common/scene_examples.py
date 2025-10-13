@@ -28,41 +28,6 @@ images_path = os.path.join(data_path, "images")
 
 class SceneExamples:
 
-    # @staticmethod
-    # def polygons_from_obj(file_path: str) -> Polygons:
-    #     # TODO receive a geometry as argument instead of a file path
-    #     # Put it in Polygons.from_geometry(geometry)
-
-    #     # parse the .obj file
-    #     geometry = MeshUtils.parse_obj_file_manual(file_path)
-    #     assert geometry.indices is not None, "The .obj file must contain face indices"
-
-    #     # Normalize the vertices to fit in a unit cube
-    #     geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
-
-    #     # Create a polygons object
-    #     polygon_count = geometry.indices.shape[0]
-    #     vertices_per_polygon = geometry.indices.shape[1]
-    #     polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
-
-    #     # return the polygons
-    #     return polygons
-
-    # @staticmethod
-    # def lines_from_obj(file_path: str) -> Lines:
-    #     # parse the .obj file
-    #     geometry = MeshUtils.parse_obj_file_manual(file_path)
-    #     assert geometry.indices is not None, "The .obj file must contain face indices"
-
-    #     # Normalize the vertices to fit in a unit cube
-    #     geometry.vertices = TransformUtils.normalize_vertices_to_unit_cube(geometry.vertices)
-
-    #     # Build the lines object
-    #     lines = Lines.from_mesh_geometry(geometry)
-
-    #     # Return the lines
-    #     return lines
-
     @staticmethod
     def addRandomPoints(point_count: int = 1000) -> Points:
         vertices = np.random.uniform(-1, 1, (point_count, 3))
