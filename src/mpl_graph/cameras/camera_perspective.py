@@ -7,13 +7,13 @@ from .camera_base import CameraBase
 
 
 class CameraPerspective(CameraBase):
-    def __init__(self):
+    def __init__(self, fovy: float = 50.0, aspect: float = 1.0, near: float = 0.001, far: float = 100.0):
         super().__init__()
         self.name = f"a {CameraPerspective.__name__}"
-        self.fovy = 50.0  # degrees
-        self.aspect = 1.0  # width / height
-        self.near = 0.001  # near clipping plane
-        self.far = 100.0  # far clipping plane
+        self.fovy = fovy  # degrees
+        self.aspect = aspect  # width / height
+        self.near = near  # near clipping plane
+        self.far = far  # far clipping plane
 
     def get_projection_matrix(self):
         projection_matrix = matrix44.create_perspective_projection(

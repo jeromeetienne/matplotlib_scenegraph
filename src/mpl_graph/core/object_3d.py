@@ -109,6 +109,7 @@ class Object3D:
     def update_local_matrix(self) -> None:
         scale_m = matrix44.create_from_scale(self.scale, dtype=np.float32)
         # REQUIRED: % (math.pi*2) is needed because matrix44.create_from_eulers() doesnt handle angles > 2pi correctly... OOPSSAAA
+        # - try: .rotation[2] = time.time() ...
         new_rotation_euler = np.array(
             [self.rotation_euler[0] % (math.pi * 2), self.rotation_euler[2] % (math.pi * 2), self.rotation_euler[1] % (math.pi * 2)], dtype=np.float32
         )
@@ -122,12 +123,10 @@ class Object3D:
         self.update_local_matrix()
 
         if parent_world_matrix is not None:
+            # Compute world matrix by combining local and parent world matrices: first local then parent's world
             self._world_matrix = matrix44.create_identity(dtype=np.float32)
             self._world_matrix = matrix44.multiply(self._world_matrix, self._local_matrix)
             self._world_matrix = matrix44.multiply(self._world_matrix, parent_world_matrix)
-
-            # self._world_matrix = self._local_matrix @ parent_world_matrix
-            # self._world_matrix = parent_world_matrix @ self._local_matrix
         else:
             self._world_matrix = self._local_matrix.copy()
 

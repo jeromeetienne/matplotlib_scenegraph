@@ -18,6 +18,8 @@ from ..core.object_3d import Object3D
 class TransformUtils:
     @staticmethod
     def compute_full_transform(camera: CameraBase, object3d: Object3D) -> np.ndarray:
+        # Build the model, view, projection matrices
+        model_matrix = object3d.get_world_matrix()
         if False:
             # Custom camera matrix (look at) - put it in Object3D
             camera_position = camera.get_world_position()
@@ -27,7 +29,6 @@ class TransformUtils:
             view_matrix = matrix44.inverse(camera_matrix)
         else:
             view_matrix = camera.get_view_matrix()
-        model_matrix = object3d.get_world_matrix()
         projection_matrix = camera.get_projection_matrix()
 
         # compute full transform, first model, then view, then projection

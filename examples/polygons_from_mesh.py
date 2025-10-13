@@ -8,12 +8,12 @@ import numpy as np
 
 
 # local imports
-from mpl_graph.core.object_3d import Object3D
+from mpl_graph.core import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
+from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects.polygons import Polygons
-from mpl_graph.core.geometry import Geometry
-from mpl_graph.core.transform_utils import TransformUtils
+from mpl_graph.objects import Polygons
+from mpl_graph.core import Geometry, TransformUtils
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
 from common.mesh_utils import MeshUtils
@@ -30,12 +30,12 @@ def main():
     # =============================================================================
     scene = Object3D()
 
-    camera = CameraOrthographic()
+    camera = CameraPerspective()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = Renderer(100, 100)
+    renderer = Renderer(512, 512)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
@@ -44,8 +44,8 @@ def main():
     # =============================================================================
 
     # Load a model from an .obj file
-    file_path = os.path.join(models_path, "cube_meshio.obj")
-    # file_path = os.path.join(models_path, "suzanne_meshio.obj")
+    # file_path = os.path.join(models_path, "cube_meshio.obj")
+    file_path = os.path.join(models_path, "suzanne.obj")
 
     # parse the .obj file
     geometry = MeshUtils.parse_obj_file_manual(file_path)
@@ -55,7 +55,7 @@ def main():
 
     # Create a polygons object
     polygons = Polygons.from_mesh_geometry(geometry)
-    polygons.scale[:] = 0.5
+    # polygons.scale[:] = 0/
     scene.add_child(polygons)
 
     @animation_loop.decorator
