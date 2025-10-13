@@ -7,6 +7,8 @@ from ..core.geometry import Geometry
 
 
 class Lines(Object3D):
+    __slots__ = ("geometry", "color")
+
     def __init__(self, geometry: Geometry, color: np.ndarray = Constants.Color.GRAY) -> None:
         super().__init__()
 
@@ -18,17 +20,17 @@ class Lines(Object3D):
         self.color: np.ndarray = color
 
     @staticmethod
-    def from_mesh_geometry(geometry: Geometry) -> "Lines":
+    def from_mesh_geometry(mesh_geometry: Geometry) -> "Lines":
         """
         Create a Lines object from a mesh Geometry (with faces).
         Each edge of each face will become a line segment.
         """
         # sanity check
-        assert geometry.indices is not None, "The mesh geometry MUST contain face indices"
+        assert mesh_geometry.indices is not None, "The mesh geometry MUST contain face indices"
 
         # Get info from the geometry
-        face_count = geometry.indices.shape[0]
-        vertices_per_face = geometry.indices.shape[1]
+        face_count = mesh_geometry.indices.shape[0]
+        vertices_per_face = mesh_geometry.indices.shape[1]
         vertices_per_line = 2
 
         # Each face has vertices_per_face edges, each edge has 2 vertices
@@ -38,17 +40,17 @@ class Lines(Object3D):
         for face_index in range(face_count):
             for vertex_index in range(vertices_per_face):
 
-                indice_start = geometry.indices[face_index, vertex_index]
-                indice_end = geometry.indices[face_index, (vertex_index + 1) % vertices_per_face]
+                indice_start = mesh_geometry.indices[face_index, vertex_index]
+                indice_end = mesh_geometry.indices[face_index, (vertex_index + 1) % vertices_per_face]
 
-                vertex_start = geometry.vertices[indice_start]
-                vertex_end = geometry.vertices[indice_end]
+                vertex_start = mesh_geometry.vertices[int(indice_start)]
+                vertex_end = mesh_geometry.vertices[int(indice_end)]
 
                 line_vertices[(face_index * vertices_per_face + vertex_index) * 2] = vertex_start
                 line_vertices[(face_index * vertices_per_face + vertex_index) * 2 + 1] = vertex_end
 
         # Build the lines object
-        geometry_lines = Geometry(line_vertices)
-        lines = Lines(geometry_lines)
+        lines_geometry = Geometry(line_vertices)
+        lines = Lines(lines_geometry)
 
         return lines

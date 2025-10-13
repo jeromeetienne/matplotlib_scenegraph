@@ -53,8 +53,6 @@ class RendererLines:
         vertices_2d = vertices_2d.reshape((line_count, 2, 2))  # reshape to (line_count, 2 endpoints, 2 coords)
         segments = vertices_2d.tolist()
         mpl_line_collection.set_segments(segments)
-
-        # segments = [[(0, 0), (1, 1)], [(1, 0), (0, 1)], [(0.5, 0), (0.5, 1)]]
-        # mpl_line_collection.set_segments(segments)
+        mpl_line_collection.set_color(lines.color.tolist())
 
         return [mpl_line_collection]

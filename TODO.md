@@ -2,11 +2,13 @@
   - clean it
 - apply transform to transform mesh
 - add more geometry shapes in `GeometryMeshShape`
-  - box
+  - box DONE
   - sphere
-  - plane
+  - plane DONE
   - cylinder
   - grid - very useful for reference
+- remove all the ' @ ' for the matrix multiplication
+  - use np.matmul or the `@` operator
 - find a good API for the various materials
   - Q. do you do a Material class like in three.js ?
 - find a good API for the various materials
