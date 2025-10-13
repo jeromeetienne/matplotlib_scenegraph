@@ -17,6 +17,13 @@ from common.example_utils import ExamplesUtils
 
 
 def main():
+    # =============================================================================
+    # Setup the scene
+    # =============================================================================
+
+    # Create a renderer
+    renderer = Renderer(512, 512)
+
     # Create the scene root
     scene = Object3D()
 
@@ -25,8 +32,9 @@ def main():
     scene.add_child(camera)
     camera.position[2] = 5.0
 
-    # Create a renderer
-    renderer = Renderer(512, 512)
+    # =============================================================================
+    # Build your scene
+    # =============================================================================
 
     # Add points
     point_count = 1000
@@ -35,6 +43,10 @@ def main():
     points = Points(geometry, color=colors)
     points.scale[:] = 0.5
     scene.add_child(points)
+
+    # =============================================================================
+    # Render the scene
+    # =============================================================================
 
     # Render the scene
     renderer.render(scene, camera)

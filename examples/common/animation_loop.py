@@ -36,11 +36,15 @@ class AnimationLoop:
             video_duration (float): The duration of the video to save in seconds.
             video_path (str | None): The path to save the video. If None, no video is saved.
         """
-        self._callbacks = []
+        self._callbacks: list[AnimationLoopCallbackType] = []
         self._renderer = renderer
         self._fps = fps
         self._video_duration = video_duration
         self._video_path = video_path
+
+    # =============================================================================
+    # .start/.stop
+    # =============================================================================
 
     def start(self, scene: Object3D, camera: CameraBase):
         """Start the animation loop."""
@@ -66,7 +70,7 @@ class AnimationLoop:
 
             changed_objects: list[Object3D] = []
             for callback in self._callbacks:
-                _changed_objects = callback(delta_time, timestamp)
+                _changed_objects = callback(delta_time)
                 changed_objects.extend(_changed_objects)
 
             # update world matrices
@@ -92,6 +96,10 @@ class AnimationLoop:
         """Stop the animation loop."""
         raise NotImplementedError()
 
+    # =============================================================================
+    # .add_callback/.remove_callback/.decorator
+    # =============================================================================
+
     def add_callback(self, func: AnimationLoopCallbackType):
         """Add a callback to the animation loop."""
         self._callbacks.append(func)
@@ -99,3 +107,24 @@ class AnimationLoop:
     def remove_callback(self, func: AnimationLoopCallbackType):
         """Remove a callback from the animation loop."""
         self._callbacks.remove(func)
+
+    def decorator(self, func: AnimationLoopCallbackType) -> AnimationLoopCallbackType:
+        """A decorator to add a callback to the animation loop. NOTE: this callback will never be removed.
+
+        Usage:
+            ```python
+                @animation_loop.decorator
+                def my_callback(delta_time: float) -> Sequence[Object3D]:
+                    ...
+            ```
+        """
+
+        self.add_callback(func)
+
+        def wrapper(delta_time: float) -> Sequence[Object3D]:
+            # print("Before the function runs")
+            result = func(delta_time)
+            # print("After the function runs")
+            return result
+
+        return wrapper

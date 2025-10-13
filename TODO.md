@@ -1,12 +1,3 @@
-- animation loop decorator..
-  - to avoid the weird `animation_loop.add_callback(lines_update)` all the time
-- animation loop remove the timestamp absolute
-  - it look weird, cant find a good name
-- DONE camera controller for awsd - advice for smoothness
-  - must have a function in animation loop, else you do repeat from keyboard
-  - you get a angular speed in seconds, position speed in seconds.
-  - you read keyboard and maintain a {lateral: [-1,0,+1], vertical: [-1,0,+1], depth: [-1,0,+1], rotation_y: [-1,0,+1]}
-  - in animation function, you use this and the world_matrix to update the camera 
 - move the .lines_from_obj in Lines class method
   - `Lines.from_geometry(geometry)``
   - same for points
@@ -19,8 +10,6 @@
   - plane
   - cylinder
   - grid - very useful for reference
-- animation loop decorator..
-  - to avoid the weird `animation_loop.add_callback(lines_update)` all the time
 - find a good API for the various materials
   - Q. do you do a Material class like in three.js ?
 - find a good API for the various materials
@@ -54,6 +43,15 @@
 
 
 ## Done
+- DONE animation loop decorator..
+  - to avoid the weird `animation_loop.add_callback(lines_update)` all the time
+- DONE animation loop remove the timestamp absolute
+  - it look weird, cant find a good name
+- DONE camera controller for awsd - advice for smoothness
+  - must have a function in animation loop, else you do repeat from keyboard
+  - you get a angular speed in seconds, position speed in seconds.
+  - you read keyboard and maintain a {lateral: [-1,0,+1], vertical: [-1,0,+1], depth: [-1,0,+1], rotation_y: [-1,0,+1]}
+  - in animation function, you use this and the world_matrix to update the camera 
 - DONE modify the obj loader to use Geometry
   - to support 'non-meshio' obj files
 - DONE implement the test layer from gsp_sc

@@ -38,6 +38,7 @@ def main():
 
     # Create a renderer
     renderer = Renderer(512, 512)
+
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
@@ -48,14 +49,13 @@ def main():
     object_controller.start()
 
     # update the camera on each frame
+    @animation_loop.decorator
     def update_camera(delta_time: float) -> Sequence[Object3D]:
         has_moved = object_controller.update(delta_time)
 
         # we need to rerender the whole scene if the camera moved
         changed_objects = scene.traverse() if has_moved else []
         return changed_objects
-
-    animation_loop.add_callback(update_camera)
 
     # =============================================================================
     # Load a model
