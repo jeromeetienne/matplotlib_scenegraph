@@ -91,12 +91,14 @@ class Object3D:
         rotation_matrix = matrix44.create_from_quaternion(self.rotation, dtype=self.local_transform.dtype)
         translation_matrix = matrix44.create_from_translation(self.position, dtype=self.local_transform.dtype)
 
-        local = matrix44.multiply(scale_matrix, matrix44.create_identity(dtype=self.local_transform.dtype))
-        local = matrix44.multiply(rotation_matrix, local)
-        local = matrix44.multiply(translation_matrix, local)
+        local = matrix44.create_identity(dtype=self.local_transform.dtype)
+        local = matrix44.multiply(local, scale_matrix)
+        local = matrix44.multiply(local, rotation_matrix)
+        local = matrix44.multiply(local, translation_matrix)
 
         self.local_transform = local
 
+        # TODO it should use local matrix if no parent_world, no ?
         parent_matrix = parent_world if parent_world is not None else matrix44.create_identity(dtype=local.dtype)
         self.world_transform = matrix44.multiply(parent_matrix, local)
 

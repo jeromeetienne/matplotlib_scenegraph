@@ -8,6 +8,8 @@
   - sphere
   - plane
   - cylinder
+- animation loop decorator..
+  - to avoid the weird `animation_loop.add_callback(lines_update)` all the time
 - find a good API for the various materials
   - Q. do you do a Material class like in three.js ?
 - find a good API for the various materials

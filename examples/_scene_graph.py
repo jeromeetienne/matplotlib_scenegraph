@@ -9,6 +9,7 @@ import numpy as np
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
+from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.objects import points
 from mpl_graph.objects.points import Points
 from mpl_graph.renderers.renderer import Renderer
@@ -19,18 +20,24 @@ from common.scene_examples import SceneExamples
 from common.example_utils import ExamplesUtils
 
 
+__dirname__ = os.path.dirname(os.path.abspath(__file__))
+assets_path = os.path.join(__dirname__, "../assets")
+models_path = os.path.join(assets_path, "models")
+
+
 def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
     scene = Object3D()
 
-    camera = CameraOrthographic()
+    # camera = CameraOrthographic()
+    camera = CameraPerspective()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = Renderer(128, 128)
+    renderer = Renderer(512, 512)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
@@ -57,18 +64,38 @@ def main():
     # =============================================================================
 
     def animate(delta_time: float, timestamp: float) -> Sequence[Object3D]:
-        point_object_1.rotation_euler[1] = timestamp * 2
-        # point_object_1.position[0] = np.cos(timestamp * 2) * 0.5
+        # point_object_1.rotation_euler[2] = timestamp * 2
+        point_object_1.position[2] = np.cos(timestamp * 10) * 4
+        point_object_1.scale[:] = 1.5
 
         # point_object_2.position[0] = np.cos(timestamp) * 0.5
         # point_object_2.position[1] = np.sin(timestamp) * 0.5
+        # point_object_2.rotation_euler[2] = timestamp * 5
+        point_object_2.scale[:] = 0.5
 
-        # # point_object_3.position[1] = np.cos(timestamp * 2) * 0.2 + 0.5
+        # point_object_3.position[1] = np.cos(timestamp * 2) * 0.2 + 0.2
         # point_object_2.rotation_euler[1] = timestamp * 5
 
         return [point_object_1, point_object_2, point_object_3]
 
     animation_loop.add_callback(animate)
+
+    # =============================================================================
+    # Lines
+    # =============================================================================
+    file_path = os.path.join(models_path, "suzanne.obj")
+
+    lines = SceneExamples.lines_from_obj(file_path)
+    lines.scale[:] = 0.5
+    scene.add_child(lines)
+
+    # @animation_loop.decorator
+    def lines_update(delta_time: float, time_stamp: float) -> Sequence[Object3D]:
+        lines.rotation_euler[1] = time_stamp
+        lines.position[2] = np.cos(time_stamp * 3) * 1
+        return [lines]
+
+    animation_loop.add_callback(lines_update)
 
     # =============================================================================
     # Start the animation loop

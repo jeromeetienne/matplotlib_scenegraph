@@ -37,8 +37,8 @@ class RendererPoints:
         # Apply full transform the vertices
         # =============================================================================
 
-        full_transform = points.get_world_matrix()
-        # full_transform = TransformUtils.compute_full_transform(camera, points)
+        # full_transform = points.get_world_matrix()
+        full_transform = TransformUtils.compute_full_transform(camera, points)
         vertices_transformed = TransformUtils.apply_transform(geometry.vertices, full_transform)
 
         # dispatch the post_transforming event

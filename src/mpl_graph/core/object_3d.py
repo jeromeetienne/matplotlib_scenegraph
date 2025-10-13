@@ -8,7 +8,7 @@ from typing import Callable
 from .random import Random
 from .event import Event
 
-PRE_RENDERING_CALLBACK = Callable[['Object3D', 'CameraBase'], None] # type: ignore
+PRE_RENDERING_CALLBACK = Callable[["Object3D", "CameraBase"], None]  # type: ignore
 """Callback type for pre-rendering rendering event.
 
 Arguments:
@@ -34,11 +34,19 @@ Arguments:
 
 class Object3D:
     __slots__ = (
-        "uuid", "name",
-        "position", "rotation_euler", "scale",
-        "parent", "_children",
-        "_local_matrix", "_world_matrix",
-        "pre_rendering", "post_transform", "post_rendering",)
+        "uuid",
+        "name",
+        "position",
+        "rotation_euler",
+        "scale",
+        "parent",
+        "_children",
+        "_local_matrix",
+        "_world_matrix",
+        "pre_rendering",
+        "post_transform",
+        "post_rendering",
+    )
 
     def __init__(self) -> None:
         self.uuid = Random.random_uuid()
@@ -70,7 +78,6 @@ class Object3D:
         self.post_rendering = Event()
         """Event triggered after rendering the visual."""
 
-
     # =============================================================================
     # add/remove child
     # =============================================================================
@@ -95,16 +102,22 @@ class Object3D:
     # =============================================================================
     def update_local_matrix(self) -> None:
         scale_m = matrix44.create_from_scale(self.scale, dtype=np.float32)
-        rot_m = matrix44.create_from_eulers(self.rotation_euler, dtype=np.float32)
+        new_rotation_euler = np.array([self.rotation_euler[0], self.rotation_euler[2], self.rotation_euler[1]], dtype=np.float32)
+        rot_m = matrix44.create_from_eulers(new_rotation_euler, dtype=np.float32)
         trans_m = matrix44.create_from_translation(self.position, dtype=np.float32)
 
-        self._local_matrix = trans_m @ rot_m @ scale_m
+        # self._local_matrix = trans_m @ rot_m @ scale_m
+        self._local_matrix = scale_m @ rot_m @ trans_m
 
     def update_world_matrix(self, parent_world_matrix: np.ndarray | None = None) -> None:
         self.update_local_matrix()
 
         if parent_world_matrix is not None:
-            self._world_matrix = self._local_matrix @ parent_world_matrix
+            self._world_matrix = matrix44.create_identity(dtype=np.float32)
+            self._world_matrix = matrix44.multiply(self._world_matrix, self._local_matrix)
+            self._world_matrix = matrix44.multiply(self._world_matrix, parent_world_matrix)
+
+            # self._world_matrix = self._local_matrix @ parent_world_matrix
             # self._world_matrix = parent_world_matrix @ self._local_matrix
         else:
             self._world_matrix = self._local_matrix.copy()

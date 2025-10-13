@@ -77,8 +77,10 @@ def test_local_transform_composition() -> None:
     expected_rot = matrix44.create_from_quaternion(node.rotation)
     expected_trans = matrix44.create_from_translation(node.position)
 
-    expected_local = matrix44.multiply(expected_rot, expected_scale)
-    expected_local = matrix44.multiply(expected_trans, expected_local)
+    expected_local = matrix44.create_identity(dtype=np.float64)
+    expected_local = matrix44.multiply(expected_local, expected_scale)
+    expected_local = matrix44.multiply(expected_local, expected_rot)
+    expected_local = matrix44.multiply(expected_local, expected_trans)
 
     _check(np.allclose(node.local_transform, expected_local), "local transform composition mismatch")
 

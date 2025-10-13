@@ -20,17 +20,33 @@ class TransformUtils:
     def compute_full_transform(camera: CameraBase, object3d: Object3D) -> np.ndarray:
         camera_position = camera.get_world_position()
         camera_target = np.array([0.0, 0.0, 0.0], dtype=np.float32)
-        camera_up = np.array([0.0, 1.0, 0.0], dtype=np.float32)
+        camera_up = np.array([0.0, -1.0, 0.0], dtype=np.float32)
         camera_matrix = matrix44.create_look_at(eye=camera_position, target=camera_target, up=camera_up)
 
         # View matrix is inverse of camera world matrix
         view_matrix = matrix44.inverse(camera_matrix)
-        model_matrix = object3d.get_world_matrix()
         # view_matrix = camera.get_view_matrix()
+        model_matrix = object3d.get_world_matrix()
         projection_matrix = camera.get_projection_matrix()
 
-        temp = matrix44.multiply(view_matrix, model_matrix)
-        full_transform = matrix44.multiply(projection_matrix, temp)
+        if False:
+            temp = matrix44.multiply(view_matrix, model_matrix)
+            full_transform = matrix44.multiply(projection_matrix, temp)
+        elif False:
+            full_transform = matrix44.create_identity(dtype=np.float32)
+            full_transform = matrix44.multiply(full_transform, projection_matrix)
+            full_transform = matrix44.multiply(full_transform, view_matrix)
+            full_transform = matrix44.multiply(full_transform, model_matrix)
+        elif True:
+            full_transform = matrix44.create_identity(dtype=np.float32)
+            full_transform = matrix44.multiply(full_transform, model_matrix)
+            full_transform = matrix44.multiply(full_transform, view_matrix)
+            full_transform = matrix44.multiply(full_transform, projection_matrix)
+        elif True:
+            full_transform = projection_matrix @ view_matrix @ model_matrix
+        else:
+            assert False, "unreachable"
+
         return full_transform
 
     @staticmethod
@@ -43,11 +59,14 @@ class TransformUtils:
         vertices_hom = np.hstack([vertices, np.ones((vertices.shape[0], 1), dtype=vertices.dtype)])  # [N, 4]
         # apply full transform to vertices
         vertices_world_hom = vertices_hom @ transform_matrix  # [N, 4]
-        # vertices_world_hom = vertices_hom @ transform  # [N, 4]
+        # vertices_world_hom = transform_matrix @ vertices_hom  # [N, 4]
         # drop w for clip space
         vertices_clip = vertices_world_hom[:, :3]  # [N, 3]
+        vertices_w = vertices_world_hom[:, 3:4]  # [N, 1]
+        # avoid division by zero
+        vertices_w[vertices_w == 0] = 1e-6
         # Perform perspective divide to get normalized device coordinates (NDC)
-        vertices_transformed = vertices_clip / vertices_world_hom[:, 3:4]  # [N, 3]
+        vertices_transformed = vertices_clip / vertices_w  # [N, 3]
 
         return vertices_transformed
 
