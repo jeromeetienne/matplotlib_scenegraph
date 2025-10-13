@@ -9,7 +9,7 @@ from .geometry import Geometry
 class MeshGeometry(Geometry):
     __slot__ = ("indices", "uvs", "normals")
 
-    def __init__(self, vertices: np.ndarray, indices: np.ndarray | None = None, uvs: np.ndarray | None = None, normals: np.ndarray | None = None):
+    def __init__(self, vertices: np.ndarray, indices: np.ndarray, uvs: np.ndarray | None = None, normals: np.ndarray | None = None):
         """
         A class representing a 3D geometry with vertices, faces, texture coordinates, and normals.
         Only triangular faces are supported.
@@ -22,8 +22,8 @@ class MeshGeometry(Geometry):
         """
 
         # sanity check - make sure we have triangular faces
-        if indices is not None:
-            assert indices.ndim == 2 and indices.shape[1] == 3, f"indices should be of shape [M, 3], got {indices.shape}"
+        assert len(indices) > 0, f"The geometry must have at least one face, got {len(indices)}"
+        assert indices.ndim == 2 and indices.shape[1] == 3, f"indices should be of shape [M, 3], got {indices.shape}"
         if uvs is not None:
             assert uvs.ndim == 2 and uvs.shape[1] == 2, f"uvs_coords should be of shape [N, 2], got {uvs.shape}"
             assert len(uvs) == len(vertices), "The number of uvs must be equal to the number of vertices"

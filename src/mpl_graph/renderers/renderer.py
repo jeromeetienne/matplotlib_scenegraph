@@ -28,11 +28,8 @@ class Renderer:
         # Create an axis that fills the whole figure
         self._axis = self._figure.add_axes((0, 0, 1, 1), frameon=False)
 
-        # this should be -1 to 1
-        # for perspective camera - BUG BUG
-        self._axis.set_xlim(-3, 3)
-        self._axis.set_ylim(-3, 3)
-        # for orthographic camera - BUG BUG
+        # this should be -1 to 1 - from normalized device coordinates - https://en.wikipedia.org/wiki/Graphics_pipeline
+        # - https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_model_view_projection
         self._axis.set_xlim(-1, 1)
         self._axis.set_ylim(-1, 1)
         self._artists: dict[str, matplotlib.artist.Artist] = {}

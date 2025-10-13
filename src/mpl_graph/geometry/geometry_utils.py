@@ -59,13 +59,19 @@ class GeometryUtils:
     def is_expanded(mesh_geometry: MeshGeometry) -> bool:
         # - this means that vertices, uv, normals are not shared between faces
         # - so len(vertices) == len(uvs) == len(normals) == 3 * len(faces)
+        #
+        # OR
+        # - does it mean more to have a single indice for each vertex/uv/normal ?
+        # - so len(vertices) == len(uvs) == len(normals) and len(faces) <= 3 * len(vertices)
+
+        # sanity checks - it MUST have faces
         if mesh_geometry.indices is None:
             return False
         if len(mesh_geometry.vertices) != 3 * len(mesh_geometry.indices):
             return False
-        if mesh_geometry.uvs is not None and len(mesh_geometry.vertices) != 3 * len(mesh_geometry.uvs):
+        if mesh_geometry.uvs is not None and len(mesh_geometry.vertices) != len(mesh_geometry.uvs):
             return False
-        if mesh_geometry.normals is not None and len(mesh_geometry.vertices) != 3 * len(mesh_geometry.normals):
+        if mesh_geometry.normals is not None and len(mesh_geometry.vertices) != len(mesh_geometry.normals):
             return False
         return True
 

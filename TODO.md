@@ -3,11 +3,7 @@
   - `GeometryUtils.expand_vertices(geometry)`
   - make a function to clone the vertices if needed
   - take it from the .obj loader
-- TODO should i make a `MeshGeometry` class which inherit from `Geometry` ?
-  - `GeometryShape` is only producing `MeshGeometry` it should be made obvious
-  - `Geometry` Would store only the vertices. no face, no uv, no normals
-  - `Lines` and `Points` and `Polygons` are using geometry
-  - `MeshGeometry`
+- FIXME the notion of expanded geometry is unclear. figure it out
 - do a backface culling for polygons
   - front, back, both
   - in `Constants`
@@ -48,6 +44,11 @@
 
 
 ## Done
+- DONE should i make a `MeshGeometry` class which inherit from `Geometry` ?
+  - `GeometryShape` is only producing `MeshGeometry` it should be made obvious
+  - `Geometry` Would store only the vertices. no face, no uv, no normals
+  - `Lines` and `Points` and `Polygons` are using geometry
+  - `MeshGeometry`
 - DONE apply transform to transform mesh
   - in `GeometryUtils.apply_transform(geometry, matrix4)`
 - FIXED bug in transform
