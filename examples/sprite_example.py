@@ -14,7 +14,7 @@ import numpy as np
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects.textured_mesh import TexturedMesh
+from mpl_graph.objects.mesh import Mesh
 from mpl_graph.core.texture import Texture
 from mpl_graph.objects.sprite import Sprite
 from mpl_graph.objects.points import Points

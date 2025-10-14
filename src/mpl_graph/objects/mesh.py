@@ -5,19 +5,19 @@ import numpy as np
 from ..core.object_3d import Object3D
 from ..core.texture import Texture
 from ..geometry import MeshGeometry
-from ..materials import TextureMeshMaterial
+from ..materials import MeshPhongMaterial
 
 
-class TexturedMesh(Object3D):
+class Mesh(Object3D):
     __slots__ = ("geometry", "material")
 
-    def __init__(self, geometry: MeshGeometry | None = None, material: TextureMeshMaterial | None = None) -> None:
+    def __init__(self, geometry: MeshGeometry | None = None, material: MeshPhongMaterial | None = None) -> None:
         super().__init__()
 
-        self.name = f"a {TexturedMesh.__name__}"
+        self.name = f"a {Mesh.__name__}"
         self.geometry: MeshGeometry = geometry if geometry is not None else MeshGeometry()
         """Geometry of the textured mesh."""
-        self.material: TextureMeshMaterial = material if material is not None else TextureMeshMaterial()
+        self.material: MeshPhongMaterial = material if material is not None else MeshPhongMaterial()
         """Material of the textured mesh."""
 
         self.sanity_checks()

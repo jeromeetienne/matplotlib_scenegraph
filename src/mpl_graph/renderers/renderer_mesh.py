@@ -13,16 +13,16 @@ from mpl_graph.core.constants import Constants
 from mpl_graph.core.texture import Texture
 
 # local imports
-from ..objects.textured_mesh import TexturedMesh
-from ..renderers.renderer import Renderer
+from ..objects.mesh import Mesh
+from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 
 
-class RendererTexturedMesh:
+class RendererMesh:
     @staticmethod
-    def render(renderer: "Renderer", mesh: TexturedMesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", mesh: Mesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
 
         assert mesh.geometry.indices is not None, "The mesh geometry must have face indices to be rendered"
         assert mesh.geometry.uvs is not None, "The mesh geometry must have texture coordinates to be rendered"
@@ -164,7 +164,7 @@ class RendererTexturedMesh:
                 continue
 
             axes_image = typing.cast(matplotlib.image.AxesImage, changed_artist)
-            RendererTexturedMesh.update_textured_face(
+            RendererMesh.update_textured_face(
                 mpl_axes=renderer._axis,
                 axes_image=axes_image,
                 face_vertices=face_vertices_2d,
@@ -215,7 +215,7 @@ class RendererTexturedMesh:
         # fake_texture = np.zeros((2, 2, 3), dtype=np.uint8)
         # axes_image = mpl_axes.imshow(fake_texture, origin="lower", extent=(0, 0, 0, 0))
 
-        matrix_wrap = RendererTexturedMesh.texture_coords_wrap(face_uvs, face_vertices)
+        matrix_wrap = RendererMesh.texture_coords_wrap(face_uvs, face_vertices)
         if matrix_wrap is None:
             # if degenerated triangle, hide the image
             axes_image.set_extent((0, 0, 0, 0))

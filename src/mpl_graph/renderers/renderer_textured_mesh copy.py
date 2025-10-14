@@ -12,7 +12,7 @@ import numpy as np
 from mpl_graph.core.texture import Texture
 
 # local imports
-from ..objects.textured_mesh import TexturedMesh
+from ..objects.mesh import Mesh
 from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
@@ -21,7 +21,7 @@ from ..geometry.geometry_utils import GeometryUtils
 
 class RendererTexturedMesh:
     @staticmethod
-    def render(renderer: "Renderer", mesh: TexturedMesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", mesh: Mesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
 
         assert mesh.geometry.indices is not None, "The mesh geometry must have face indices to be rendered"
         assert mesh.geometry.uvs is not None, "The mesh geometry must have texture coordinates to be rendered"

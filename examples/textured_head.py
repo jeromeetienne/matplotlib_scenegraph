@@ -15,9 +15,9 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.core.constants import Constants
 from mpl_graph.renderers import Renderer
-from mpl_graph.objects import TexturedMesh
+from mpl_graph.objects import Mesh
 from mpl_graph.geometry import Geometry
-from mpl_graph.materials import TextureMeshMaterial
+from mpl_graph.materials import MeshPhongMaterial
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -68,8 +68,8 @@ def main():
     # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
-    material = TextureMeshMaterial(texture, face_culling=Constants.FaceCulling.FrontSide, face_sorting=True)
-    mesh = TexturedMesh(mesh_geometry, material)
+    material = MeshPhongMaterial(texture, face_culling=Constants.FaceCulling.FrontSide, face_sorting=True)
+    mesh = Mesh(mesh_geometry, material)
     # mesh.position[2] = -2
     # mesh.scale[:] = 0.5
     # mesh.rotation_euler[1] = np.pi  # rotate 180deg around Y to have the face looking towards the camera
@@ -78,7 +78,7 @@ def main():
     scene.add_child(mesh)
 
     @animation_loop.decorator
-    def mesh_update(delta_time: float) -> list[TexturedMesh]:
+    def mesh_update(delta_time: float) -> list[Mesh]:
         present = time.time()
         # mesh.position[0] = np.sin(present)
         mesh.rotation_euler[1] += delta_time

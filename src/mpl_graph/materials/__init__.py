@@ -3,4 +3,4 @@ from .lines_material import LinesMaterial
 from .points_material import PointsMaterial
 from .polygons_material import PolygonsMaterial
 from .sprite_material import SpriteMaterial
-from .textured_mesh_material import TextureMeshMaterial
+from .mesh_phong_material import MeshPhongMaterial

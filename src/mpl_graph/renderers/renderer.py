@@ -10,7 +10,7 @@ from ..objects.points import Points
 from ..objects.lines import Lines
 from ..objects.polygons import Polygons
 from ..objects.sprite import Sprite
-from ..objects.textured_mesh import TexturedMesh
+from ..objects.mesh import Mesh
 from ..cameras.camera_base import CameraBase
 
 
@@ -98,10 +98,10 @@ class Renderer:
 
             _changed_artists = RendererSprite.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
-        elif isinstance(object3d, TexturedMesh):
-            from .renderer_textured_mesh import RendererTexturedMesh
+        elif isinstance(object3d, Mesh):
+            from .renderer_mesh import RendererMesh
 
-            _changed_artists = RendererTexturedMesh.render(self, object3d, camera)
+            _changed_artists = RendererMesh.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Object3D):
             # base class, do nothing
