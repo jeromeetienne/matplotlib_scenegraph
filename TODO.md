@@ -1,15 +1,3 @@
-- Start a mesh object and put multiple material
-  - see how you can handle it in the renderer
-    - renderer_mesh_wireframe.py
-    - renderer_mesh_basic.py
-    - renderer_mesh_normal.py
-    - renderer_mesh_texture.py
-  - in those case the Material is the one handling the matplotlib rendering
-  - Mesh(geometry, MeshWireframeMaterial) -> Lines (geometry is not the same, duplication of vertices)
-  - Mesh(geometry, MeshBasicMaterial) -> Polygons
-  - Mesh(geometry, MeshNormalMaterial) -> Polygons
-  - Mesh(geometry, MeshPhongMaterial) -> 
-- make a scene class
 - TODO add an assert 
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
@@ -22,7 +10,6 @@
     - a line is lit relative to its center
     - a point is lit relative to its position
     - ambient will be the same on all the same
-    - 
 - make an object `Text`
   - https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b
 - put all the sanity check you got in the contructor, put it a function
@@ -75,6 +62,18 @@
 
 
 ## Done
+- DONE Start a mesh object and put multiple material
+  - see how you can handle it in the renderer
+    - renderer_mesh_wireframe.py
+    - renderer_mesh_basic.py
+    - renderer_mesh_normal.py
+    - renderer_mesh_texture.py
+  - in those case the Material is the one handling the matplotlib rendering
+  - Mesh(geometry, MeshWireframeMaterial) -> Lines (geometry is not the same, duplication of vertices)
+  - Mesh(geometry, MeshBasicMaterial) -> Polygons
+  - Mesh(geometry, MeshNormalMaterial) -> Polygons
+  - Mesh(geometry, MeshPhongMaterial) -> 
+- DONE make a scene class
 - DONE do a backface culling for polygons
   - front, back, both
   - in `Constants`

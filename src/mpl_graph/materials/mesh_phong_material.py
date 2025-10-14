@@ -20,6 +20,8 @@ class MeshPhongMaterial(MeshMaterial):
         shininess: float | None = None,
         face_sorting: bool | None = None,
         face_culling: Constants.FaceCulling | None = None,
+        edge_colors: np.ndarray | None = None,
+        edge_widths: np.ndarray | None = None,
     ):
         super().__init__()
 
@@ -31,3 +33,7 @@ class MeshPhongMaterial(MeshMaterial):
         """Whether to sort faces by depth (painter's algorithm)."""
         self.face_culling: Constants.FaceCulling = face_culling if face_culling is not None else Constants.FaceCulling.FrontSide
         """Whether to cull faces based on their orientation relative to the camera."""
+        self.edge_colors: np.ndarray = edge_colors if edge_colors is not None else np.array([Constants.Color.BLACK])
+        """array of point edge colors, shape (N, 3) or (N, 4)"""
+        self.edge_widths: np.ndarray = edge_widths if edge_widths is not None else np.array([1.0])
+        """array of point edge widths, shape (N,)"""
