@@ -217,5 +217,5 @@ class RendererMesh:
         else:
             raise ValueError(f"Unknown face culling mode: {face_culling}")
 
-        print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
+        # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
         return faces_visible

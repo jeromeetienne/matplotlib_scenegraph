@@ -4,11 +4,10 @@ import typing
 # pip imports
 import matplotlib.artist
 import matplotlib.collections
+import matplotlib.pyplot
 import numpy as np
 
-
 # local imports
-from ..core import Constants, Texture
 from ..materials import MeshDepthMaterial
 from ..objects.mesh import Mesh
 from .renderer import Renderer
@@ -54,24 +53,23 @@ class RendererMeshDepthMaterial:
         # Computes face_colors
         # =============================================================================
 
-        # faces_depth has a shape of (n_faces,) with the mean Z of each face in NDC space
-        faces_depth_ndc = faces_vertices_world[:, :, 2].mean(axis=1)
-        # faces_depth_normalized = (faces_depth_ndc + 1.0) * 0.5
-        # faces_color = 1.0 - faces_depth_normalized
-        # print(f"balabl")
+        # # faces_depth has a shape of (n_faces,) with the mean Z of each face in NDC space
+        faces_depth_ndc = faces_vertices_ndc[:, :, 2].mean(axis=1)
 
+        # normalize faces_depth to be between 0 and 1
+        # face_depth_normalized has a shape of (n_faces,) with values between 0 and 1
         depth_min = faces_depth_ndc.min()
         depth_max = faces_depth_ndc.max()
-
-        # face_depth_normalized has a shape of (n_faces,) with values between 0 and 1
         brightness = (faces_depth_ndc - depth_min) / (depth_max - depth_min)
 
-        faces_color = np.zeros((len(faces_vertices_2d), 3), dtype=np.float32)
-        faces_color[:, 0] = brightness
-        faces_color[:, 1] = brightness
-        faces_color[:, 2] = brightness
+        # in theory _ndc is between -1 and +1 on all axis, so i could do (ndc + 1 / 2) to normalize it
+        # but my ndc is wrong :(
+        # brightness = (faces_depth_ndc + 1.0) / 2.0
 
-        # faces_color = np.ones((len(faces_vertices_2d), 3), dtype=np.float32)
+        # map brightness to a colormap to get RGBA colors
+        color_map = matplotlib.pyplot.get_cmap(material.colormap_name)
+        colors_rgba = color_map(brightness)
+        faces_color = colors_rgba
 
         # =============================================================================
         # honor material.face_sorting
@@ -92,10 +90,11 @@ class RendererMeshDepthMaterial:
         # =============================================================================
 
         faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
-        print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
+        # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
 
-        # remove hidden faces
+        # remove hidden faces - CAUTION: must be done after sorting be sure to keep the order of ALL arrays the same
         faces_vertices_2d = faces_vertices_2d[faces_visible]
+        faces_color = faces_color[faces_visible]
 
         # =============================================================================
         # Create artists if needed

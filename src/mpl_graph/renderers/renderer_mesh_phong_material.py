@@ -61,6 +61,9 @@ class RendererMeshPhongMaterial:
         # - will be used for zorder in matplotlib
         faces_depth = faces_vertices_world[:, :, 2].mean(axis=1)
 
+        if material.texture is None or material.texture.data.size == 0:
+            raise ValueError("MeshPhongMaterial requires a valid texture.")
+
         # =============================================================================
         # Create the artists if needed
         # =============================================================================

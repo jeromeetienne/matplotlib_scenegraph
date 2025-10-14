@@ -70,11 +70,12 @@ def main():
     # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
-    # material = MeshPhongMaterial(texture)
+    material = MeshPhongMaterial(texture)
     # material = MeshBasicMaterial()
-    # material = MeshNormalMaterial()
-    material = MeshDepthMaterial()
+    material = MeshNormalMaterial()
+    # material = MeshDepthMaterial(colormap_name="viridis")
     mesh = Mesh(mesh_geometry, material)
+    mesh.rotation_euler[1] = np.pi
 
     # Add the textured mesh to the scene
     scene.add_child(mesh)

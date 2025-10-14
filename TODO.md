@@ -9,6 +9,9 @@
   - Mesh(geometry, MeshBasicMaterial) -> Polygons
   - Mesh(geometry, MeshNormalMaterial) -> Polygons
   - Mesh(geometry, MeshPhongMaterial) -> 
+- TODO add an assert 
+  - ndc coord must be in [-1,+1]
+  - so after computation add the assert for it
 - lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)
   - the dedup_edges DO NOT WORK
 - do a function .save_as_obj in geometry_utils

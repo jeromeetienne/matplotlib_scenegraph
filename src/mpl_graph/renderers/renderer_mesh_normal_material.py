@@ -57,14 +57,8 @@ class RendererMeshNormalMaterial:
         faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
         camera_direction = mesh.get_world_position() - camera.get_world_position()
         camera_direction /= np.linalg.norm(camera_direction)
-        camera_cosines: np.ndarray = np.dot(faces_normals_unit, camera_direction)
-        faces_color = np.zeros((len(faces_vertices_2d), 4), dtype=np.float32)
-        faces_color[:, 0] = (camera_cosines + 1) / 2
-        faces_color[:, 1] = (camera_cosines + 1) / 2
-        faces_color[:, 2] = (camera_cosines + 1) / 2
-        faces_color[:, 3] = 1.0
-
-        faces_color = np.ones((len(faces_vertices_2d), 3), dtype=np.float32)
+        camera_cosines: np.ndarray = np.cross(faces_normals_unit, camera_direction)
+        faces_color = (np.abs(camera_cosines) + 1) / 2
 
         # =============================================================================
         # honor material.face_sorting
@@ -89,6 +83,7 @@ class RendererMeshNormalMaterial:
 
         # remove hidden faces
         faces_vertices_2d = faces_vertices_2d[faces_visible]
+        faces_color = faces_color[faces_visible]
 
         # =============================================================================
         # Create artists if needed

@@ -14,12 +14,17 @@ class MeshDepthMaterial(MeshMaterial):
 
     def __init__(
         self,
+        colormap_name: str | None = None,
         edge_colors: np.ndarray | None = None,
         edge_widths: np.ndarray | None = None,
         face_sorting: bool | None = None,
         face_culling: Constants.FaceCulling | None = None,
     ):
         super().__init__()
+
+        # list of colormap_name - https://matplotlib.org/stable/users/explain/colors/colormaps.html
+        self.colormap_name: str = colormap_name if colormap_name is not None else "gist_gray"
+        """Name of the colormap to use for depth coloring."""
 
         self.edge_colors: np.ndarray = edge_colors if edge_colors is not None else np.array([Constants.Color.BLACK]).astype(np.float32)
         """array of point edge colors, shape (N, 3) or (N, 4)"""
