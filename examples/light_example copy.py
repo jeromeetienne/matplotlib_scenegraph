@@ -16,8 +16,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.core.constants import Constants
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh, Scene
-from mpl_graph.lights import DirectionalLight, PointLight, AmbientLight, Light
-from mpl_graph.geometry import Geometry
+from mpl_graph.lights import DirectionalLight, Light
 from mpl_graph.materials import MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedMaterial
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop

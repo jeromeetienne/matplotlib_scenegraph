@@ -35,5 +35,5 @@ class MeshPhongMaterial(MeshMaterial):
         """Whether to cull faces based on their orientation relative to the camera."""
         self.edge_colors: np.ndarray = edge_colors if edge_colors is not None else np.array([Constants.Color.BLACK])
         """array of point edge colors, shape (N, 3) or (N, 4)"""
-        self.edge_widths: np.ndarray = edge_widths if edge_widths is not None else np.array([1.0])
+        self.edge_widths: np.ndarray = edge_widths if edge_widths is not None else np.array([0.1])
         """array of point edge widths, shape (N,)"""
