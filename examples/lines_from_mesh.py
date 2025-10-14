@@ -51,6 +51,8 @@ def main():
     mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)
     assert mesh_geometry.indices is not None, "The .obj file must contain face indices"
 
+    print(f"mesh_geometry vertices: {mesh_geometry.vertices.shape}, faces: {mesh_geometry.indices.shape}")
+
     # Normalize the vertices to fit in a unit cube
     mesh_geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(mesh_geometry.vertices)
 

@@ -9,6 +9,10 @@ from .mesh_geometry import MeshGeometry
 class GeometryUtils:
 
     # FIXME: it should handle Geometry and not only vertices
+    # TODO here handle geometry... and put this function in transorm_utils ?
+    # - in this module use TRansformUtils
+    # - rename this function apply_mat4x4_to_vertices ?
+
     @staticmethod
     def apply_transform(vertices: np.ndarray, transform_matrix: np.ndarray) -> np.ndarray:
         # sanity checks

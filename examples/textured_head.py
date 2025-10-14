@@ -13,6 +13,7 @@ import numpy as np
 from mpl_graph.core import Object3D, Texture
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
+from mpl_graph.core.constants import Constants
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import TexturedMesh
 from mpl_graph.geometry import Geometry
@@ -20,6 +21,7 @@ from mpl_graph.materials import TextureMeshMaterial
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
+from common.geometry_shape import GeometryShape
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 assets_path = os.path.join(__dirname__, "../assets")
@@ -39,8 +41,8 @@ def main():
     scene = Object3D()
 
     # Create a camera and add it to the scene
-    # camera = CameraOrthographic()
-    camera = CameraPerspective()
+    camera = CameraOrthographic()
+    # camera = CameraPerspective()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
@@ -58,17 +60,19 @@ def main():
     texture = texture.strip_alpha() if texture.has_alpha() else texture
 
     # Load a obj model
-    # obj_path = os.path.join(models_path, "head_meshio.obj")
-    # obj_path = os.path.join(models_path, "suzanne.obj")
-    obj_path = os.path.join(models_path, "cube_meshio.obj")
-
+    # obj_path = os.path.join(models_path, "head.obj")
+    obj_path = os.path.join(models_path, "suzanne.obj")
+    # obj_path = os.path.join(models_path, "cube_meshio.obj")
     mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
-    assert mesh_geometry.uvs is not None, "The .obj file must contain texture coordinates (vt)"
+
+    # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
-    material = TextureMeshMaterial(texture)
+    material = TextureMeshMaterial(texture, face_culling=Constants.FaceCulling.FrontSide, face_sorting=True)
     mesh = TexturedMesh(mesh_geometry, material)
-    mesh.scale[:] = 0.5
+    # mesh.position[2] = -2
+    # mesh.scale[:] = 0.5
+    # mesh.rotation_euler[1] = np.pi  # rotate 180deg around Y to have the face looking towards the camera
 
     # Add the textured mesh to the scene
     scene.add_child(mesh)
