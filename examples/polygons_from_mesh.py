@@ -72,7 +72,7 @@ def main():
     @animation_loop.decorator
     def polygons_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
-        polygons.rotation_euler[1] += delta_time
+        polygons.rotation_euler[0] += delta_time
 
         fps_monitor.print_fps()
         # polygons.position[2] = np.cos(present * 3) * 1
