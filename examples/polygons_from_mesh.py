@@ -64,7 +64,7 @@ def main():
     polygons = Polygons.from_mesh_geometry(mesh_geometry)
     polygons.material.face_culling = Constants.FaceCulling.FrontSide
     polygons.material.face_sorting = True
-    polygons.scale[:] = 1
+    polygons.scale[:] = 0.5
     scene.add_child(polygons)
 
     fps_monitor = FpsMonitor()
