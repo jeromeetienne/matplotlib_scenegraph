@@ -1,5 +1,9 @@
 - make an object `Text`
   - https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b
+- put all the sanity check you got in the contructor, put it a function
+  - call it at the end of the constructor
+  - call it in the renderer
+- textured mesh vertices are not yet transformed
 - bug in geometryShape
   - vertices are still reused . it makes `Polygons` to fail
   - `GeometryUtils.expand_vertices(geometry)`

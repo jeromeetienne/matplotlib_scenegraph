@@ -27,6 +27,7 @@ class RendererTexturedMesh:
         assert mesh.geometry.uvs is not None, "The mesh geometry must have texture coordinates to be rendered"
 
         geometry = mesh.geometry
+        material = mesh.material
 
         # Get the full transform matrix for the mesh
         transform_matrix = mesh.get_world_matrix()
@@ -117,7 +118,7 @@ class RendererTexturedMesh:
                 axes_image=axes_image,
                 face_vertices=face_vertices,
                 face_uvs=face_uvs,
-                texture=mesh.texture,
+                texture=material.texture,
                 intensity=light_intensity,
             )
 
