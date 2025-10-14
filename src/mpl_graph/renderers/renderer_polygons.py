@@ -22,21 +22,6 @@ class RendererPolygons:
     def render(renderer: "Renderer", polygons: Polygons, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         geometry = polygons.geometry
         material = polygons.material
-        # =============================================================================
-        # Create artists if needed
-        # =============================================================================
-        if polygons.uuid not in renderer._artists:
-            mpl_poly_collection = matplotlib.collections.PolyCollection([], clip_on=False, snap=False)
-            mpl_poly_collection.set_visible(False)  # hide until properly positioned and sized
-            renderer._axis.add_collection(mpl_poly_collection)
-            renderer._artists[polygons.uuid] = mpl_poly_collection
-
-        # =============================================================================
-        # Get the mpl_artist
-        # =============================================================================
-
-        mpl_poly_collection = typing.cast(matplotlib.collections.PolyCollection, renderer._artists[polygons.uuid])
-        mpl_poly_collection.set_visible(True)
 
         # =============================================================================
         # Apply full transform the vertices
@@ -104,6 +89,22 @@ class RendererPolygons:
         # =============================================================================
 
         faces_vertices2d = faces_vertices[:, :, :2]  # drop z for 2D rendering
+
+        # =============================================================================
+        # Create artists if needed
+        # =============================================================================
+        if polygons.uuid not in renderer._artists:
+            mpl_poly_collection = matplotlib.collections.PolyCollection([], clip_on=False, snap=False)
+            mpl_poly_collection.set_visible(False)  # hide until properly positioned and sized
+            renderer._axis.add_collection(mpl_poly_collection)
+            renderer._artists[polygons.uuid] = mpl_poly_collection
+
+        # =============================================================================
+        # Get the mpl_artist
+        # =============================================================================
+
+        mpl_poly_collection = typing.cast(matplotlib.collections.PolyCollection, renderer._artists[polygons.uuid])
+        mpl_poly_collection.set_visible(True)
 
         # =============================================================================
         # Update all the artists

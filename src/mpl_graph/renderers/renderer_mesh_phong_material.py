@@ -22,6 +22,75 @@ from ..geometry.geometry_utils import GeometryUtils
 
 class RendererMeshPhongMaterial:
 
+    @staticmethod
+    def render(
+        renderer: "Renderer",
+        mesh: Mesh,
+        camera: CameraBase,
+        faces_vertices_world: np.ndarray,
+        faces_vertices_2d: np.ndarray,
+        faces_uvs: np.ndarray,
+        light_intensities: np.ndarray,
+        faces_visible: np.ndarray,
+    ) -> list[matplotlib.artist.Artist]:
+        geometry = mesh.geometry
+        material = mesh.material
+
+        # =============================================================================
+        # Sort triangles by depth (painter's algorithm)
+        # =============================================================================
+
+        # compute face depth as the mean Z of the face vertices in world space (negative is in front of the camera)
+        # - will be used for zorder in matplotlib
+        faces_depth = faces_vertices_world[:, :, 2].mean(axis=1)
+
+        # =============================================================================
+        # Create the artists if needed
+        # =============================================================================
+        face_uuid = f"{mesh.uuid}_face_0"
+        if face_uuid not in renderer._artists:
+            # Create a list of axes images for each face
+            faces_count = len(faces_vertices_2d)
+            fake_texture = np.zeros((1, 1, 3), dtype=np.uint8)
+            for face_index in range(faces_count):
+                axes_image = renderer._axis.imshow(fake_texture, origin="lower", extent=(0, 0, 0, 0))
+                axes_image.set_visible(False)  # hide until properly positioned and sized
+                face_uuid = f"{mesh.uuid}_face_{face_index}"
+                renderer._artists[face_uuid] = axes_image
+
+        # =============================================================================
+        # Loop over faces and draw them
+        # =============================================================================
+        changed_artists: list[matplotlib.artist.Artist] = []
+        for face_index, (face_vertices_2d, face_uvs, light_intensity, face_visible, face_depth) in enumerate(
+            zip(faces_vertices_2d, faces_uvs, light_intensities, faces_visible, faces_depth)
+        ):
+            face_uuid = f"{mesh.uuid}_face_{face_index}"
+            changed_artist = renderer._artists[face_uuid]
+            changed_artists.append(changed_artist)
+
+            # set the zorder based on the depth (the more negative, the closer to the camera), so invert the depth
+            # - also, matplotlib has a limited zorder range, so scale it down
+            # if material.face_sorting:
+            changed_artist.set_zorder(-face_depth)
+            changed_artist.set_visible(face_visible)
+
+            # skip hidden faces
+            if not face_visible:
+                continue
+
+            axes_image = typing.cast(matplotlib.image.AxesImage, changed_artist)
+            RendererMeshPhongMaterial.update_textured_face(
+                mpl_axes=renderer._axis,
+                axes_image=axes_image,
+                face_vertices_2d=face_vertices_2d,
+                face_uvs=face_uvs,
+                texture=material.texture,
+                intensity=light_intensity,
+            )
+
+        return changed_artists
+
     # =============================================================================
     # Update the artist for a texture face
     # =============================================================================
@@ -29,7 +98,7 @@ class RendererMeshPhongMaterial:
     def update_textured_face(
         mpl_axes: matplotlib.axes.Axes,
         axes_image: matplotlib.image.AxesImage,
-        face_vertices: np.ndarray,
+        face_vertices_2d: np.ndarray,
         face_uvs: np.ndarray,
         texture: Texture,
         intensity: np.float64,
@@ -62,7 +131,7 @@ class RendererMeshPhongMaterial:
         # fake_texture = np.zeros((2, 2, 3), dtype=np.uint8)
         # axes_image = mpl_axes.imshow(fake_texture, origin="lower", extent=(0, 0, 0, 0))
 
-        matrix_wrap = RendererMeshPhongMaterial.texture_coords_wrap(face_uvs, face_vertices)
+        matrix_wrap = RendererMeshPhongMaterial.texture_coords_wrap(face_uvs, face_vertices_2d)
         if matrix_wrap is None:
             # if degenerated triangle, hide the image
             axes_image.set_extent((0, 0, 0, 0))
@@ -80,6 +149,10 @@ class RendererMeshPhongMaterial:
         axes_image.set_extent(extent)
         axes_image.set_transform(transform)
         axes_image.set_clip_path(path, transform)
+
+    # =============================================================================
+    # Compute mapping between image coord and screen coordinate
+    # =============================================================================
 
     @staticmethod
     def texture_coords_wrap(face_coord_1: np.ndarray, face_coord_2: np.ndarray) -> matplotlib.transforms.Affine2D | None:
