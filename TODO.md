@@ -9,6 +9,8 @@
   - Mesh(geometry, MeshBasicMaterial) -> Polygons
   - Mesh(geometry, MeshNormalMaterial) -> Polygons
   - Mesh(geometry, MeshPhongMaterial) -> 
+- lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)
+  - the dedup_edges DO NOT WORK
 - do a function .save_as_obj in geometry_utils
 - for lighting - https://chatgpt.com/c/68edfbd0-efb8-8330-b1a2-a6e65f3460ed
   - i can do that per polygon in flat shading

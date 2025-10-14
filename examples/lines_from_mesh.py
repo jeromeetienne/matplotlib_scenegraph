@@ -58,7 +58,9 @@ def main():
 
     # Build the lines object
     material = LinesMaterial(colors=np.array([Constants.Color.GRAY]))
-    lines = Lines.from_mesh_geometry(mesh_geometry)
+    lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)
+
+    print(f"lines vertices: {lines.geometry.vertices.shape}")
     lines.material.colors = Constants.Color.CYAN
     lines.scale[:] = 0.5
     scene.add_child(lines)
