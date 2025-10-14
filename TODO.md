@@ -1,3 +1,13 @@
+- Start a mesh object and put multiple material
+  - see how you can handle it in the renderer
+    - renderer_mesh_wireframe.py
+    - renderer_mesh_basic.py
+    - renderer_mesh_normal.py
+    - renderer_mesh_texture.py
+  - Mesh(geometry, MeshWireframeMaterial) -> Lines (geometry is not the same, duplication of vertices)
+  - Mesh(geometry, MeshBasicMaterial) -> Polygons
+  - Mesh(geometry, MeshNormalMaterial) -> Polygons
+  - Mesh(geometry, MeshTextureMaterial) -> 
 - make an object `Text`
   - https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b
 - put all the sanity check you got in the contructor, put it a function

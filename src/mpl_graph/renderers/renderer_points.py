@@ -42,13 +42,14 @@ class RendererPoints:
         # =============================================================================
 
         # full_transform = points.get_world_matrix()
-        full_transform = TransformUtils.compute_mvp_matrix(camera, points)
-        vertices_transformed = GeometryUtils.apply_transform(geometry.vertices, full_transform)
+        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, points)
+        vertices_transformed = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
 
         # dispatch the post_transforming event
         points.post_transform.dispatch(vertices_transformed)
 
-        vertices_2d = vertices_transformed[:, :2]  # drop z for 2D rendering
+        # drop z for 2D rendering
+        vertices_2d = vertices_transformed[:, :2]
 
         # =============================================================================
         # Update the matplotlib artists data

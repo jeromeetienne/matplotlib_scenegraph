@@ -43,13 +43,14 @@ class RendererSprite:
         vertices = np.array([sprite.position])
 
         # full_transform = sprite.get_world_matrix()
-        full_transform = TransformUtils.compute_mvp_matrix(camera, sprite)
-        vertices = GeometryUtils.apply_transform(vertices, full_transform)
+        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, sprite)
+        vertices = GeometryUtils.apply_transform(vertices, mvp_matrix)
 
         # dispatch the post_transforming event
         sprite.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
 
-        vertices_2d = vertices[:, :2]  # drop z for 2D rendering
+        # drop z for 2D rendering
+        vertices_2d = vertices[:, :2]
 
         # =============================================================================
         # Update the artist

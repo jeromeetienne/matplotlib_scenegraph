@@ -20,7 +20,7 @@ class RendererLines:
         geometry = lines.geometry
         material = lines.material
 
-        print("Rendering Lines", lines.name)
+        # print("Rendering Lines", lines.name)
 
         line_count = len(geometry.vertices) // 2
         assert line_count * 2 == len(geometry.vertices), "Lines vertices length must be even"
@@ -46,17 +46,23 @@ class RendererLines:
         # =============================================================================
 
         # full_transform = lines.get_world_matrix()
-        full_transform = TransformUtils.compute_mvp_matrix(camera, lines)
-        vertices = GeometryUtils.apply_transform(geometry.vertices, full_transform)
+        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, lines)
+        vertices = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
 
         # dispatch the post_transforming event
         lines.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
 
-        vertices_2d = vertices[:, :2]  # drop z for 2D rendering
+        # drop z for 2D rendering
+        vertices_2d = vertices[:, :2]
 
-        vertices_2d = vertices_2d.reshape((line_count, 2, 2))  # reshape to (line_count, 2 endpoints, 2 coords)
+        # reshape to (line_count, 2 endpoints, 2 coords)
+        vertices_2d = vertices_2d.reshape((line_count, 2, 2))
 
+        # =============================================================================
+        # Update the artists
+        # =============================================================================
         mpl_line_collection.set_segments(typing.cast(list, vertices_2d))
         mpl_line_collection.set_color(typing.cast(list, material.colors))
 
+        # Return the changed_artists
         return [mpl_line_collection]
