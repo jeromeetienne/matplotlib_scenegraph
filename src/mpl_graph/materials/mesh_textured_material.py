@@ -1,15 +1,14 @@
 # pip imports
 import numpy as np
 
-from mpl_graph.core.constants import Constants
 
 # local imports
-from .material import Material
+from ..core.constants import Constants
 from ..core import Texture
 from .mesh_material import MeshMaterial
 
 
-class MeshPhongMaterial(MeshMaterial):
+class MeshTexturedaterial(MeshMaterial):
     """A simple material class to hold texture mesh material properties."""
 
     __slots__ = "texture"

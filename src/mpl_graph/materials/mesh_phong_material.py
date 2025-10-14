@@ -5,7 +5,7 @@ from mpl_graph.core.constants import Constants
 
 # local imports
 from .material import Material
-from ..core import Texture
+from ..core import Texture, Constants
 from .mesh_material import MeshMaterial
 
 
@@ -16,14 +16,14 @@ class MeshPhongMaterial(MeshMaterial):
 
     def __init__(
         self,
-        texture: Texture | None = None,
+        color: np.ndarray | None = None,
         face_sorting: bool | None = None,
         face_culling: Constants.FaceCulling | None = None,
     ):
         super().__init__()
 
-        self.texture: Texture | None = texture
-        """Texture for the TextureMeshMaterial."""
+        self.color: np.ndarray = color if color is not None else Constants.Color.CYAN
+        """Base color of the material, as an (R, G, B) array with values in [0, 1]."""
         self.face_sorting: bool = face_sorting if face_sorting is not None else True
         """Whether to sort faces by depth (painter's algorithm)."""
         self.face_culling: Constants.FaceCulling = face_culling if face_culling is not None else Constants.FaceCulling.FrontSide

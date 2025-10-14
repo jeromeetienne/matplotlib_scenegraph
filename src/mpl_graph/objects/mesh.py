@@ -5,7 +5,7 @@ import numpy as np
 from ..core.object_3d import Object3D
 from ..core.texture import Texture
 from ..geometry import MeshGeometry
-from ..materials import MeshMaterial, MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial
+from ..materials import MeshMaterial, MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedaterial
 
 
 class Mesh(Object3D):
@@ -32,11 +32,12 @@ class Mesh(Object3D):
         elif isinstance(self.material, MeshDepthMaterial):
             pass
         elif isinstance(self.material, MeshPhongMaterial):
-            if self.material.texture is not None:
-                assert self.geometry.uvs is not None, f"The geometry must have texture coordinates (uvs) defined for a textured mesh"
-                assert self.material.texture is not None, f"The material must have a texture defined for a textured mesh"
-                assert len(self.geometry.uvs) == len(
-                    self.geometry.vertices
-                ), f"The number of uvs must be equal to the number of vertices, got {len(self.geometry.uvs)} uvs and {len(self.geometry.vertices)} vertices"
+            pass
+        elif isinstance(self.material, MeshTexturedaterial):
+            assert self.geometry.uvs is not None, f"The geometry must have texture coordinates (uvs) defined for a textured mesh"
+            assert self.material.texture is not None, f"The material must have a texture defined for a textured mesh"
+            assert len(self.geometry.uvs) == len(
+                self.geometry.vertices
+            ), f"The number of uvs must be equal to the number of vertices, got {len(self.geometry.uvs)} uvs and {len(self.geometry.vertices)} vertices"
         else:
             raise TypeError(f"The material must be of type MeshPhongMaterial or MeshBasicMaterial, got {type(self.material)}")

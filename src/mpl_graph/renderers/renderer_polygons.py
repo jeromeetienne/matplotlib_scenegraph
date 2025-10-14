@@ -23,6 +23,8 @@ class RendererPolygons:
         geometry = polygons.geometry
         material = polygons.material
 
+        # TODO factorize with RendererMesh
+
         # =============================================================================
         # Apply full transform the vertices
         # =============================================================================

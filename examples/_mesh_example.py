@@ -16,8 +16,9 @@ from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.core.constants import Constants
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh
+from mpl_graph.lights import DirectionalLight
 from mpl_graph.geometry import Geometry
-from mpl_graph.materials import MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial
+from mpl_graph.materials import MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedaterial
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -55,6 +56,10 @@ def main():
     # Load a model
     # =============================================================================
 
+    directional_light = DirectionalLight()
+    directional_light.position = np.array((1.0, 1.0, 1.0))
+    scene.add_child(directional_light)
+
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)
@@ -70,8 +75,9 @@ def main():
     # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
-    material = MeshPhongMaterial(texture)
+    # material = MeshTexturedaterial(texture)
     # material = MeshPhongMaterial()
+    material = MeshPhongMaterial()
     # material = MeshBasicMaterial()
     # material = MeshNormalMaterial()
     # material = MeshDepthMaterial(colormap_name="viridis")

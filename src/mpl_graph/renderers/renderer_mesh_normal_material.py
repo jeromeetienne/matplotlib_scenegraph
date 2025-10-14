@@ -79,7 +79,7 @@ class RendererMeshNormalMaterial:
         # =============================================================================
 
         faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
-        print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
+        # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
 
         # remove hidden faces
         faces_vertices_2d = faces_vertices_2d[faces_visible]
