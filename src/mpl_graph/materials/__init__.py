@@ -1,2 +1,4 @@
 from .material import Material
-from .line_material import LineMaterial
+from .lines_material import LinesMaterial
+from .points_material import PointsMaterial
+from .polygons_material import PolygonsMaterial

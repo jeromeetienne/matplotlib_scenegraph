@@ -20,6 +20,8 @@ class RendererLines:
         geometry = lines.geometry
         material = lines.material
 
+        print("Rendering Lines", lines.name)
+
         line_count = len(geometry.vertices) // 2
         assert line_count * 2 == len(geometry.vertices), "Lines vertices length must be even"
 
@@ -55,6 +57,6 @@ class RendererLines:
         vertices_2d = vertices_2d.reshape((line_count, 2, 2))  # reshape to (line_count, 2 endpoints, 2 coords)
 
         mpl_line_collection.set_segments(typing.cast(list, vertices_2d))
-        mpl_line_collection.set_color(typing.cast(list, material.color))
+        mpl_line_collection.set_color(typing.cast(list, material.colors))
 
         return [mpl_line_collection]

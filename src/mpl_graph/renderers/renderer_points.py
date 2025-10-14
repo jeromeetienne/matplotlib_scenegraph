@@ -18,6 +18,8 @@ class RendererPoints:
     @staticmethod
     def render(renderer: "Renderer", points: Points, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         geometry = points.geometry
+        material = points.material
+
         # =============================================================================
         # Create the artists if needed
         # =============================================================================
@@ -53,9 +55,9 @@ class RendererPoints:
         # =============================================================================
 
         mpl_path_collection.set_offsets(offsets=vertices_2d)
-        mpl_path_collection.set_sizes(points.sizes.tolist())  # set a default size for each point
-        mpl_path_collection.set_color(points.colors.tolist())
-        mpl_path_collection.set_edgecolor(points.edge_colors.tolist())
-        mpl_path_collection.set_linewidth(points.edge_widths.tolist())
+        mpl_path_collection.set_sizes(typing.cast(list, material.sizes))  # set a default size for each point
+        mpl_path_collection.set_color(typing.cast(list, material.colors))
+        mpl_path_collection.set_edgecolor(typing.cast(list, material.edge_colors))
+        mpl_path_collection.set_linewidth(typing.cast(list, material.edge_widths))
 
         return [mpl_path_collection]

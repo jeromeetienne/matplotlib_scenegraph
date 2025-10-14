@@ -21,6 +21,7 @@ class RendererPolygons:
     @staticmethod
     def render(renderer: "Renderer", polygons: Polygons, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         geometry = polygons.geometry
+        material = polygons.material
 
         # =============================================================================
         # Create artists if needed
@@ -53,7 +54,7 @@ class RendererPolygons:
         # =============================================================================
         # Compute face normals - needed for lighting and back-face culling
         # =============================================================================
-        if polygons.face_culling != Constants.FaceCulling.BothSides:
+        if material.face_culling != Constants.FaceCulling.BothSides:
             faces_normals = np.cross(
                 faces_vertices[:, 2] - faces_vertices[:, 0],
                 faces_vertices[:, 1] - faces_vertices[:, 0],
@@ -72,7 +73,7 @@ class RendererPolygons:
             camera_cosines: np.ndarray = np.dot(faces_normals_unit, camera_direction)
 
             # determine which faces are hidden based on the face_culling mode
-            faces_hidden = camera_cosines <= 0 if polygons.face_culling == Constants.FaceCulling.BackSide else camera_cosines >= 0
+            faces_hidden = camera_cosines <= 0 if material.face_culling == Constants.FaceCulling.BackSide else camera_cosines >= 0
         else:
             # no face hidden - all False
             faces_hidden = np.zeros(shape=(len(faces_vertices),), dtype=bool)
@@ -86,7 +87,7 @@ class RendererPolygons:
 
         # Sort polygons by depth (painter's algorithm)
         # FIXME how does it interact with the zorder at the object3D level ?
-        if polygons.face_sorting:
+        if material.face_sorting:
             # compute the depth of each face as the mean z value of its vertices
             faces_depth = faces_vertices[:, :, 2].mean(axis=1)
             # get the sorting indices (from farthest to nearest)
@@ -125,8 +126,7 @@ class RendererPolygons:
 
         # update the PathCollection with the new patches
         mpl_path_collection.set_paths(mpl_patches_polygons)
-        mpl_path_collection.set_facecolor(polygons.color.tolist())
-        mpl_path_collection.set_facecolor((0.5, 0.5, 0.5, 1))
+        mpl_path_collection.set_facecolor(material.colors.tolist())
         mpl_path_collection.set_edgecolor((0, 0, 0, 0.3))
         mpl_path_collection.set_linewidth(0.5)
 

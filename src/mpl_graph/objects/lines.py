@@ -4,13 +4,13 @@ import numpy as np
 from ..core.object_3d import Object3D
 from ..core.constants import Constants
 from ..geometry import Geometry, MeshGeometry
-from ..materials.line_material import LineMaterial
+from ..materials.lines_material import LinesMaterial
 
 
 class Lines(Object3D):
     __slots__ = ("geometry", "material")
 
-    def __init__(self, geometry: Geometry = Geometry(), material: LineMaterial = LineMaterial()) -> None:
+    def __init__(self, geometry: Geometry | None = None, material: LinesMaterial | None = None) -> None:
         """
         Create a Lines object.
         - each line segment has 2 vertices
@@ -18,12 +18,12 @@ class Lines(Object3D):
         """
         super().__init__()
 
-        # sanity checks
-        assert len(geometry.vertices) % 2 == 0, f"Lines vertices length must be even, got {len(geometry.vertices)}"
-
         self.name = f"a {Lines.__name__}"
-        self.geometry: Geometry = geometry
-        self.material: LineMaterial = material
+        self.geometry: Geometry = geometry if geometry is not None else Geometry()
+        self.material: LinesMaterial = material if material is not None else LinesMaterial()
+
+        # sanity checks
+        assert len(self.geometry.vertices) % 2 == 0, f"Lines vertices length must be even, got {len(self.geometry.vertices)}"
 
     @staticmethod
     def from_mesh_geometry(mesh_geometry: MeshGeometry) -> "Lines":

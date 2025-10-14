@@ -62,8 +62,8 @@ def main():
 
     # Create a polygons object
     polygons = Polygons.from_mesh_geometry(mesh_geometry)
-    polygons.face_culling = Constants.FaceCulling.FrontSide
-    polygons.face_sorting = True
+    polygons.material.face_culling = Constants.FaceCulling.FrontSide
+    polygons.material.face_sorting = True
     polygons.scale[:] = 1
     scene.add_child(polygons)
 

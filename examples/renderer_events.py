@@ -10,13 +10,14 @@ import time
 import numpy as np
 
 # local imports
-from mpl_graph.core.object_3d import Object3D
+from mpl_graph.core import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.renderers.renderer import Renderer
+from mpl_graph.renderers import Renderer
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
-from mpl_graph.objects.points import Points
-from mpl_graph.geometry.geometry import Geometry
+from mpl_graph.objects import Points
+from mpl_graph.geometry import Geometry
+from mpl_graph.materials import PointsMaterial
 from mpl_graph.cameras.camera_base import CameraBase
 
 
@@ -45,7 +46,8 @@ def main():
     colors = np.array([[1.0, 0.0, 0.0, 1.0] for i in range(point_count)])
     sizes = np.array([100.0 for i in range(point_count)])
     edge_colors = np.array([[0.0, 0.0, 0.0, 0.2] for i in range(point_count)])
-    points = Points(geometry, color=colors, sizes=sizes, edge_colors=edge_colors)
+    material = PointsMaterial(colors=colors, sizes=sizes, edge_colors=edge_colors)
+    points = Points(geometry, material)
     scene.add_child(points)
 
     @points.post_transform.subscriber
@@ -56,9 +58,9 @@ def main():
         vertices_transformed[:] = vertices_transformed[sorted_indices]
         # apply same sorting to points.geometry.vertices, points.colors etc... to preserve the correct association
         points.geometry.vertices[:] = points.geometry.vertices[sorted_indices]
-        points.colors[:] = points.colors[sorted_indices]
-        points.sizes[:] = points.sizes[sorted_indices]
-        points.edge_colors[:] = points.edge_colors[sorted_indices]
+        points.material.colors[:] = points.material.colors[sorted_indices]
+        points.material.sizes[:] = points.material.sizes[sorted_indices]
+        points.material.edge_colors[:] = points.material.edge_colors[sorted_indices]
         # points.edge_widths[:] = points.edge_widths[sorted_indices]
 
         # get the min and max y values
@@ -69,7 +71,7 @@ def main():
         for vertex_index, vertex in enumerate(vertices_transformed):
             color_component = (vertex[2] - z_min) / z_range
             color = np.array([1.0, 1.0 - color_component, 1.0 - color_component, 1.0], dtype=np.float32)
-            points.colors[vertex_index] = color
+            points.material.colors[vertex_index] = color
 
     # points.post_transform.subscribe(post_transform_points)
 

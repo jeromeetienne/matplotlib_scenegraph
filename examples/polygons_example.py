@@ -61,7 +61,7 @@ def main():
     vertices_per_polygon = vertices.shape[1]
     vertices = vertices.reshape(polygon_count * vertices_per_polygon, 3)
     geometry = Geometry(vertices=vertices)
-    quad_polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
+    quad_polygons = Polygons(polygon_count, vertices_per_polygon, geometry)
     scene.add_child(quad_polygons)
 
     @animation_loop.decorator

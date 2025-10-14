@@ -31,7 +31,7 @@ def main():
     # =============================================================================
 
     # Create a renderer
-    renderer = Renderer(100, 100)
+    renderer = Renderer(100, 100, depth_sorting=True)
 
     # Create the scene root
     scene = Object3D()
@@ -51,13 +51,13 @@ def main():
     geometry_box1 = GeometryShape.box()
     box1_lines = Lines.from_mesh_geometry(geometry_box1)
     box1_lines.position[0] = -0.5
-    box1_lines.color = Constants.Color.GREEN
+    box1_lines.material.colors = Constants.Color.GREEN
     scene.add_child(box1_lines)
 
     geometry_box2 = GeometryShape.box()
     box2_lines = Lines.from_mesh_geometry(geometry_box2)
     box2_lines.position[0] = 0.5
-    box2_lines.color = Constants.Color.RED
+    box2_lines.material.colors = Constants.Color.RED
     scene.add_child(box2_lines)
 
     @animation_loop.decorator

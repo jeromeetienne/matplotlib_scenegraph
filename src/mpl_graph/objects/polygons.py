@@ -7,20 +7,13 @@ import typing
 # local imports
 from ..core import Constants, Object3D
 from ..geometry import Geometry, MeshGeometry
+from ..materials import PolygonsMaterial
 
 
 class Polygons(Object3D):
-    __slots__ = ("polygon_count", "vertices_per_polygon", "geometry", "color", "face_sorting", "face_culling")
+    __slots__ = ("polygon_count", "vertices_per_polygon", "geometry", "material")
 
-    def __init__(
-        self,
-        geometry: Geometry,
-        polygon_count: int,
-        vertices_per_polygon: int,
-        color: np.ndarray = Constants.Color.GRAY,
-        face_sorting: bool = False,
-        face_culling: Constants.FaceCulling = Constants.FaceCulling.BothSides,
-    ) -> None:
+    def __init__(self, polygon_count: int, vertices_per_polygon: int, geometry: Geometry, material: PolygonsMaterial | None = None) -> None:
         """
         Create a Polygons object.
         - able to have multiple polygons with shared vertices
@@ -44,12 +37,8 @@ class Polygons(Object3D):
         """number of vertices per polygon."""
         self.geometry: Geometry = geometry
         """Geometry object containing the vertices."""
-        self.face_sorting: bool = face_sorting
-        """Whether to sort faces by depth (painter's algorithm)."""
-        self.face_culling: Constants.FaceCulling = face_culling
-        """Whether to cull faces based on their orientation relative to the camera."""
-
-        self.color: np.ndarray = color
+        self.material: PolygonsMaterial = material if material is not None else PolygonsMaterial()
+        """Material object containing the material properties."""
 
     @staticmethod
     def from_mesh_geometry(geometry: MeshGeometry) -> "Polygons":
@@ -60,8 +49,8 @@ class Polygons(Object3D):
         # sanity check
         assert geometry.indices is not None, "The mesh geometry MUST contain face indices"
         # Create a polygons object
-        polygon_count = geometry.indices.shape[0]
-        vertices_per_polygon = geometry.indices.shape[1]
-        polygons = Polygons(geometry, polygon_count, vertices_per_polygon)
+        polygon_count: int = geometry.indices.shape[0]
+        vertices_per_polygon: int = geometry.indices.shape[1]
+        polygons = Polygons(polygon_count, vertices_per_polygon, geometry)
 
         return polygons

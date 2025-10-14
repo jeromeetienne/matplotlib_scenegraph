@@ -38,7 +38,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = Renderer(256, 256)
+    renderer = Renderer(256, 256, depth_sorting=True)
 
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
@@ -61,7 +61,7 @@ def main():
 
     geometry_grid = GeometryShape.grid(5.0, 5.0)
     grid_lines = Lines.from_mesh_geometry(geometry_grid)
-    grid_lines.color = Constants.Color.CYAN
+    grid_lines.material.colors = Constants.Color.CYAN
     grid_lines.position[1] = 0
     grid_lines.position[2] = -0.01  # trick to ensure the grid is behind the other objects
     scene.add_child(grid_lines)

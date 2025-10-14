@@ -19,6 +19,7 @@ from mpl_graph.core.texture import Texture
 from mpl_graph.objects.sprite import Sprite
 from mpl_graph.objects.points import Points
 from mpl_graph.geometry.geometry import Geometry
+from mpl_graph.materials import PointsMaterial
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
 
@@ -51,7 +52,8 @@ def main():
     vertices = np.random.uniform(-1, 1, (point_count, 3))
     geometry = Geometry(vertices)
     colors = np.array([[1, 0, 0, 1] for i in range(point_count)])
-    points = Points(geometry, color=colors)
+    material = PointsMaterial(colors=colors)
+    points = Points(geometry, material)
     points.scale[:] = 0.5
     scene.add_child(points)
 

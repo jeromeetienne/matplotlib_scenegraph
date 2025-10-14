@@ -16,7 +16,8 @@ from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects.points import Points
-from mpl_graph.geometry.geometry import Geometry
+from mpl_graph.geometry import Geometry
+from mpl_graph.materials import PointsMaterial
 from mpl_graph.core.constants import Constants
 from common.example_utils import ExamplesUtils
 from common.animation_loop import AnimationLoop
@@ -49,7 +50,8 @@ def main():
     point_count = 1000
     geometry = Geometry(np.random.uniform(-1, 1, (point_count, 3)))
     colors = np.array([Constants.Color.CYAN for i in range(point_count)])
-    points = Points(geometry, color=colors)
+    material = PointsMaterial(colors=colors)
+    points = Points(geometry, material)
     points.scale[:] = 0.5
     scene.add_child(points)
 
