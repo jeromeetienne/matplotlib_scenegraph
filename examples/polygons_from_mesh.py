@@ -12,7 +12,7 @@ from mpl_graph.core import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects import Polygons
+from mpl_graph.objects import Polygons, Scene
 from mpl_graph.core import TransformUtils
 from mpl_graph.geometry import Geometry, GeometryUtils
 from mpl_graph.core.constants import Constants
@@ -32,7 +32,7 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
-    scene = Object3D()
+    scene = Scene()
 
     # camera = CameraPerspective()
     camera = CameraOrthographic()

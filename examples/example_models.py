@@ -11,6 +11,7 @@ import typing
 
 # local imports
 from mpl_graph.core.object_3d import Object3D
+from mpl_graph.objects import Scene
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
@@ -22,7 +23,7 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
-    scene = Object3D()
+    scene = Scene()
     scene.name = "Scene"
 
     camera = CameraOrthographic()

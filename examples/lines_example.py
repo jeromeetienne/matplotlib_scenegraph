@@ -10,7 +10,7 @@ import numpy as np
 from mpl_graph.core import Object3D, Constants
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers import Renderer
-from mpl_graph.objects import Lines
+from mpl_graph.objects import Lines, Scene
 from mpl_graph.materials import LinesMaterial
 from mpl_graph.geometry import Geometry
 from common.animation_loop import AnimationLoop
@@ -25,7 +25,7 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
-    scene = Object3D()
+    scene = Scene()
 
     camera = CameraOrthographic()
     scene.add_child(camera)

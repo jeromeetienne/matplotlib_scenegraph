@@ -15,7 +15,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.core.constants import Constants
 from mpl_graph.renderers import Renderer
-from mpl_graph.objects import Mesh
+from mpl_graph.objects import Mesh, Scene
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import MeshPhongMaterial, MeshTexturedMaterial
 from common.mesh_utils import MeshUtils
@@ -38,7 +38,7 @@ def main():
     renderer = Renderer(256, 256)
 
     # Create the scene root
-    scene = Object3D()
+    scene = Scene()
 
     # Create a camera and add it to the scene
     camera = CameraOrthographic()

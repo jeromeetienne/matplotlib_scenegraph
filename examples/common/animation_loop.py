@@ -10,6 +10,7 @@ import matplotlib.pyplot
 # local imports
 from common.example_utils import ExamplesUtils
 from mpl_graph.core.object_3d import Object3D
+from mpl_graph.objects import Scene
 from mpl_graph.cameras.camera_base import CameraBase
 from mpl_graph.renderers.renderer import Renderer
 
@@ -51,7 +52,7 @@ class AnimationLoop:
     # .start/.stop
     # =============================================================================
 
-    def start(self, scene: Object3D, camera: CameraBase):
+    def start(self, scene: Scene, camera: CameraBase):
         """Start the animation loop."""
 
         self._scene = scene

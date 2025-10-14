@@ -10,10 +10,11 @@ from typing import Sequence
 import numpy as np
 
 # local imports
-from mpl_graph.core.object_3d import Object3D
+from mpl_graph.core import Object3D
+from mpl_graph.objects import Scene
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
-from mpl_graph.renderers.renderer import Renderer
+from mpl_graph.renderers import Renderer
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
 from common.camera_controller_awds import ObjectControllerWasd
@@ -30,7 +31,7 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
-    scene = Object3D()
+    scene = Scene()
 
     camera = CameraPerspective()
     scene.add_child(camera)

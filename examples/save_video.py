@@ -14,7 +14,7 @@ import numpy as np
 from mpl_graph.core import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects import Points
+from mpl_graph.objects import Points, Scene
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import PointsMaterial
 from common.animation_loop import AnimationLoop
@@ -30,7 +30,7 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
-    scene = Object3D()
+    scene = Scene()
 
     camera = CameraOrthographic()
     scene.add_child(camera)

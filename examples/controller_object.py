@@ -11,6 +11,7 @@ import numpy as np
 
 # local imports
 from mpl_graph.core.object_3d import Object3D
+from mpl_graph.objects import Scene
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
@@ -30,7 +31,7 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
-    scene = Object3D()
+    scene = Scene()
 
     camera = CameraPerspective()
     scene.add_child(camera)

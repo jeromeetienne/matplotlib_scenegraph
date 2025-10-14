@@ -13,7 +13,7 @@ import numpy as np
 from mpl_graph.core import Object3D
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers import Renderer
-from mpl_graph.objects import Points, Lines
+from mpl_graph.objects import Points, Lines, Scene
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import PointsMaterial
 from common.example_utils import ExamplesUtils
@@ -28,7 +28,7 @@ def main():
     renderer = Renderer(512, 512)
 
     # Create the scene root
-    scene = Object3D()
+    scene = Scene()
 
     # Create a camera
     camera = CameraOrthographic()

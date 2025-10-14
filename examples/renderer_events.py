@@ -15,7 +15,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers import Renderer
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
-from mpl_graph.objects import Points
+from mpl_graph.objects import Points, Scene
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import PointsMaterial
 from mpl_graph.cameras.camera_base import CameraBase
@@ -25,7 +25,7 @@ def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
-    scene = Object3D()
+    scene = Scene()
 
     camera = CameraOrthographic()
     scene.add_child(camera)

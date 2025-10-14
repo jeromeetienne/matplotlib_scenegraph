@@ -15,7 +15,7 @@ import matplotlib.pyplot
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects.points import Points
+from mpl_graph.objects import Points, Scene
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import PointsMaterial
 from mpl_graph.core.constants import Constants
@@ -32,7 +32,7 @@ def main():
     renderer = Renderer(512, 512)
 
     # Create the scene root
-    scene = Object3D()
+    scene = Scene()
 
     # Create a camera
     camera = CameraPerspective()
