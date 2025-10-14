@@ -154,8 +154,8 @@ class RendererMesh:
 
             changed_artists = RendererMeshPhongMaterial.render(
                 renderer=renderer,
-                mesh=mesh,
                 camera=camera,
+                mesh=mesh,
                 faces_vertices_world=faces_vertices_world,
                 faces_vertices_ndc=faces_vertices_ndc,
                 faces_vertices_2d=faces_vertices_2d,

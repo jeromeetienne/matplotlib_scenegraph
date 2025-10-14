@@ -17,7 +17,7 @@ from mpl_graph.core.constants import Constants
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh
 from mpl_graph.geometry import Geometry
-from mpl_graph.materials import MeshPhongMaterial
+from mpl_graph.materials import MeshPhongMaterial, MeshTexturedaterial
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -68,7 +68,7 @@ def main():
     # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
-    material = MeshPhongMaterial(texture, face_culling=Constants.FaceCulling.FrontSide, face_sorting=True)
+    material = MeshTexturedaterial(texture, face_culling=Constants.FaceCulling.FrontSide, face_sorting=True)
     mesh = Mesh(mesh_geometry, material)
     # mesh.position[2] = -2
     # mesh.scale[:] = 0.5

@@ -3,22 +3,14 @@ import typing
 
 # pip imports
 import matplotlib.artist
-import matplotlib.image
-import matplotlib.path
-import matplotlib.axes
-import matplotlib.transforms
 import matplotlib.collections
 import numpy as np
-
-from mpl_graph.core.constants import Constants
-from mpl_graph.core.texture import Texture
 
 # local imports
 from ..objects.mesh import Mesh
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
-from ..core.transform_utils import TransformUtils
-from ..geometry.geometry_utils import GeometryUtils
+from ..core import Object3D
 from ..materials import MeshPhongMaterial
 from .renderer_mesh import RendererMesh
 
