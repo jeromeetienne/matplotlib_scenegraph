@@ -19,7 +19,7 @@ from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh
 from mpl_graph.lights import DirectionalLight, PointLight, AmbientLight, Light
 from mpl_graph.geometry import Geometry
-from mpl_graph.materials import MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedaterial
+from mpl_graph.materials import MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedMaterial
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -49,6 +49,8 @@ def main():
     # camera = CameraPerspective()
     scene.add_child(camera)
     camera.position[2] = 5.0
+    camera.position[1] = 2.0
+    camera.rotation_euler[0] = np.pi / 10
 
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
@@ -93,6 +95,17 @@ def main():
         directional_light_key.position[2] = 2.0 * np.sin(present)
         return [directional_light_key]
 
+    mesh_grid = Mesh(GeometryShape.grid(5.0, 5.0), MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE))
+    scene.add_child(mesh_grid)
+    mesh_grid.rotation_euler[1] = np.pi
+    mesh_grid.position[1] = 0
+    mesh_grid.position[2] = -0.01  # trick to ensure the grid is behind the other objects
+
+    @animation_loop.decorator
+    def grid_update(delta_time: float) -> Sequence[Object3D]:
+        # mesh_grid.rotation_euler[0] += 0.1 * delta_time
+        return [mesh_grid]
+
     # =============================================================================
     #
     # =============================================================================
@@ -111,25 +124,25 @@ def main():
     # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
-    # material = MeshTexturedaterial(texture)
+    material = MeshTexturedMaterial(texture)
     # material = MeshPhongMaterial()
-    material = MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE)
+    # material = MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE)
     # material = MeshBasicMaterial()
     # material = MeshNormalMaterial()
     # material = MeshDepthMaterial(colormap_name="viridis")
-    mesh = Mesh(mesh_geometry, material)
-    mesh.scale[:] = 1
-    mesh.rotation_euler[1] = np.pi
+    mesh_head = Mesh(mesh_geometry, material)
+    mesh_head.scale[:] = 1
+    mesh_head.rotation_euler[1] = np.pi
 
     # Add the textured mesh to the scene
-    scene.add_child(mesh)
+    scene.add_child(mesh_head)
 
     @animation_loop.decorator
     def mesh_update(delta_time: float) -> list[Mesh]:
         present = time.time()
         # mesh.position[0] = np.sin(present)
         # mesh.rotation_euler[1] += delta_time
-        return [mesh]
+        return [mesh_head]
 
     # =============================================================================
     # Start the animation loop

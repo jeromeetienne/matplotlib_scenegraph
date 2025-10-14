@@ -9,7 +9,7 @@ import numpy as np
 # local imports
 from ..core.constants import Constants
 from ..objects.mesh import Mesh
-from ..materials import MeshBasicMaterial, MeshPhongMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedaterial
+from ..materials import MeshBasicMaterial, MeshPhongMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedMaterial
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
@@ -160,7 +160,7 @@ class RendererMesh:
                 faces_vertices_ndc=faces_vertices_ndc,
                 faces_vertices_2d=faces_vertices_2d,
             )
-        elif isinstance(mesh.material, MeshTexturedaterial):
+        elif isinstance(mesh.material, MeshTexturedMaterial):
             from .renderer_mesh_textured_material import RendererMeshTexturedMaterial
 
             changed_artists = RendererMeshTexturedMaterial.render(

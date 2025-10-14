@@ -5,7 +5,7 @@ import numpy as np
 from ..core.object_3d import Object3D
 from ..core.texture import Texture
 from ..geometry import MeshGeometry
-from ..materials import MeshMaterial, MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedaterial
+from ..materials import MeshMaterial, MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedMaterial
 
 
 class Mesh(Object3D):
@@ -33,7 +33,7 @@ class Mesh(Object3D):
             pass
         elif isinstance(self.material, MeshPhongMaterial):
             pass
-        elif isinstance(self.material, MeshTexturedaterial):
+        elif isinstance(self.material, MeshTexturedMaterial):
             assert self.geometry.uvs is not None, f"The geometry must have texture coordinates (uvs) defined for a textured mesh"
             assert self.material.texture is not None, f"The material must have a texture defined for a textured mesh"
             assert len(self.geometry.uvs) == len(

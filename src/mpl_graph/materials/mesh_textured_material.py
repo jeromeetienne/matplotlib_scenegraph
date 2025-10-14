@@ -8,7 +8,7 @@ from ..core import Texture
 from .mesh_material import MeshMaterial
 
 
-class MeshTexturedaterial(MeshMaterial):
+class MeshTexturedMaterial(MeshMaterial):
     """A simple material class to hold texture mesh material properties."""
 
     __slots__ = "texture"
