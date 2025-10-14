@@ -6,13 +6,15 @@ import numpy as np
 from ..core.constants import Constants
 from ..core.object_3d import Object3D
 from ..core.texture import Texture
+from ..materials import SpriteMaterial
 
 
 class Sprite(Object3D):
-    __slots__ = "texture"
+    __slots__ = "material"
 
-    def __init__(self, texture: Texture) -> None:
+    def __init__(self, material: SpriteMaterial | None = None) -> None:
         super().__init__()
 
         self.name = f"a {Sprite.__name__}"
-        self.texture: Texture = texture
+        self.material: SpriteMaterial = material if material is not None else SpriteMaterial()
+        """Material of the sprite."""

@@ -18,7 +18,7 @@ from ..geometry.geometry_utils import GeometryUtils
 class RendererSprite:
     @staticmethod
     def render(renderer: "Renderer", sprite: Sprite, camera: CameraBase) -> list[matplotlib.artist.Artist]:
-        assert sprite.texture is not None, "Sprite must have a texture"
+        material = sprite.material
 
         # =============================================================================
         # Create artists if needed
@@ -55,11 +55,11 @@ class RendererSprite:
         # Update the artist
         # =============================================================================
 
-        mpl_axes_image.set_array(sprite.texture.data)
+        mpl_axes_image.set_array(material.texture.data)
 
         transformed_extent = (
-            vertices_2d[0, 0] - 0.5 * sprite.scale[0] * sprite.texture.aspect_ratio(),
-            vertices_2d[0, 0] + 0.5 * sprite.scale[0] * sprite.texture.aspect_ratio(),
+            vertices_2d[0, 0] - 0.5 * sprite.scale[0] * material.texture.aspect_ratio(),
+            vertices_2d[0, 0] + 0.5 * sprite.scale[0] * material.texture.aspect_ratio(),
             vertices_2d[0, 1] - 0.5 * sprite.scale[1] * 1.0,
             vertices_2d[0, 1] + 0.5 * sprite.scale[1] * 1.0,
         )

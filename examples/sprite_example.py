@@ -19,7 +19,7 @@ from mpl_graph.core.texture import Texture
 from mpl_graph.objects.sprite import Sprite
 from mpl_graph.objects.points import Points
 from mpl_graph.geometry.geometry import Geometry
-from mpl_graph.materials import PointsMaterial
+from mpl_graph.materials import PointsMaterial, SpriteMaterial
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
 
@@ -64,8 +64,8 @@ def main():
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)
-
-    sprite = Sprite(texture)
+    material = SpriteMaterial(texture=texture)
+    sprite = Sprite(material)
     # sprite.extent = np.array([0.0, 0.5, 0.0, 0.5])
     scene.add_child(sprite)
 

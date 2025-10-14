@@ -6,15 +6,16 @@ import matplotlib.image
 class Texture:
     __slots__ = ("data",)
 
-    def __init__(self, data: np.ndarray) -> None:
+    def __init__(self, data: np.ndarray | None = None) -> None:
         """
         float texture image data of shape [H, W, 3] or [H, W, 4] in range [0, 1]
         """
 
-        assert data.ndim == 3 and data.shape[2] in [3, 4], f"image should be of shape [H, W, 3] or [H, W, 4], got {data.shape}"
-        assert data.dtype in [np.float32, np.float64], f"image should be of type float32 or float64, got {data.dtype}"
+        self.data: np.ndarray = data if data is not None else np.array([], dtype=np.float32).reshape((0, 0, 3))
+        """float texture image data of shape [H, W, 3] or [H, W, 4] in range [0, 1]"""
 
-        self.data: np.ndarray = data
+        assert self.data.ndim == 3 and self.data.shape[2] in [3, 4], f"image should be of shape [H, W, 3] or [H, W, 4], got {self.data.shape}"
+        assert self.data.dtype in [np.float32, np.float64], f"image should be of type float32 or float64, got {self.data.dtype}"
 
     def copy(self) -> "Texture":
         """Return a copy of the texture."""
@@ -30,7 +31,7 @@ class Texture:
 
     def aspect_ratio(self) -> float:
         """Return the aspect ratio of the texture (width / height)."""
-        return self.width() / self.height()
+        return self.width() / self.height() if self.height() != 0 else 1.0
 
     def has_alpha(self) -> bool:
         """Return True if the texture has an alpha channel."""
