@@ -9,11 +9,19 @@ import numpy as np
 # local imports
 from ..core.constants import Constants
 from ..objects.mesh import Mesh
-from ..materials import MeshBasicMaterial, MeshPhongMaterial
+from ..materials import MeshBasicMaterial, MeshPhongMaterial, MeshNormalMaterial, MeshDepthMaterial
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
+
+# https://chatgpt.com/c/68ee0eab-776c-8331-b44a-f131ba3f166b
+# local -> world -> view -> clip (NDC) -> screen (2D)
+
+# local -> world : coord in world space
+# world -> view : coord in camera space
+# view -> clip (NDC) : coord in normalized device coord space
+# clip (NDC) -> screen (2D) : coord in 2D screen
 
 
 class RendererMesh:
@@ -24,7 +32,7 @@ class RendererMesh:
         assert mesh.geometry.uvs is not None, "The mesh geometry must have texture coordinates to be rendered"
 
         geometry = mesh.geometry
-        material = mesh.material
+        # material = mesh.material
         faces_uvs = mesh.geometry.uvs[geometry.indices]
 
         # =============================================================================
@@ -41,12 +49,12 @@ class RendererMesh:
         # =============================================================================
         # Compute face normals - needed for lighting and back-face culling
         # =============================================================================
-        faces_normals = np.cross(
-            faces_vertices_world[:, 2] - faces_vertices_world[:, 0],
-            faces_vertices_world[:, 1] - faces_vertices_world[:, 0],
-        )
-        faces_normals_unit = faces_normals / np.linalg.norm(faces_normals, axis=1).reshape(len(faces_normals), 1)
-        """Compute the face normals for lighting and culling. shape = [num_faces, 3] in world space"""
+        # faces_normals = np.cross(
+        #     faces_vertices_world[:, 2] - faces_vertices_world[:, 0],
+        #     faces_vertices_world[:, 1] - faces_vertices_world[:, 0],
+        # )
+        # faces_normals_unit = faces_normals / np.linalg.norm(faces_normals, axis=1).reshape(len(faces_normals), 1)
+        # """Compute the face normals for lighting and culling. shape = [num_faces, 3] in world space"""
 
         # =============================================================================
         # Face culling
@@ -109,7 +117,7 @@ class RendererMesh:
         #
         # =============================================================================
 
-        if isinstance(material, MeshBasicMaterial):
+        if isinstance(mesh.material, MeshBasicMaterial):
             from .renderer_mesh_basic_material import RendererMeshBasicMaterial
 
             changed_artists = RendererMeshBasicMaterial.render(
@@ -118,21 +126,31 @@ class RendererMesh:
                 camera=camera,
                 faces_vertices_ndc=faces_vertices_ndc,
                 faces_vertices_2d=faces_vertices_2d,
-                faces_uvs=faces_uvs,
             )
-        elif isinstance(material, MeshPhongMaterial):
-            from .renderer_mesh_phong_material import RendererMeshPhongMaterial
+        elif isinstance(mesh.material, MeshNormalMaterial):
+            from .renderer_mesh_normal_material import RendererMeshNormalMaterial
 
-            faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
-            print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
-            # =============================================================================
-            # Lighting
-            # =============================================================================
-            # light_direction = light_position - mesh_position
-            light_direction = np.array((1.0, 1.0, 1.0)).astype(np.float32)
-            light_direction /= np.linalg.norm(light_direction)
-            light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction)
-            light_intensities = (light_cosines + 1) / 2
+            changed_artists = RendererMeshNormalMaterial.render(
+                renderer=renderer,
+                mesh=mesh,
+                camera=camera,
+                faces_vertices_world=faces_vertices_world,
+                faces_vertices_ndc=faces_vertices_ndc,
+                faces_vertices_2d=faces_vertices_2d,
+            )
+        elif isinstance(mesh.material, MeshDepthMaterial):
+            from .renderer_mesh_depth_material import RendererMeshDepthMaterial
+
+            changed_artists = RendererMeshDepthMaterial.render(
+                renderer=renderer,
+                mesh=mesh,
+                camera=camera,
+                faces_vertices_world=faces_vertices_world,
+                faces_vertices_ndc=faces_vertices_ndc,
+                faces_vertices_2d=faces_vertices_2d,
+            )
+        elif isinstance(mesh.material, MeshPhongMaterial):
+            from .renderer_mesh_phong_material import RendererMeshPhongMaterial
 
             changed_artists = RendererMeshPhongMaterial.render(
                 renderer=renderer,
@@ -141,16 +159,37 @@ class RendererMesh:
                 faces_vertices_world=faces_vertices_world,
                 faces_vertices_2d=faces_vertices_2d,
                 faces_uvs=faces_uvs,
-                light_intensities=light_intensities,
-                faces_visible=faces_visible,
             )
         else:
-            raise ValueError(f"Unsupported material type: {type(material)}")
+            raise ValueError(f"Unsupported material type: {type(mesh.material)}")
         return changed_artists
 
     # =============================================================================
     #
     # =============================================================================
+
+    @staticmethod
+    def compute_faces_normal_unit(faces_vertices_world: np.ndarray) -> np.ndarray:
+        """Compute the face normals for lighting.
+
+        Args:
+            faces_vertices_world (np.ndarray): shape = [num_faces, 3, 3] in world space
+        Returns:
+            np.ndarray: shape = [num_faces, 3] unit vectors in world space
+        """
+
+        # =============================================================================
+        # Compute face normals - needed for lighting and back-face culling
+        # =============================================================================
+        faces_normals = np.cross(
+            faces_vertices_world[:, 2] - faces_vertices_world[:, 0],
+            faces_vertices_world[:, 1] - faces_vertices_world[:, 0],
+        )
+        # FIXME this will trigger exception on degenerated faces...
+        faces_normals_unit = faces_normals / np.linalg.norm(faces_normals, axis=1).reshape(len(faces_normals), 1)
+
+        return faces_normals_unit
+
     @staticmethod
     def compute_faces_visible(faces_vertices_2d: np.ndarray, face_culling: Constants.FaceCulling) -> np.ndarray:
         """Compute which faces are visible based on their normals and the camera position.

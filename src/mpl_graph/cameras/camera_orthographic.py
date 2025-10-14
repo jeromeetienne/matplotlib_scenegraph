@@ -14,7 +14,7 @@ class CameraOrthographic(CameraBase):
         self.bottom = -1.0
         self.top = 1.0
         self.near = 0.1
-        self.far = 100.0
+        self.far = 10.0
 
     def get_projection_matrix(self):
         projection_matrix = matrix44.create_orthogonal_projection(

@@ -17,7 +17,7 @@ from mpl_graph.core.constants import Constants
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh
 from mpl_graph.geometry import Geometry
-from mpl_graph.materials import MeshPhongMaterial, MeshBasicMaterial
+from mpl_graph.materials import MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -35,13 +35,15 @@ def main():
     # =============================================================================
 
     # Create a renderer
-    renderer = Renderer(256, 256)
+    renderer = Renderer(512, 512, background_color=Constants.Color.LIGHT_GRAY)
 
     # Create the scene root
     scene = Object3D()
 
     # Create a camera and add it to the scene
     camera = CameraOrthographic()
+    camera.near = 0.1
+    camera.far = 4
     # camera = CameraPerspective()
     scene.add_child(camera)
     camera.position[2] = 5.0
@@ -61,15 +63,17 @@ def main():
 
     # Load a obj model
     obj_path = os.path.join(models_path, "head.obj")
-    obj_path = os.path.join(models_path, "suzanne.obj")
+    # obj_path = os.path.join(models_path, "suzanne.obj")
     # obj_path = os.path.join(models_path, "cube_meshio.obj")
     mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
 
     # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
-    material = MeshPhongMaterial(texture)
+    # material = MeshPhongMaterial(texture)
     # material = MeshBasicMaterial()
+    # material = MeshNormalMaterial()
+    material = MeshDepthMaterial()
     mesh = Mesh(mesh_geometry, material)
 
     # Add the textured mesh to the scene

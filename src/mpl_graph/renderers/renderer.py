@@ -1,11 +1,16 @@
+# stdlib imports
+import typing
+
 # pip imports
 import matplotlib.pyplot
 import matplotlib.artist
 import matplotlib.figure
 import matplotlib.axes
+import numpy as np
 
 # local imports
 from ..core.object_3d import Object3D
+from ..core import Constants
 from ..objects.points import Points
 from ..objects.lines import Lines
 from ..objects.polygons import Polygons
@@ -17,9 +22,15 @@ from ..cameras.camera_base import CameraBase
 class Renderer:
     __slot__ = "depth_sorting"
 
-    def __init__(self, figure_w: int = 100, figure_h: int = 100, dpi: int = 100, /, depth_sorting: bool = False) -> None:
+    def __init__(
+        self, figure_w: int = 100, figure_h: int = 100, dpi: int = 100, /, depth_sorting: bool = False, background_color: np.ndarray | None = None
+    ) -> None:
         # Create a figure of 512x512 pixels
         self._figure = matplotlib.pyplot.figure(figsize=(figure_w / dpi, figure_h / dpi), dpi=dpi)
+
+        background_color = background_color if background_color is not None else Constants.Color.WHITE
+        # Set the figure's background color
+        self._figure.patch.set_facecolor(background_color.tolist())
 
         self.depth_sorting = depth_sorting
         """Whether to enable depth sorting based on camera distance at the object3D level.

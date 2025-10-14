@@ -3,5 +3,8 @@ from .lines_material import LinesMaterial
 from .points_material import PointsMaterial
 from .polygons_material import PolygonsMaterial
 from .sprite_material import SpriteMaterial
+from .mesh_material import MeshMaterial
 from .mesh_phong_material import MeshPhongMaterial
 from .mesh_basic_material import MeshBasicMaterial
+from .mesh_normal_material import MeshNormalMaterial
+from .mesh_depth_material import MeshDepthMaterial

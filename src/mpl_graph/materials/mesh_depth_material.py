@@ -1,21 +1,19 @@
 # pip imports
 import numpy as np
 
-from mpl_graph.core.constants import Constants
 
 # local imports
-from .material import Material
 from .mesh_material import MeshMaterial
+from ..core.constants import Constants
 
 
-class MeshBasicMaterial(MeshMaterial):
+class MeshDepthMaterial(MeshMaterial):
     """A simple material class to hold texture mesh material properties."""
 
     __slots__ = "texture"
 
     def __init__(
         self,
-        colors: np.ndarray | None = None,
         edge_colors: np.ndarray | None = None,
         edge_widths: np.ndarray | None = None,
         face_sorting: bool | None = None,
@@ -23,8 +21,6 @@ class MeshBasicMaterial(MeshMaterial):
     ):
         super().__init__()
 
-        self.colors: np.ndarray = colors if colors is not None else np.array([Constants.Color.CYAN]).astype(np.float32)
-        """Color for the MeshPhongMaterial."""
         self.edge_colors: np.ndarray = edge_colors if edge_colors is not None else np.array([Constants.Color.BLACK]).astype(np.float32)
         """array of point edge colors, shape (N, 3) or (N, 4)"""
         self.edge_widths: np.ndarray = edge_widths if edge_widths is not None else np.array([0.2]).astype(np.float32)

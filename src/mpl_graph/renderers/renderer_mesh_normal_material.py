@@ -9,32 +9,33 @@ import numpy as np
 
 # local imports
 from ..core import Constants, Texture
-from ..materials import MeshBasicMaterial
+from ..materials import MeshNormalMaterial
 from ..objects.mesh import Mesh
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from .renderer_mesh import RendererMesh
 
 
-class RendererMeshBasicMaterial:
+class RendererMeshNormalMaterial:
 
     @staticmethod
     def render(
         renderer: "Renderer",
         mesh: Mesh,
         camera: CameraBase,
+        faces_vertices_world: np.ndarray,
         faces_vertices_ndc: np.ndarray,
         faces_vertices_2d: np.ndarray,
     ) -> list[matplotlib.artist.Artist]:
         geometry = mesh.geometry
-        material = typing.cast(MeshBasicMaterial, mesh.material)
+        material = typing.cast(MeshNormalMaterial, mesh.material)
 
         # faces_vertices_world: (n_faces, 3, 3) array of the 3D vertices of each face in world space
         # faces_vertices_2d: (n_faces, 3, 2) array of the 2D vertices of each face in screen space
         # faces_uvs: (n_faces, 3, 2) array of the UV coordinates of each face
 
         # sanity check
-        assert isinstance(material, MeshBasicMaterial), f"Expected material to be a MeshBasicMaterial, got {type(material)}"
+        assert isinstance(material, MeshNormalMaterial), f"Expected material to be a MeshNormalMaterial, got {type(material)}"
         assert faces_vertices_ndc.shape == (
             len(geometry.indices),
             3,
@@ -50,6 +51,22 @@ class RendererMeshBasicMaterial:
         ), f"Expected faces_vertices_2d to have {len(geometry.indices)} faces, got {len(faces_vertices_2d)}"
 
         # =============================================================================
+        # Computes face_colors
+        # =============================================================================
+
+        faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
+        camera_direction = mesh.get_world_position() - camera.get_world_position()
+        camera_direction /= np.linalg.norm(camera_direction)
+        camera_cosines: np.ndarray = np.dot(faces_normals_unit, camera_direction)
+        faces_color = np.zeros((len(faces_vertices_2d), 4), dtype=np.float32)
+        faces_color[:, 0] = (camera_cosines + 1) / 2
+        faces_color[:, 1] = (camera_cosines + 1) / 2
+        faces_color[:, 2] = (camera_cosines + 1) / 2
+        faces_color[:, 3] = 1.0
+
+        faces_color = np.ones((len(faces_vertices_2d), 3), dtype=np.float32)
+
+        # =============================================================================
         # honor material.face_sorting
         # =============================================================================
 
@@ -61,8 +78,7 @@ class RendererMeshBasicMaterial:
             depth_sorted_indices = np.argsort(faces_depth)
             # apply the sorting to faces_vertices_2d and faces_hidden
             faces_vertices_2d = faces_vertices_2d[depth_sorted_indices]
-            # faces_vertices_world = faces_vertices_world[depth_sorted_indices]
-            # faces_uvs = faces_uvs[depth_sorted_indices]
+            faces_color = faces_color[depth_sorted_indices]
 
         # =============================================================================
         # honor material.face_culling
@@ -96,7 +112,7 @@ class RendererMeshBasicMaterial:
 
         # update the PathCollection with the new patches
         mpl_poly_collection.set_verts(typing.cast(list, faces_vertices_2d))
-        mpl_poly_collection.set_facecolor(typing.cast(list, material.colors))
+        mpl_poly_collection.set_facecolor(typing.cast(list, faces_color))
         mpl_poly_collection.set_edgecolor(typing.cast(list, material.edge_colors))
         mpl_poly_collection.set_linewidth(typing.cast(list, material.edge_widths))
 

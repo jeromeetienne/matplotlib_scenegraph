@@ -18,6 +18,8 @@ from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
+from ..materials import MeshPhongMaterial
+from .renderer_mesh import RendererMesh
 
 
 class RendererMeshPhongMaterial:
@@ -30,11 +32,26 @@ class RendererMeshPhongMaterial:
         faces_vertices_world: np.ndarray,
         faces_vertices_2d: np.ndarray,
         faces_uvs: np.ndarray,
-        light_intensities: np.ndarray,
-        faces_visible: np.ndarray,
     ) -> list[matplotlib.artist.Artist]:
-        geometry = mesh.geometry
-        material = mesh.material
+        material = typing.cast(MeshPhongMaterial, mesh.material)
+
+        # =============================================================================
+        # Face culling
+        # =============================================================================
+        faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
+        print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
+
+        # =============================================================================
+        # Lighting
+        # =============================================================================
+
+        faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
+
+        # light_direction = light_position - mesh_position
+        light_direction = np.array((1.0, 1.0, 1.0)).astype(np.float32)
+        light_direction /= np.linalg.norm(light_direction)
+        light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction)
+        light_intensities = (light_cosines + 1) / 2
 
         # =============================================================================
         # Sort triangles by depth (painter's algorithm)

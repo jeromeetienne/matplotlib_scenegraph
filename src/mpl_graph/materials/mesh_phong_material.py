@@ -6,9 +6,10 @@ from mpl_graph.core.constants import Constants
 # local imports
 from .material import Material
 from ..core import Texture
+from .mesh_material import MeshMaterial
 
 
-class MeshPhongMaterial(Material):
+class MeshPhongMaterial(MeshMaterial):
     """A simple material class to hold texture mesh material properties."""
 
     __slots__ = "texture"
