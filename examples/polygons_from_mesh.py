@@ -52,7 +52,7 @@ def main():
     file_path = os.path.join(models_path, "bunny.obj")
     # file_path = os.path.join(models_path, "head.obj")
     # file_path = os.path.join(models_path, "cube.obj")
-    # file_path = os.path.join(models_path, "suzanne.obj")
+    file_path = os.path.join(models_path, "suzanne.obj")
 
     # parse the .obj file
     mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)

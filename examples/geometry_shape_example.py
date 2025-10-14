@@ -55,6 +55,8 @@ def main():
 
     geometry_box = GeometryShape.box(1.0, 1.0, 1.0)
     box_polygons = Polygons.from_mesh_geometry(geometry_box)
+    box_polygons.material.face_culling = Constants.FaceCulling.FrontSide
+    box_polygons.material.face_sorting = True
     box_polygons.position[0] = 1
     box_polygons.position[1] = 0.7
     scene.add_child(box_polygons)
