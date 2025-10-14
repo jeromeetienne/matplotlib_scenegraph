@@ -7,7 +7,7 @@ import numpy as np
 # local imports
 from mpl_graph.core import Constants, Texture
 from mpl_graph.geometry import Geometry, GeometryUtils
-from mpl_graph.materials.points_material import PointsMaterial
+from mpl_graph.materials import PointsMaterial, TextureMeshMaterial
 from mpl_graph.objects import Points, TexturedMesh
 from .mesh_utils import MeshUtils
 
@@ -76,5 +76,6 @@ class SceneExamples:
         assert mesh_geometry.uvs is not None, "The .obj file must contain texture coordinates (vt)"
 
         # Create a textured mesh
-        textured_mesh = TexturedMesh(mesh_geometry, texture)
+        material = TextureMeshMaterial(texture=texture)
+        textured_mesh = TexturedMesh(mesh_geometry, material)
         return textured_mesh

@@ -6,12 +6,12 @@ basic example of rendering a rotating point cloud
 import os
 
 # local imports
-from mpl_graph.core.object_3d import Object3D
+from mpl_graph.core import Object3D, Texture
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects.textured_mesh import TexturedMesh
-from mpl_graph.core.texture import Texture
-from mpl_graph.geometry.geometry import Geometry
+from mpl_graph.renderers import Renderer
+from mpl_graph.objects import TexturedMesh
+from mpl_graph.geometry import Geometry
+from mpl_graph.materials import TextureMeshMaterial
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -55,7 +55,8 @@ def main():
     assert mesh_geometry.uvs is not None, "The .obj file must contain texture coordinates (vt)"
 
     # Create a textured mesh
-    mesh = TexturedMesh(mesh_geometry, texture)
+    material = TextureMeshMaterial(texture=texture)
+    mesh = TexturedMesh(mesh_geometry, material)
 
     # Add the textured mesh to the scene
     scene.add_child(mesh)
