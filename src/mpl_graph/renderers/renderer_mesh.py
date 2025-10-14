@@ -180,6 +180,18 @@ class RendererMesh:
     # =============================================================================
 
     @staticmethod
+    def compute_faces_centroids(faces_vertices_world: np.ndarray) -> np.ndarray:
+        """Compute the face centroids.
+
+        Args:
+            faces_vertices_world (np.ndarray): shape = [num_faces, 3, 3] in world space
+        Returns:
+            np.ndarray: shape = [num_faces, 3] in world space
+        """
+        faces_centroids = np.mean(faces_vertices_world, axis=1)
+        return faces_centroids
+
+    @staticmethod
     def compute_faces_normal_unit(faces_vertices_world: np.ndarray) -> np.ndarray:
         """Compute the face normals for lighting.
 

@@ -16,6 +16,7 @@ from ..objects.lines import Lines
 from ..objects.polygons import Polygons
 from ..objects.sprite import Sprite
 from ..objects.mesh import Mesh
+from ..objects.scene import Scene
 from ..cameras.camera_base import CameraBase
 
 
@@ -55,7 +56,7 @@ class Renderer:
     def get_axis(self) -> matplotlib.axes.Axes:
         return self._axis
 
-    def render(self, scene: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(self, scene: Scene, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         # update world matrices
         scene.update_world_matrix()
 

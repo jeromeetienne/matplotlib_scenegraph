@@ -94,6 +94,12 @@ class Object3D:
             objects.extend(child_objects)
         return objects
 
+    def root(self) -> "Object3D":
+        object: Object3D = self
+        while object.parent is not None:
+            object = object.parent
+        return object
+
     # =============================================================================
     # Update matrix
     # =============================================================================

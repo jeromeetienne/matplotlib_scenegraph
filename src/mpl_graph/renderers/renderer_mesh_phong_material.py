@@ -5,9 +5,11 @@ import typing
 import matplotlib.artist
 import matplotlib.collections
 import numpy as np
+from pyrr import vector, vector3
 
 # local imports
 from ..objects.mesh import Mesh
+from ..lights import Light, DirectionalLight, PointLight, AmbientLight
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core import Object3D
@@ -16,6 +18,74 @@ from .renderer_mesh import RendererMesh
 
 
 class RendererMeshPhongMaterial:
+    @staticmethod
+    def shade_faces_flat(
+        camera: CameraBase,
+        material: MeshPhongMaterial,
+        normals_world: np.ndarray,
+        face_centroids_world: np.ndarray,
+        lights: list[Light],
+    ) -> np.ndarray:
+        """
+        Flat shading per face using isinstance for light types.
+        Diffuse + ambient only, no specular.
+
+        normals_world: [F, 3]  -> unit normal per face
+        face_centroids_world: [F, 3] -> centroid per face
+        lights: list of light objects (AmbientLight, DirectionalLight, PointLight)
+        base_color: np.array([3]) RGB
+        """
+        num_faces = normals_world.shape[0]
+        shaded = np.zeros((num_faces, 3), dtype=np.float32)
+
+        base_color_rgb = np.array(material.color[:3], dtype=np.float32)
+
+        # --- Ambient lights
+        for light in lights:
+            if isinstance(light, AmbientLight):
+                light_color_rgb = np.array(light.color[:3], dtype=np.float32)
+                shaded += base_color_rgb * light_color_rgb * light.intensity
+
+        # --- Directional and Point lights
+        for light in lights:
+            if isinstance(light, DirectionalLight):
+                # Light direction toward scene origin (or target)
+                target = np.array([0, 0, 0], dtype=np.float32)
+                L = target - light.get_world_position()
+                L = L / np.linalg.norm(L)
+                L_dir = np.tile(L, (num_faces, 1))
+                attenuation = 1.0
+
+            elif isinstance(light, PointLight):
+                # Vector from face centroid to point light
+                L_dir = light.get_world_position() - face_centroids_world
+                dist = np.linalg.norm(L_dir, axis=1, keepdims=True) + 1e-6
+                L_dir = L_dir / dist
+                attenuation = 1.0 / (dist * dist)
+
+            else:
+                continue
+
+            # --- Diffuse Lambert
+            ndotl = np.clip(np.sum(normals_world * L_dir, axis=1, keepdims=True), 0, 1)
+            light_color_rgb = np.array(light.color[:3], dtype=np.float32)
+            diffuse = base_color_rgb * light_color_rgb * light.intensity * ndotl * attenuation
+            shaded += diffuse
+
+            # --- Specular Phong
+            V = camera.get_world_position() - face_centroids_world
+            V = V / (np.linalg.norm(V, axis=1, keepdims=True) + 1e-6)
+            R = 2 * ndotl * normals_world - L_dir
+            R = R / (np.linalg.norm(R, axis=1, keepdims=True) + 1e-6)
+            spec_angle = np.clip(np.sum(R * V, axis=1, keepdims=True), 0, 1)
+            specular = light_color_rgb * (spec_angle**material.shininess) * attenuation
+            shaded += specular
+
+        return np.clip(shaded, 0, 1)
+
+    # =============================================================================
+    #
+    # =============================================================================
 
     @staticmethod
     def render(
@@ -32,22 +102,36 @@ class RendererMeshPhongMaterial:
         # Lighting
         # =============================================================================
 
+        # get the scene lights in the scene graph
+        scene = mesh.root()
+        assert isinstance(scene, Object3D)
+        lights: list[Light] = [child for child in scene.traverse() if isinstance(child, Light)]
+
+        # compute face normals and centroids in world space
         faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
+        faces_centroids_world = RendererMesh.compute_faces_centroids(faces_vertices_world)
 
-        # light_direction = light_position - mesh_position
-        light_direction = np.array((1.0, 1.0, 1.0)).astype(np.float32)
-        light_direction /= np.linalg.norm(light_direction)
-        light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction)
-        light_intensities = (light_cosines + 1) / 2
+        shaded_colors = RendererMeshPhongMaterial.shade_faces_flat(camera, material, faces_normals_unit, faces_centroids_world, lights)
+        faces_color = shaded_colors
+        # =============================================================================
+        #
+        # =============================================================================
+        # faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
 
-        faces_color = np.zeros((len(faces_vertices_2d), 4))
-        faces_color[:, 0] = material.color[0] * light_intensities
-        faces_color[:, 1] = material.color[1] * light_intensities
-        faces_color[:, 2] = material.color[2] * light_intensities
-        faces_color[:, 3] = 1.0  # alpha
+        # # light_direction = light_position - mesh_position
+        # light_direction = np.array((1.0, 1.0, 1.0)).astype(np.float32)
+        # light_direction /= np.linalg.norm(light_direction)
+        # light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction)
+        # light_intensities = (light_cosines + 1) / 2
+
+        # faces_color = np.zeros((len(faces_vertices_2d), 4))
+        # faces_color[:, 0] = material.color[0] * light_intensities
+        # faces_color[:, 1] = material.color[1] * light_intensities
+        # faces_color[:, 2] = material.color[2] * light_intensities
+        # faces_color[:, 3] = 1.0  # alpha
 
         # =============================================================================
-        # Depth sort at the faces level
+        # Face sorting based on depth
         # =============================================================================
 
         # Sort polygons by depth (painter's algorithm)

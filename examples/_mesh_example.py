@@ -5,6 +5,7 @@ basic example of rendering a rotating point cloud
 # stdlib imports
 import os
 import time
+from typing import Sequence
 
 # pip imports
 import numpy as np
@@ -16,7 +17,7 @@ from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.core.constants import Constants
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh
-from mpl_graph.lights import DirectionalLight
+from mpl_graph.lights import DirectionalLight, PointLight, AmbientLight, Light
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import MeshPhongMaterial, MeshBasicMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedaterial
 from common.mesh_utils import MeshUtils
@@ -56,10 +57,45 @@ def main():
     # Load a model
     # =============================================================================
 
-    directional_light = DirectionalLight()
-    directional_light.position = np.array((1.0, 1.0, 1.0))
-    scene.add_child(directional_light)
+    # Create a directional key light
+    directional_light_key = DirectionalLight(intensity=1)
+    directional_light_key.position = np.array((1.0, 0.0, -1.0))
+    scene.add_child(directional_light_key)
+    scene.add_child(directional_light_key.target)
 
+    # # Create a directional fill light
+    # directional_light_fill = DirectionalLight(color=Constants.Color.WHITE, intensity=0.3)
+    # directional_light_fill.position = np.array((-1.0, 0.0, -1.0))
+    # scene.add_child(directional_light_fill)
+    # scene.add_child(directional_light_fill.target)
+
+    # # Create a directional rim light
+    # directional_light_rim = DirectionalLight(color=Constants.Color.WHITE, intensity=0.2)
+    # directional_light_rim.position = np.array((0.0, 1.0, -1.0))
+    # scene.add_child(directional_light_rim)
+    # scene.add_child(directional_light_rim.target)
+
+    # # add a ambient light
+    # ambient_light = AmbientLight(color=Constants.Color.DARK_RED, intensity=0.2)
+    # scene.add_child(ambient_light)
+
+    # # # add a point light
+    # point_light = PointLight(color=Constants.Color.RED, intensity=2)
+    # point_light.position = np.array((2.0, 0.0, 2.0))
+    # scene.add_child(point_light)
+
+    # point_light_helper = Mesh(Geometry.box(), MeshBasicMaterial(color=Constants.Color.RED))
+
+    @animation_loop.decorator
+    def light_update(delta_time: float) -> Sequence[Light]:
+        present = time.time()
+        directional_light_key.position[0] = 2.0 * np.cos(present)
+        directional_light_key.position[2] = 2.0 * np.sin(present)
+        return [directional_light_key]
+
+    # =============================================================================
+    #
+    # =============================================================================
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)
@@ -77,11 +113,12 @@ def main():
     # Create a textured mesh
     # material = MeshTexturedaterial(texture)
     # material = MeshPhongMaterial()
-    material = MeshPhongMaterial()
+    material = MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE)
     # material = MeshBasicMaterial()
     # material = MeshNormalMaterial()
     # material = MeshDepthMaterial(colormap_name="viridis")
     mesh = Mesh(mesh_geometry, material)
+    mesh.scale[:] = 1
     mesh.rotation_euler[1] = np.pi
 
     # Add the textured mesh to the scene
@@ -91,7 +128,7 @@ def main():
     def mesh_update(delta_time: float) -> list[Mesh]:
         present = time.time()
         # mesh.position[0] = np.sin(present)
-        mesh.rotation_euler[1] += delta_time
+        # mesh.rotation_euler[1] += delta_time
         return [mesh]
 
     # =============================================================================

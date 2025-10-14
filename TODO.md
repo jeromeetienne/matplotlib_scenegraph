@@ -9,6 +9,7 @@
   - Mesh(geometry, MeshBasicMaterial) -> Polygons
   - Mesh(geometry, MeshNormalMaterial) -> Polygons
   - Mesh(geometry, MeshPhongMaterial) -> 
+- make a scene class
 - TODO add an assert 
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
