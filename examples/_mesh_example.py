@@ -71,8 +71,9 @@ def main():
 
     # Create a textured mesh
     material = MeshPhongMaterial(texture)
+    # material = MeshPhongMaterial()
     # material = MeshBasicMaterial()
-    material = MeshNormalMaterial()
+    # material = MeshNormalMaterial()
     # material = MeshDepthMaterial(colormap_name="viridis")
     mesh = Mesh(mesh_geometry, material)
     mesh.rotation_euler[1] = np.pi

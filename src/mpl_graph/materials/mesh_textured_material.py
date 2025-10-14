@@ -22,7 +22,7 @@ class MeshPhongMaterial(MeshMaterial):
     ):
         super().__init__()
 
-        self.texture: Texture | None = texture
+        self.texture: Texture = texture if texture is not None else Texture()
         """Texture for the TextureMeshMaterial."""
         self.face_sorting: bool = face_sorting if face_sorting is not None else True
         """Whether to sort faces by depth (painter's algorithm)."""
