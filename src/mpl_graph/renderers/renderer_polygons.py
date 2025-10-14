@@ -42,13 +42,15 @@ class RendererPolygons:
         # Apply full transform the vertices
         # =============================================================================
 
+        # TODO bug all the face culling + lighting must be done in world space
+
         # full_transform = polygons.get_world_matrix()
         mvp_matrix = TransformUtils.compute_mvp_matrix(camera, polygons)
-        vertices_transformed = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
-        faces_vertices = vertices_transformed.reshape(polygons.polygon_count, polygons.vertices_per_polygon, 3)  # [P, V, 3]
+        vertices_ndc = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
+        faces_vertices = vertices_ndc.reshape(polygons.polygon_count, polygons.vertices_per_polygon, 3)  # [P, V, 3]
 
         # dispatch the post_transforming event
-        polygons.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_transformed)
+        polygons.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_ndc)
 
         # =============================================================================
         # Compute face normals - needed for lighting and back-face culling
@@ -101,14 +103,14 @@ class RendererPolygons:
         # Switch vertices to 2d
         # =============================================================================
 
-        vertices_2d = faces_vertices[:, :, :2]  # drop z for 2D rendering
+        faces_vertices2d = faces_vertices[:, :, :2]  # drop z for 2D rendering
 
         # =============================================================================
         # Update all the artists
         # =============================================================================
 
         # update the PathCollection with the new patches
-        mpl_poly_collection.set_verts(typing.cast(list, vertices_2d))
+        mpl_poly_collection.set_verts(typing.cast(list, faces_vertices2d))
         mpl_poly_collection.set_facecolor(typing.cast(list, material.colors))
         mpl_poly_collection.set_edgecolor((0, 0, 0, 0.3))
         mpl_poly_collection.set_linewidth(0.5)

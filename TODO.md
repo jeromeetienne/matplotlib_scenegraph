@@ -4,10 +4,18 @@
     - renderer_mesh_basic.py
     - renderer_mesh_normal.py
     - renderer_mesh_texture.py
+  - in those case the Material is the one handling the matplotlib rendering
   - Mesh(geometry, MeshWireframeMaterial) -> Lines (geometry is not the same, duplication of vertices)
   - Mesh(geometry, MeshBasicMaterial) -> Polygons
   - Mesh(geometry, MeshNormalMaterial) -> Polygons
-  - Mesh(geometry, MeshTextureMaterial) -> 
+  - Mesh(geometry, MeshPhongMaterial) -> 
+- for lighting - https://chatgpt.com/c/68edfbd0-efb8-8330-b1a2-a6e65f3460ed
+  - i can do that per polygon in flat shading
+  - can i do lighting on point, line ?
+    - a line is lit relative to its center
+    - a point is lit relative to its position
+    - ambient will be the same on all the same
+    - 
 - make an object `Text`
   - https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b
 - put all the sanity check you got in the contructor, put it a function
