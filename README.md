@@ -26,25 +26,32 @@ python examples/basic.py
 ## Minimal Example
 
 ```python
+# Create a renderer
 renderer = Renderer(512, 512)
+
+# Create the scene root
 scene = Scene()
+
+# Create a camera
 camera = CameraPerspective()
 scene.add_child(camera)
 camera.position[2] = 5.0
 
+# Create an animation loop
+animation_loop = AnimationLoop(renderer)
+
+# Add a rotating point cloud
 geometry = Geometry(np.random.uniform(-1, 1, (1000, 3)))
 material = PointsMaterial()
 points = Points(geometry, material)
 scene.add_child(points)
 
+# Add a rotating point cloud
 animation_loop = AnimationLoop(renderer)
-
 @animation_loop.decorator_callback
 def spin(delta_time):
 		points.rotation_euler[1] += delta_time
 		return [points]
-
-animation_loop.start(scene, camera)
 ```
 
 ## Project Layout
