@@ -46,6 +46,12 @@ class Renderer:
         self._axis.set_ylim(-1, 1)
         self._artists: dict[str, matplotlib.artist.Artist] = {}
 
+    def close(self) -> None:
+        # stop the event loop if any - thus .show(block=True) will return
+        self._figure.canvas.stop_event_loop()
+        # close the figure
+        matplotlib.pyplot.close(self._figure)
+
     # =============================================================================
     # Public Function
     # =============================================================================

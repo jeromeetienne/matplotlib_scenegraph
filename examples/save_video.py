@@ -39,7 +39,7 @@ def main():
     # Create a renderer
     renderer = Renderer(100, 100)
     # Create an animation loop
-    video_path = os.path.join(__dirname__, "output/sprite_animation.mp4")
+    video_path = os.path.join(__dirname__, f"output/{os.path.basename(__file__).replace('.py', '')}.mp4")
     video_duration = 10.0  # seconds
     print(f"Animation will be saved to: {video_path}")
     animation_loop = AnimationLoop(renderer, video_duration=video_duration, video_path=video_path)
@@ -52,9 +52,7 @@ def main():
     def on_save():
         print(f"Video saved to: {video_path}")
         animation_loop.stop()
-
-    # animation_loop.video_saved.subscribe(lambda: print("Video has been saved!"))
-    # # TODO how can i stop whenever the video is done
+        renderer.close()
 
     # =============================================================================
     # Add a point cloud

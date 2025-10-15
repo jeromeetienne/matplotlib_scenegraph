@@ -30,7 +30,7 @@ class VideoSavedCalledback(Protocol):
 
 
 class AnimationLoop:
-    __slots__ = ("_callbacks", "_renderer", "_fps", "_video_duration", "_video_path", "_time_last_update", "_scene", "_camera", "video_saved")
+    __slots__ = ("_callbacks", "_renderer", "_fps", "_video_duration", "_video_path", "_time_last_update", "_scene", "_camera", "video_saved", "_funcAnimation")
 
     def __init__(self, renderer: Renderer, fps: int = 30, video_duration: float = 10.0, video_path: str | None = None) -> None:
         """
@@ -53,6 +53,7 @@ class AnimationLoop:
         self._time_last_update = None
         self._scene: Object3D | None = None
         self._camera: CameraBase | None = None
+        self._funcAnimation: matplotlib.animation.FuncAnimation | None = None
 
         self.video_saved = Event[VideoSavedCalledback]()
         """Event triggered when the video is saved."""
@@ -75,11 +76,11 @@ class AnimationLoop:
         if ExamplesUtils.postamble():
             return
 
-        funcAnimation = matplotlib.animation.FuncAnimation(
+        self._funcAnimation = matplotlib.animation.FuncAnimation(
             self._renderer.get_figure(), self._mpl_update_scene, frames=int(self._video_duration * self._fps), interval=1000 / self._fps
         )
         if self._video_path is not None:
-            funcAnimation.save(self._video_path, dpi=200, fps=self._fps)
+            self._funcAnimation.save(self._video_path, dpi=200, fps=self._fps)
             print(f"Video saved to: {self._video_path}")
             self.video_saved.dispatch()
 
@@ -90,8 +91,10 @@ class AnimationLoop:
         self._camera = None
         self._time_last_update = None
 
-        """Stop the animation loop."""
-        raise NotImplementedError()
+        # stop the animation function timer
+        if self._funcAnimation is not None:
+            self._funcAnimation.event_source.stop()
+            self._funcAnimation = None
 
     # =============================================================================
     # .add_callback/.remove_callback/.decorator
