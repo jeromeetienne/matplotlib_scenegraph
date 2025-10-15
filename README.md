@@ -2,6 +2,13 @@
 
 Matplotlib Scenegraph (`mpl-graph`) is a pure-Python 3D scene graph and renderer that leans on Matplotlib for visualization. It provides hierarchical transforms, multiple geometry types, and a lightweight animation loop so you can prototype scientific visuals, custom plot tooling, or interactive demos without leaving the Matplotlib ecosystem.
 
+## Context & Motivation
+
+Matplotlib is a fantastic library for 2D plotting, but it has limited built-in support for 3D graphics. While `mpl_toolkits.mplot3d` provides basic 3D plotting capabilities, it lacks advanced features like hierarchical scene management, complex geometries, and efficient rendering techniques.
+
+This one is like a three.js clone that i wrote more to learn python and matplotlib than to create a serious library.
+The API is super similar to three.js.
+
 ## Highlights
 
 - **Hierarchical scene graph:** Compose complex scenes by attaching `Object3D` children; transforms propagate in the right-handed order scale → rotation → translation.
@@ -124,3 +131,8 @@ A Makefile is provided to help with common tasks:
 - `make lint`: Run linting checks
 - `make run_all_examples`: Run all example scripts to ensure they run without exceptions
 - `make check_expected_output`: Check if the output of examples matches expected output
+
+## Credits
+
+- Thanks to Nicolas Rougier. Textured mesh handling code adapted from from <https://github.com/rougier/mesh-3D-mpl>
+- API and code structure inspired by three.js  
