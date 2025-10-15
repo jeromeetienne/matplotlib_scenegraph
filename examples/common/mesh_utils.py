@@ -224,7 +224,6 @@ class MeshUtils:
         # only 3d triangular meshes are supported for now
         faces_indices = meshio_mesh.cells[0].data
 
-        faces_vertices = vertices_coords[faces_indices]
         # Optional texture coordinates
         faces_uvs = meshio_mesh.point_data["obj:vt"] if "obj:vt" in meshio_mesh.point_data else None
         # Optional (per-vertex) normals coordinates
