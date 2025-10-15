@@ -11,7 +11,7 @@ from mpl_graph.geometry.geometry_utils import GeometryUtils
 from ..objects.points import Points
 from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
-from ..core.transform_utils import TransformUtils
+from ..math.transform_utils import TransformUtils
 
 
 class RendererPoints:

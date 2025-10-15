@@ -12,7 +12,7 @@ import numpy as np
 from ..objects.polygons import Polygons
 from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
-from ..core.transform_utils import TransformUtils
+from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 from ..core.constants import Constants
 

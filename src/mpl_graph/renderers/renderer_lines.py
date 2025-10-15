@@ -10,7 +10,7 @@ import matplotlib.lines
 from ..objects.lines import Lines
 from ..renderers.renderer import Renderer
 from ..cameras.camera_base import CameraBase
-from ..core.transform_utils import TransformUtils
+from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 
 

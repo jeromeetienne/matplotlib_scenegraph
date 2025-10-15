@@ -5,7 +5,7 @@ import meshio
 # local imports
 from mpl_graph.geometry import MeshGeometry
 from mpl_graph.objects.polygons import Polygons
-from mpl_graph.core.transform_utils import TransformUtils
+from mpl_graph.math.transform_utils import TransformUtils
 
 
 class MeshUtils:

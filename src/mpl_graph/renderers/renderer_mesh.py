@@ -12,7 +12,7 @@ from ..objects.mesh import Mesh
 from ..materials import MeshBasicMaterial, MeshPhongMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedMaterial
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
-from ..core.transform_utils import TransformUtils
+from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 
 # https://chatgpt.com/c/68ee0eab-776c-8331-b44a-f131ba3f166b

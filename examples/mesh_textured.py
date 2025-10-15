@@ -10,15 +10,12 @@ import time
 import numpy as np
 
 # local imports
-from mpl_graph.core import Object3D, Texture
-from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.cameras.camera_perspective import CameraPerspective
-from mpl_graph.core.constants import Constants
+from mpl_graph.core import Texture
+from mpl_graph.cameras import CameraOrthographic
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh, Scene
-from mpl_graph.geometry import Geometry
-from mpl_graph.materials import MeshPhongMaterial, MeshTexturedMaterial
-from mpl_graph.lights import DirectionalLight, PointLight, AmbientLight, Light
+from mpl_graph.materials import MeshTexturedMaterial
+from mpl_graph.lights import DirectionalLight, AmbientLight, Light
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils

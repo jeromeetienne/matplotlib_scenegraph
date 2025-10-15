@@ -15,7 +15,7 @@ from ..objects.mesh import Mesh
 from ..core import Constants, Texture, Object3D
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
-from ..core.transform_utils import TransformUtils
+from ..math.transform_utils import TransformUtils
 from ..lights import Light
 from ..geometry.geometry_utils import GeometryUtils
 from ..materials import MeshPhongMaterial
