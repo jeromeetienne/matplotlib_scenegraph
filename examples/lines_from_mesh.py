@@ -21,6 +21,7 @@ from mpl_graph.geometry import GeometryUtils
 
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
+output_path = os.path.join(__dirname__, "output")
 assets_path = os.path.join(__dirname__, "../assets")
 models_path = os.path.join(assets_path, "models")
 
@@ -36,7 +37,7 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = Renderer(100, 100)
+    renderer = Renderer(512, 512)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
@@ -47,6 +48,7 @@ def main():
     # Load a model from an .obj file
     # file_path = os.path.join(models_path, "cube_meshio.obj")
     file_path = os.path.join(models_path, "suzanne.obj")
+    file_path = os.path.join(output_path, "box.obj")
 
     # parse the .obj file
     mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)

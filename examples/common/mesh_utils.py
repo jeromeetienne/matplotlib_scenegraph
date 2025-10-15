@@ -13,6 +13,53 @@ class MeshUtils:
     Manual Wavefront .obj file parser
     """
 
+    @staticmethod
+    def geometry_as_obj_string(mesh_geometry: MeshGeometry) -> str:
+        """
+        Save a MeshGeometry as a Wavefront .obj file.
+
+        Arguments:
+            file_path (str): Path to save the .obj file.
+            mesh_geometry (MeshGeometry): The mesh geometry to save.
+        """
+
+        output = ""
+
+        # Write vertices
+        for vertex in mesh_geometry.vertices:
+            output += f"v {vertex[0]} {vertex[1]} {vertex[2]}\n"
+
+        # Write texture coordinates if available
+        if mesh_geometry.uvs is not None:
+            for uv in mesh_geometry.uvs:
+                output += f"vt {uv[0]} {uv[1]}\n"
+
+        # Write normals if available
+        if mesh_geometry.normals is not None:
+            for normal in mesh_geometry.normals:
+                output += f"vn {normal[0]} {normal[1]} {normal[2]}\n"
+
+        # Write faces
+        if mesh_geometry.indices is not None:
+            has_uvs = mesh_geometry.uvs is not None
+            has_normals = mesh_geometry.normals is not None
+
+            for face in mesh_geometry.indices:
+                face_elems = []
+                for vertex_idx in face:
+                    if has_uvs and has_normals:
+                        face_elems.append(f"{vertex_idx + 1}/{vertex_idx + 1}/{vertex_idx + 1}")
+                    elif has_uvs:
+                        face_elems.append(f"{vertex_idx + 1}/{vertex_idx + 1}")
+                    elif has_normals:
+                        face_elems.append(f"{vertex_idx + 1}//{vertex_idx + 1}")
+                    else:
+                        face_elems.append(f"{vertex_idx + 1}")
+
+                output += f"f {' '.join(face_elems)}\n"
+
+        return output
+
     # =============================================================================
     #
     # =============================================================================
