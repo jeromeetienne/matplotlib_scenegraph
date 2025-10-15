@@ -9,17 +9,18 @@ import matplotlib.axes
 import matplotlib.transforms
 import numpy as np
 
-from mpl_graph.core.constants import Constants
-from mpl_graph.core.texture import Texture
 
 # local imports
 from ..objects.mesh import Mesh
+from ..core import Constants, Texture, Object3D
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from ..core.transform_utils import TransformUtils
+from ..lights import Light
 from ..geometry.geometry_utils import GeometryUtils
 from ..materials import MeshPhongMaterial
 from .renderer_mesh import RendererMesh
+from .renderer_mesh_phong_material import RendererMeshPhongMaterial
 
 
 class RendererMeshTexturedMaterial:
@@ -42,17 +43,43 @@ class RendererMeshTexturedMaterial:
         faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
         # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
 
+        # # =============================================================================
+        # # Lighting
+        # # =============================================================================
+
+        # faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
+
+        # # light_direction = light_position - mesh_position
+        # light_direction = np.array((1.0, 1.0, 1.0)).astype(np.float32)
+        # light_direction /= np.linalg.norm(light_direction)
+        # light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction)
+        # light_intensities = (light_cosines + 1) / 2
+
         # =============================================================================
-        # Lighting
+        # Lighting - compute faces_color
         # =============================================================================
 
+        # get the scene lights in the scene graph
+        scene = mesh.root()
+        assert isinstance(scene, Object3D)
+        lights: list[Light] = [child for child in scene.traverse() if isinstance(child, Light)]
+
+        # compute face normals and centroids in world space
         faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
+        faces_centroids_world = RendererMesh.compute_faces_centroids(faces_vertices_world)
 
-        # light_direction = light_position - mesh_position
-        light_direction = np.array((1.0, 1.0, 1.0)).astype(np.float32)
-        light_direction /= np.linalg.norm(light_direction)
-        light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction)
-        light_intensities = (light_cosines + 1) / 2
+        # apply flat shading
+        shaded_colors = RendererMeshPhongMaterial.shade_faces_flat(
+            camera,
+            material_color=material.color,
+            material_shininess=material.shininess,
+            faces_normals_unit=faces_normals_unit,
+            faces_centroids_world=faces_centroids_world,
+            lights=lights,
+        )
+
+        # apply vertex colors if any
+        faces_color = shaded_colors
 
         # =============================================================================
         # Compute faces_depth to set zorder
@@ -80,8 +107,8 @@ class RendererMeshTexturedMaterial:
         # Loop over faces and draw them
         # =============================================================================
         changed_artists: list[matplotlib.artist.Artist] = []
-        for face_index, (face_vertices_2d, face_uvs, light_intensity, face_visible, face_depth) in enumerate(
-            zip(faces_vertices_2d, faces_uvs, light_intensities, faces_visible, faces_depth)
+        for face_index, (face_vertices_2d, face_uvs, face_color, face_visible, face_depth) in enumerate(
+            zip(faces_vertices_2d, faces_uvs, faces_color, faces_visible, faces_depth)
         ):
             face_uuid = f"{mesh.uuid}_face_{face_index}"
             changed_artist = renderer._artists[face_uuid]
@@ -104,7 +131,7 @@ class RendererMeshTexturedMaterial:
                 face_vertices_2d=face_vertices_2d,
                 face_uvs=face_uvs,
                 texture=material.texture,
-                intensity=light_intensity,
+                face_color=face_color,
             )
 
         return changed_artists
@@ -119,7 +146,7 @@ class RendererMeshTexturedMaterial:
         face_vertices_2d: np.ndarray,
         face_uvs: np.ndarray,
         texture: Texture,
-        intensity: np.float64,
+        face_color: np.ndarray,
         interpolation="none",
     ) -> None:
         """
@@ -133,6 +160,9 @@ class RendererMeshTexturedMaterial:
         Image to use for texture
         """
 
+        # sanity check
+        assert face_color.shape == (3,), f"face_color shape should be (3,), got {face_color.shape}"
+
         texture_data = texture.data
         image_w, image_h = texture_data.shape[:2]
         uvs_pixel = face_uvs * (image_w, image_h)
@@ -142,7 +172,7 @@ class RendererMeshTexturedMaterial:
         y_min = int(np.floor(uvs_pixel[:, 1].min()))
         y_max = int(np.ceil(uvs_pixel[:, 1].max()))
 
-        texture_region = texture_data[y_min:y_max, x_min:x_max, :] * 255.0 * intensity
+        texture_region = texture_data[y_min:y_max, x_min:x_max, :] * 255.0 * face_color
         texture_region = (texture_region).astype(np.uint8)
         extent = x_min / image_w, x_max / image_w, y_min / image_h, y_max / image_h
 

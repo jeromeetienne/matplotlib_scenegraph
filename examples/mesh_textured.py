@@ -18,6 +18,7 @@ from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh, Scene
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import MeshPhongMaterial, MeshTexturedMaterial
+from mpl_graph.lights import DirectionalLight, PointLight, AmbientLight, Light
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -50,6 +51,20 @@ def main():
     animation_loop = AnimationLoop(renderer)
 
     # =============================================================================
+    # Add a lighting
+    # =============================================================================
+
+    # add a ambient light
+    ambient_light = AmbientLight(intensity=0.2)
+    scene.add_child(ambient_light)
+
+    # Create a directional key light
+    directional_light_key = DirectionalLight(intensity=0.8)
+    directional_light_key.position = np.array((1.0, 0.0, -1.0))
+    scene.add_child(directional_light_key)
+    scene.add_child(directional_light_key.target)
+
+    # =============================================================================
     # Load a model
     # =============================================================================
 
@@ -60,13 +75,13 @@ def main():
     texture = texture.strip_alpha() if texture.has_alpha() else texture
 
     # Load a obj model
-    # obj_path = os.path.join(models_path, "head.obj")
-    obj_path = os.path.join(models_path, "suzanne.obj")
-    # obj_path = os.path.join(models_path, "cube_meshio.obj")
+    obj_path = os.path.join(models_path, "head.obj")
+    # obj_path = os.path.join(models_path, "suzanne.obj")
+    # obj_path = os.path.join(models_path, "box.obj")
     mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
 
     # Create a textured mesh
-    material = MeshTexturedMaterial(texture, face_culling=Constants.FaceCulling.FrontSide, face_sorting=True)
+    material = MeshTexturedMaterial(texture=texture)
     mesh = Mesh(mesh_geometry, material)
     scene.add_child(mesh)
 

@@ -35,7 +35,7 @@ class RendererMeshPhongMaterial:
         material = typing.cast(MeshPhongMaterial, mesh.material)
 
         # =============================================================================
-        # Lighting
+        # Lighting - compute faces_color
         # =============================================================================
 
         # get the scene lights in the scene graph
@@ -48,7 +48,9 @@ class RendererMeshPhongMaterial:
         faces_centroids_world = RendererMesh.compute_faces_centroids(faces_vertices_world)
 
         # apply flat shading
-        shaded_colors = RendererMeshPhongMaterial.shade_faces_flat(camera, material, faces_normals_unit, faces_centroids_world, lights)
+        shaded_colors = RendererMeshPhongMaterial.shade_faces_flat(
+            camera, material.color, material.shininess, faces_normals_unit, faces_centroids_world, lights
+        )
 
         # apply vertex colors if any
         faces_color = shaded_colors
@@ -123,9 +125,10 @@ class RendererMeshPhongMaterial:
     @staticmethod
     def shade_faces_flat(
         camera: CameraBase,
-        material: MeshPhongMaterial,
-        normals_world: np.ndarray,
-        face_centroids_world: np.ndarray,
+        material_color: np.ndarray,
+        material_shininess: float,
+        faces_normals_unit: np.ndarray,
+        faces_centroids_world: np.ndarray,
         lights: list[Light],
     ) -> np.ndarray:
         """
@@ -137,10 +140,18 @@ class RendererMeshPhongMaterial:
         lights: list of light objects (AmbientLight, DirectionalLight, PointLight)
         base_color: np.array([3]) RGB
         """
-        num_faces = normals_world.shape[0]
+
+        # sanity checks - check np.ndarray's
+        assert faces_normals_unit.ndim == 2 and faces_normals_unit.shape[1] == 3, f"normals_world should be of shape [F, 3], got {faces_normals_unit.shape}"
+        assert (
+            faces_centroids_world.ndim == 2 and faces_centroids_world.shape[1] == 3
+        ), f"face_centroids_world should be of shape [F, 3], got {faces_centroids_world.shape}"
+        assert material_color.shape == (3,) or material_color.shape == (4,), f"material_color should be of shape (3,) or (4,), got {material_color.shape}"
+
+        num_faces = faces_normals_unit.shape[0]
         shaded = np.zeros((num_faces, 3), dtype=np.float32)
 
-        base_color_rgb = np.array(material.color[:3], dtype=np.float32)
+        base_color_rgb = np.array(material_color[:3], dtype=np.float32)
 
         # --- Ambient lights
         for light in lights:
@@ -160,7 +171,7 @@ class RendererMeshPhongMaterial:
 
             elif isinstance(light, PointLight):
                 # Vector from face centroid to point light
-                L_dir = light.get_world_position() - face_centroids_world
+                L_dir = light.get_world_position() - faces_centroids_world
                 dist = np.linalg.norm(L_dir, axis=1, keepdims=True) + 1e-6
                 L_dir = L_dir / dist
                 attenuation = 1.0 / (dist * dist)
@@ -169,18 +180,18 @@ class RendererMeshPhongMaterial:
                 continue
 
             # --- Diffuse Lambert
-            ndotl = np.clip(np.sum(normals_world * L_dir, axis=1, keepdims=True), 0, 1)
+            ndotl = np.clip(np.sum(faces_normals_unit * L_dir, axis=1, keepdims=True), 0, 1)
             light_color_rgb = np.array(light.color[:3], dtype=np.float32)
             diffuse = base_color_rgb * light_color_rgb * light.intensity * ndotl * attenuation
             shaded += diffuse
 
             # --- Specular Phong
-            V = camera.get_world_position() - face_centroids_world
+            V = camera.get_world_position() - faces_centroids_world
             V = V / (np.linalg.norm(V, axis=1, keepdims=True) + 1e-6)
-            R = 2 * ndotl * normals_world - L_dir
+            R = 2 * ndotl * faces_normals_unit - L_dir
             R = R / (np.linalg.norm(R, axis=1, keepdims=True) + 1e-6)
             spec_angle = np.clip(np.sum(R * V, axis=1, keepdims=True), 0, 1)
-            specular = light_color_rgb * (spec_angle**material.shininess) * attenuation
+            specular = light_color_rgb * (spec_angle**material_shininess) * attenuation
             shaded += specular
 
         return np.clip(shaded, 0, 1)

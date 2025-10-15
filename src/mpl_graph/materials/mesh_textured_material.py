@@ -16,11 +16,17 @@ class MeshTexturedMaterial(MeshMaterial):
     def __init__(
         self,
         texture: Texture | None = None,
+        color: np.ndarray | None = None,
+        shininess: float | None = None,
         face_sorting: bool | None = None,
         face_culling: Constants.FaceCulling | None = None,
     ):
         super().__init__()
 
+        self.color: np.ndarray = color if color is not None else Constants.Color.WHITE
+        """Base color of the material, as an (R, G, B, A) array with values in [0, 1]. shape (4,)"""
+        self.shininess: float = shininess if shininess is not None else 30.0
+        """Shininess factor for specular highlights."""
         self.texture: Texture = texture if texture is not None else Texture()
         """Texture for the TextureMeshMaterial."""
         self.face_sorting: bool = face_sorting if face_sorting is not None else True
