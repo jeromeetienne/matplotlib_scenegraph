@@ -99,4 +99,13 @@ See `TODO.md` for active investigations: additional sanity checks, expanded geom
 - Discuss larger changes or new dependencies in an issue first; the project aims to stay lightweight and Matplotlib-native.
 
 ## License
-No explicit license file is currently provided. If you plan to use this project in production or redistribute it, please contact the author to clarify licensing.
+under MIT License, see `LICENSE.txt` for details.
+
+# Makefile
+
+A Makefile is provided to help with common tasks:
+- `make help`: Show available make commands
+- `make test`: Run all the tests
+- `make lint`: Run linting checks
+- `make run_all_examples`: Run all example scripts to ensure they run without exceptions
+- `make check_expected_output`: Check if the output of examples matches expected output
