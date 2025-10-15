@@ -16,11 +16,7 @@ from mpl_graph.core.object_3d import Object3D
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects import Points, Scene
-from mpl_graph.geometry import Geometry
-from mpl_graph.materials import PointsMaterial
-from mpl_graph.core.constants import Constants
 from common.example_utils import ExamplesUtils
-from common.animation_loop import AnimationLoop
 from common.mesh_utils import MeshUtils
 from common.geometry_shape import GeometryShape
 
