@@ -7,6 +7,8 @@ import matplotlib.collections
 import matplotlib.image
 import numpy as np
 
+from mpl_graph.renderers.renderer_utils import RendererUtils
+
 # local imports
 from ..objects.sprite import Sprite
 from ..renderers.renderer import Renderer
@@ -19,6 +21,43 @@ class RendererSprite:
     @staticmethod
     def render(renderer: "Renderer", sprite: Sprite, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         material = sprite.material
+
+        # =============================================================================
+        # Apply full transform the vertices
+        # =============================================================================
+
+        # Get the local position of the sprite (single vertex)
+        vertices_localspace = np.array([sprite.position])
+
+        # full_transform = sprite.get_world_matrix()
+        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, sprite)
+        vertices_ndc, vertices_clip = GeometryUtils.apply_mvp_matrix(vertices_localspace, mvp_matrix)
+
+        # dispatch the post_transforming event
+        sprite.post_transform.dispatch(vertices_clip)
+
+        # =============================================================================
+        # Switch vertices to 2d
+        # =============================================================================
+
+        # drop z for 2D rendering
+        vertices_2d = vertices_ndc[:, :2]
+
+        # =============================================================================
+        # Compute extent
+        # =============================================================================
+
+        # compute distance from camera to object3d
+        camera_position = camera.get_world_position()
+        object_position = sprite.get_world_position()
+        distance_to_camera = ((camera_position - object_position) ** 2).sum() ** 0.5
+
+        extent_2d = (
+            vertices_2d[0, 0] - (0.5 * sprite.scale[0] * material.extent[0] * material.texture.aspect_ratio()) / distance_to_camera,
+            vertices_2d[0, 0] + (0.5 * sprite.scale[0] * material.extent[0] * material.texture.aspect_ratio()) / distance_to_camera,
+            vertices_2d[0, 1] - (0.5 * sprite.scale[1] * material.extent[0] * 1.0) / distance_to_camera,
+            vertices_2d[0, 1] + (0.5 * sprite.scale[1] * material.extent[0] * 1.0) / distance_to_camera,
+        )
 
         # =============================================================================
         # Create artists if needed
@@ -37,33 +76,17 @@ class RendererSprite:
         mpl_axes_image.set_visible(True)
 
         # =============================================================================
-        # Apply full transform the vertices
+        # do z-ordering based on distance to camera
         # =============================================================================
 
-        vertices = np.array([sprite.position])
-
-        # full_transform = sprite.get_world_matrix()
-        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, sprite)
-        vertices = GeometryUtils.apply_transform(vertices, mvp_matrix)
-
-        # dispatch the post_transforming event
-        sprite.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
-
-        # drop z for 2D rendering
-        vertices_2d = vertices[:, :2]
+        # compute and set zorder on our single artist
+        RendererUtils.update_single_artist_zorder(camera, sprite, mpl_axes_image)
 
         # =============================================================================
         # Update the artist
         # =============================================================================
 
         mpl_axes_image.set_array(material.texture.data)
-
-        transformed_extent = (
-            vertices_2d[0, 0] - 0.5 * sprite.scale[0] * material.texture.aspect_ratio(),
-            vertices_2d[0, 0] + 0.5 * sprite.scale[0] * material.texture.aspect_ratio(),
-            vertices_2d[0, 1] - 0.5 * sprite.scale[1] * 1.0,
-            vertices_2d[0, 1] + 0.5 * sprite.scale[1] * 1.0,
-        )
-        mpl_axes_image.set_extent(transformed_extent)
+        mpl_axes_image.set_extent(extent_2d)
 
         return [mpl_axes_image]

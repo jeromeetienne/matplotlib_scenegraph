@@ -49,3 +49,11 @@ class MeshGeometry(Geometry):
         if self.normals is not None:
             assert self.normals.ndim == 2 and self.normals.shape[1] == 3, f"normals should be of shape [N, 3], got {self.normals.shape}"
             assert len(self.normals) == len(self.vertices), "The number of normals must be equal to the number of vertices"
+
+    def copy(self) -> "MeshGeometry":
+        return MeshGeometry(
+            vertices=self.vertices.copy(),
+            indices=self.indices.copy() if self.indices is not None else None,
+            uvs=self.uvs.copy() if self.uvs is not None else None,
+            normals=self.normals.copy() if self.normals is not None else None,
+        )

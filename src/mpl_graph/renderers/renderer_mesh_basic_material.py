@@ -8,12 +8,11 @@ import numpy as np
 
 
 # local imports
-from ..core import Constants, Texture
 from ..materials import MeshBasicMaterial
 from ..objects.mesh import Mesh
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
-from .renderer_mesh import RendererMesh
+from .renderer_utils import RendererUtils
 
 
 class RendererMeshBasicMaterial:
@@ -68,7 +67,7 @@ class RendererMeshBasicMaterial:
         # honor material.face_culling
         # =============================================================================
 
-        faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
+        faces_visible = RendererUtils.compute_faces_visible(faces_vertices_2d, material.face_culling)
         # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
 
         # remove hidden faces

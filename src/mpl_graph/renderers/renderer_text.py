@@ -13,12 +13,33 @@ from ..cameras.camera_base import CameraBase
 from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 from ..materials.text_material import TextMaterial
+from .renderer_utils import RendererUtils
 
 
 class RendererText:
     @staticmethod
     def render(renderer: "Renderer", text: Text, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         material: TextMaterial = text.material
+        # =============================================================================
+        # Apply full transform the vertices
+        # =============================================================================
+
+        # Get the local position of the sprite (single vertex)
+        vertices_localspace = np.array([text.position])
+
+        # full_transform = sprite.get_world_matrix()
+        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, text)
+        vertices_ndc, vertices_clip = GeometryUtils.apply_mvp_matrix(vertices_localspace, mvp_matrix)
+
+        # dispatch the post_transforming event
+        text.post_transform.dispatch(vertices_clip)
+
+        # =============================================================================
+        # Switch vertices to 2d
+        # =============================================================================
+
+        # drop z for 2D rendering
+        vertices_2d = vertices_ndc[:, :2]
 
         # =============================================================================
         # Create artists if needed
@@ -36,23 +57,14 @@ class RendererText:
         mpl_text.set_visible(True)
 
         # =============================================================================
-        # Apply full transform the vertices
+        # do z-ordering based on distance to camera
         # =============================================================================
 
-        vertices = np.array([text.position])
-
-        # full_transform = sprite.get_world_matrix()
-        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, text)
-        vertices = GeometryUtils.apply_transform(vertices, mvp_matrix)
-
-        # dispatch the post_transforming event
-        text.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
-
-        # drop z for 2D rendering
-        vertices_2d = vertices[:, :2]
+        # compute and set zorder on our single artist
+        RendererUtils.update_single_artist_zorder(camera, text, mpl_text)
 
         # =============================================================================
-        # Update the artist
+        # Update the artists
         # =============================================================================
 
         mpl_text.set_position((vertices_2d[0, 0], vertices_2d[0, 1]))

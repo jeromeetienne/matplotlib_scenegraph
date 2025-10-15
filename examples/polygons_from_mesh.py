@@ -45,35 +45,44 @@ def main():
     # Add objects
     # =============================================================================
 
-    # Load a model from an .obj file
+    # Load a model geometry
     file_path = os.path.join(models_path, "bunny.obj")
-    # file_path = os.path.join(models_path, "head.obj")
-    # file_path = os.path.join(models_path, "cube.obj")
-    # file_path = os.path.join(models_path, "suzanne.obj")
-    file_path = os.path.join(output_path, "box.obj")
-
-    # parse the .obj file
     mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)
 
-    # Normalize the vertices to fit in a unit cube
-    mesh_geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(mesh_geometry.vertices)
+    # Fit the vertices to a unit cube
+    mesh_geometry.vertices = GeometryUtils.fit_unit_cube(mesh_geometry.vertices)
 
     # Create a polygons object
-    polygons = Polygons.from_mesh_geometry(mesh_geometry)
-    polygons.material.face_culling = Constants.FaceCulling.FrontSide
-    polygons.material.face_sorting = True
-    polygons.scale[:] = 0.5
-    scene.add(polygons)
+    polygons1 = Polygons.from_mesh_geometry(mesh_geometry.copy())
+    polygons1.material.face_culling = Constants.FaceCulling.FrontSide
+    polygons1.material.depth_sorting = True
+    polygons1.scale[:] = 0.5
+    scene.add(polygons1)
+
+    # Create a polygons object
+    polygons2 = Polygons.from_mesh_geometry(mesh_geometry.copy())
+    polygons2.material.face_culling = Constants.FaceCulling.FrontSide
+    polygons2.material.depth_sorting = True
+    polygons2.scale[:] = 0.5
+    scene.add(polygons2)
 
     fps_monitor = FpsMonitor()
 
     @animation_loop.event_listener
     def polygons_update(delta_time: float) -> Sequence[Object3D]:
-        polygons.rotate_x(delta_time)
-        polygons.rotate_y(delta_time * 0.5)
+        polygons1.rotate_x(delta_time)
+        polygons1.rotate_y(delta_time / 2)
+
+        angle1 = time.time()
+        polygons1.position[1] = np.cos(angle1) * 0.2
+        polygons1.position[2] = np.sin(angle1) * 3
+
+        angle2 = angle1 + np.pi
+        polygons2.position[1] = np.cos(angle2) * 0.2
+        polygons2.position[2] = np.sin(angle2) * 3
 
         fps_monitor.print_fps()
-        return [polygons]
+        return [polygons1, polygons2]
 
     # =============================================================================
     # Start the animation loop

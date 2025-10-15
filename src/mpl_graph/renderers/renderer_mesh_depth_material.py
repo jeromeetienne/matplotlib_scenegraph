@@ -13,6 +13,7 @@ from ..objects.mesh import Mesh
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
 from .renderer_mesh import RendererMesh
+from .renderer_utils import RendererUtils
 
 
 class RendererMeshDepthMaterial:
@@ -89,7 +90,7 @@ class RendererMeshDepthMaterial:
         # honor material.face_culling
         # =============================================================================
 
-        faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
+        faces_visible = RendererUtils.compute_faces_visible(faces_vertices_2d, material.face_culling)
         # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
 
         # remove hidden faces - CAUTION: must be done after sorting be sure to keep the order of ALL arrays the same

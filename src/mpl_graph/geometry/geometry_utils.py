@@ -14,6 +14,32 @@ class GeometryUtils:
     # - rename this function apply_mat4x4_to_vertices ?
 
     @staticmethod
+    def apply_mvp_matrix(vertices: np.ndarray, transform_matrix: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+        # sanity checks
+        assert vertices.shape[1] == 3 and vertices.ndim == 2, f"vertices should be of shape [N, 3]. Got {vertices.shape}"
+        assert transform_matrix.shape == (4, 4), f"transform should be of shape [4, 4]. Got {transform_matrix.shape}"
+
+        # make vertices homogeneous
+        vertices_hom = np.hstack([vertices, np.ones((vertices.shape[0], 1), dtype=vertices.dtype)])  # [N, 4]
+
+        # apply full transform to homogeneous vertices
+        vertices_world_hom = vertices_hom @ transform_matrix  # [N, 4]
+
+        # get w for perspective divide
+        vertices_w = vertices_world_hom[:, 3:4]  # [N, 1]
+
+        # drop w for clip space
+        vertices_clip = vertices_world_hom[:, :3]  # [N, 3]
+
+        # avoid division by zero
+        vertices_w[vertices_w == 0] = 1e-6
+
+        # Perform perspective divide to get normalized device coordinates (NDC)
+        vertices_ndc = vertices_clip / vertices_w  # [N, 3]
+
+        return vertices_ndc, vertices_clip
+
+    @staticmethod
     def apply_transform(vertices: np.ndarray, transform_matrix: np.ndarray) -> np.ndarray:
         # sanity checks
         assert vertices.shape[1] == 3 and vertices.ndim == 2, f"vertices should be of shape [N, 3]. Got {vertices.shape}"
@@ -41,7 +67,7 @@ class GeometryUtils:
 
     # FIXME: it should handle Geometry and not only vertices
     @staticmethod
-    def normalize_vertices_to_unit_cube(vertices: np.ndarray) -> np.ndarray:
+    def fit_unit_cube(vertices: np.ndarray) -> np.ndarray:
         # sanity checks
         assert vertices.shape[1] == 3 and vertices.ndim == 2, "vertices should be of shape [N, 3]"
         # make a copy to avoid modifying the original

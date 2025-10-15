@@ -1,4 +1,8 @@
-## TODO
+# TODO
+
+- Object3D
+  - depth sorting of this object3d
+- rename `CameraBase` into `Camera`
 
 - zorder in renderer
   - for all artists, set the zorder according to the distance from the camera

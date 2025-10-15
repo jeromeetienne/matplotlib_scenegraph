@@ -8,6 +8,8 @@ import matplotlib.lines
 import matplotlib.patches
 import numpy as np
 
+from mpl_graph.renderers.renderer_utils import RendererUtils
+
 # local imports
 from ..objects.polygons import Polygons
 from ..renderers.renderer import Renderer
@@ -29,31 +31,35 @@ class RendererPolygons:
         # Apply full transform the vertices
         # =============================================================================
 
+        # Get the vertices in local space
+        vertices_localspace = geometry.vertices
+
         # TODO bug all the face culling + lighting must be done in world space
 
         # full_transform = polygons.get_world_matrix()
         mvp_matrix = TransformUtils.compute_mvp_matrix(camera, polygons)
-        vertices_ndc = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
-        faces_vertices = vertices_ndc.reshape(polygons.polygon_count, polygons.vertices_per_polygon, 3)  # [P, V, 3]
+        vertices_ndc, vertices_clip = GeometryUtils.apply_mvp_matrix(vertices_localspace, mvp_matrix)
+
+        # reshape to faces - shape [P, V, 3]
+        faces_vertices_ndc = vertices_ndc.reshape(polygons.polygon_count, polygons.vertices_per_polygon, 3)
 
         # dispatch the post_transforming event
-        polygons.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_ndc)
+        polygons.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_clip)
 
         # =============================================================================
-        # Compute face normals - needed for lighting and back-face culling
+        # Face culling
         # =============================================================================
         if material.face_culling != Constants.FaceCulling.BothSides:
+            # compute the face normals in view space
             faces_normals = np.cross(
-                faces_vertices[:, 2] - faces_vertices[:, 0],
-                faces_vertices[:, 1] - faces_vertices[:, 0],
+                faces_vertices_ndc[:, 2] - faces_vertices_ndc[:, 0],
+                faces_vertices_ndc[:, 1] - faces_vertices_ndc[:, 0],
             )
             faces_normals_unit = faces_normals / np.linalg.norm(faces_normals, axis=1).reshape(len(faces_normals), 1)
 
             # =============================================================================
             # Face culling
-            # =============================================================================
-
-            # camera_cosines is the cosine of the angle between the normal and the camera
+            # - camera_cosines is the cosine of the angle between the normal and the camera
             # - if <= 0, the face is pointing away from the camera
             # - if > 0, the face is pointing towards the camera
             # camera_direction = (0, 0, -1)
@@ -61,36 +67,35 @@ class RendererPolygons:
             camera_cosines: np.ndarray = np.dot(faces_normals_unit, camera_direction)
 
             # determine which faces are hidden based on the face_culling mode
-            faces_hidden = camera_cosines <= 0 if material.face_culling == Constants.FaceCulling.BackSide else camera_cosines >= 0
+            faces_visible = camera_cosines >= 0 if material.face_culling == Constants.FaceCulling.BackSide else camera_cosines < 0
         else:
             # no face hidden - all False
-            faces_hidden = np.zeros(shape=(len(faces_vertices),), dtype=bool)
+            faces_visible = np.ones(shape=(len(faces_vertices_ndc),), dtype=bool)
 
         # log how many faces are visible
-        print(f"Rendering {np.sum(~faces_hidden)} visible faces out of {polygons.polygon_count} polygons")
+        # print(f"Rendering {np.sum(faces_visible)} visible faces out of {polygons.polygon_count} polygons")
 
         # remove hidden faces
-        faces_vertices = faces_vertices[~faces_hidden]
+        faces_vertices_ndc = faces_vertices_ndc[faces_visible]
 
         # =============================================================================
         # Depth sort at the faces level
         # =============================================================================
 
         # Sort polygons by depth (painter's algorithm)
-        # FIXME how does it interact with the zorder at the object3D level ?
-        if material.face_sorting:
+        if material.depth_sorting:
             # compute the depth of each face as the mean z value of its vertices
-            faces_depth = faces_vertices[:, :, 2].mean(axis=1)
+            faces_depth = faces_vertices_ndc[:, :, 2].mean(axis=1)
             # get the sorting indices (from farthest to nearest)
             depth_sorted_indices = np.argsort(faces_depth)
-            # apply the sorting to faces_vertices and faces_hidden
-            faces_vertices = faces_vertices[depth_sorted_indices]
+            # apply the sorting to faces_vertices
+            faces_vertices_ndc = faces_vertices_ndc[depth_sorted_indices]
 
         # =============================================================================
         # Switch vertices to 2d
         # =============================================================================
 
-        faces_vertices2d = faces_vertices[:, :, :2]  # drop z for 2D rendering
+        faces_vertices_2d = faces_vertices_ndc[:, :, :2]  # drop z for 2D rendering
 
         # =============================================================================
         # Create artists if needed
@@ -109,11 +114,18 @@ class RendererPolygons:
         mpl_poly_collection.set_visible(True)
 
         # =============================================================================
+        # do z-ordering based on distance to camera
+        # =============================================================================
+
+        # compute and set zorder on our single artist
+        RendererUtils.update_single_artist_zorder(camera, polygons, mpl_poly_collection)
+
+        # =============================================================================
         # Update all the artists
         # =============================================================================
 
         # update the PathCollection with the new patches
-        mpl_poly_collection.set_verts(typing.cast(list, faces_vertices2d))
+        mpl_poly_collection.set_verts(typing.cast(list, faces_vertices_2d))
         mpl_poly_collection.set_facecolor(typing.cast(list, material.colors))
         mpl_poly_collection.set_edgecolor((0, 0, 0, 0.3))
         mpl_poly_collection.set_linewidth(0.5)

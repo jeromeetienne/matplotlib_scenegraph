@@ -5,68 +5,68 @@ basic example of rendering a rotating point cloud
 # stdlib imports
 import os
 from typing import Sequence
-import time
 
 # pip imports
 import numpy as np
 
 # local imports
+from common.scene_examples import SceneExamples
+from mpl_graph.core import Object3D, Texture
 from mpl_graph.cameras import CameraOrthographic
-from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.objects import Scene, Text
-from mpl_graph.core import Object3D
-from mpl_graph.materials import TextMaterial
+from mpl_graph.renderers import Renderer
+from mpl_graph.objects import Mesh, Scene
+from mpl_graph.materials import MeshPhongMaterial, MeshTexturedMaterial, MeshDepthMaterial, MeshBasicMaterial
+from common.controllers.camera_controller_trackball import CameraControllerTrackball
+from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
-from mpl_graph.core import Constants
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
-data_path = os.path.join(__dirname__, "../assets")
-models_path = os.path.join(data_path, "models")
-images_path = os.path.join(data_path, "images")
+assets_path = os.path.join(__dirname__, "../assets")
+models_path = os.path.join(assets_path, "models")
+images_path = os.path.join(assets_path, "images")
 
 
 def main():
     # =============================================================================
     # Setup the scene
     # =============================================================================
+
+    # Create a renderer
+    renderer = Renderer(256, 256)
+
+    # Create the scene root
     scene = Scene()
 
+    # Create a camera and add it to the scene
     camera = CameraOrthographic()
+    # camera = CameraPerspective()
     scene.add(camera)
     camera.position[2] = 5.0
 
-    # Create a renderer
-    renderer = Renderer(background_color=Constants.Color.LIGHT_GRAY)
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
     # =============================================================================
-    # Add objects to the scene
+    # Load a model
     # =============================================================================
 
-    font_size = renderer.width // 5
+    # Load a obj geometry
+    obj_path = os.path.join(models_path, "suzanne.obj")
+    mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
 
-    material2 = TextMaterial(font_size=font_size, color=Constants.Color.BLUE)
-    text1 = Text("hello", material2)
-    text1.scale[:] = 0.5
-    scene.add(text1)
+    # Create a mesh
+    mesh = Mesh(mesh_geometry, MeshBasicMaterial())
+    mesh.rotate_y(np.pi)  # rotate 180deg around Y to have the face looking towards the camera
 
-    material2 = TextMaterial(font_size=font_size, color=Constants.Color.RED)
-    text2 = Text("world", material2)
-    text2.scale[:] = 0.5
-    scene.add(text2)
+    # Add the textured mesh to the scene
+    scene.add(mesh)
 
+    # update to rotate the mesh
     @animation_loop.event_listener
-    def on_update(delta_time: float) -> Sequence[Object3D]:
-        angle1 = time.time()
-        text1.position[1] = np.cos(angle1) * 0.2
-        text1.position[2] = np.sin(angle1) * 0.5
-
-        angle2 = angle1 + np.pi
-        text2.position[1] = np.cos(angle2) * 0.2
-        text2.position[2] = np.sin(angle2) * 0.5
-        return [text1, text2]
+    def mesh_update(delta_time: float) -> list[Mesh]:
+        mesh.rotate_y(0.5 * delta_time)
+        return [mesh]
 
     # =============================================================================
     # Start the animation loop

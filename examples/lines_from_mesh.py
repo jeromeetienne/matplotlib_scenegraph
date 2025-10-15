@@ -44,7 +44,7 @@ def main():
     assert mesh_geometry.indices is not None, "The .obj file must contain face indices"
 
     # Normalize the vertices to fit in a unit cube
-    mesh_geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(mesh_geometry.vertices)
+    mesh_geometry.vertices = GeometryUtils.fit_unit_cube(mesh_geometry.vertices)
 
     # Build the lines object
     lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)

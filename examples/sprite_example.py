@@ -38,46 +38,40 @@ def main():
     camera.position[2] = 5.0
 
     # Create a renderer
-    renderer = Renderer(100, 100)
+    renderer = Renderer()
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
     # =============================================================================
-    # Load a model
-    # =============================================================================
-
-    point_count = 10
-    vertices = np.random.uniform(-1, 1, (point_count, 3))
-    geometry = Geometry(vertices)
-    colors = np.array([[1, 0, 0, 1] for i in range(point_count)])
-    material = PointsMaterial(colors=colors)
-    points = Points(geometry, material)
-    points.scale[:] = 0.5
-    scene.add(points)
-
-    # =============================================================================
-    # Load a model
+    # Add objects to the scene
     # =============================================================================
 
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)
-    material = SpriteMaterial(texture=texture)
-    sprite = Sprite(material)
-    # sprite.extent = np.array([0.0, 0.5, 0.0, 0.5])
-    scene.add(sprite)
+
+    # Create a sprite
+    material1 = SpriteMaterial(texture=texture)
+    sprite1 = Sprite(material1)
+    sprite1.scale[:] = 2
+    scene.add(sprite1)
+
+    # Create a sprite
+    material2 = SpriteMaterial(texture=texture)
+    sprite2 = Sprite(material2)
+    sprite2.scale[:] = 2
+    scene.add(sprite2)
 
     @animation_loop.event_listener
-    def sprite_animation(delta_time: float) -> Sequence[Object3D]:
-        present = time.time()
+    def on_update(delta_time: float) -> Sequence[Object3D]:
+        angle1 = time.time()
+        sprite1.position[1] = np.cos(angle1) * 0.2
+        sprite1.position[2] = np.sin(angle1) * 3
 
-        sprite.position[0] = np.sin(present * 3) * 0.5
-        sprite.position[1] = np.cos(present * 3) * 0.5
-
-        sprite.scale[0] = 0.5 + 0.1 * np.cos(present * 2.0)
-        sprite.scale[1] = 0.5 + 0.1 * np.sin(present * 2.0)
-
-        return [sprite]
+        angle2 = angle1 + np.pi
+        sprite2.position[1] = np.cos(angle2) * 0.2
+        sprite2.position[2] = np.sin(angle2) * 3
+        return [sprite1, sprite2]
 
     # =============================================================================
     # Start the animation loop

@@ -25,18 +25,26 @@ class Renderer:
     __slot__ = "depth_sorting"
 
     def __init__(
-        self, figure_w: int = 100, figure_h: int = 100, dpi: int = 100, /, depth_sorting: bool = False, background_color: np.ndarray | None = None
+        self, figure_w: int = 256, figure_h: int = 256, dpi: int = 100, /, depth_sorting: bool = False, background_color: np.ndarray | None = None
     ) -> None:
+        self.width = figure_w
+        """Width of the figure in pixels."""
+        self.height = figure_h
+        """Height of the figure in pixels."""
+        self.dpi = dpi
+        """DPI (dots per inch) of the figure."""
+        self.background_color = background_color if background_color is not None else Constants.Color.WHITE
+        """Background color of the figure."""
+
+        # =============================================================================
+        # Setup matplotlib
+        # =============================================================================
+
         # Create a figure of 512x512 pixels
-        self._figure = matplotlib.pyplot.figure(figsize=(figure_w / dpi, figure_h / dpi), dpi=dpi)
+        self._figure = matplotlib.pyplot.figure(figsize=(self.width / self.dpi, self.height / self.dpi), dpi=self.dpi)
 
-        background_color = background_color if background_color is not None else Constants.Color.WHITE
         # Set the figure's background color
-        self._figure.patch.set_facecolor(background_color.tolist())
-
-        self.depth_sorting = depth_sorting
-        """Whether to enable depth sorting based on camera distance at the object3D level.
-        This affects the `zorder` of the matplotlib artists created for each object3D."""
+        self._figure.patch.set_facecolor(self.background_color.tolist())
 
         # Create an axis that fills the whole figure
         self._axis = self._figure.add_axes((0, 0, 1, 1), frameon=False)
@@ -132,23 +140,6 @@ class Renderer:
             pass
         else:
             raise NotImplementedError(f"Rendering for {type(object3d)} not implemented yet")
-
-        # =============================================================================
-        # honor .depth_sorting
-        # =============================================================================
-
-        # update `artists.zorder` based on camera distance if depth sorting is enabled
-        if self.depth_sorting:
-            # compute distance from camera to object3d
-            camera_position = camera.get_world_position()
-            object_position = object3d.get_world_position()
-            euclidian_distance = ((camera_position - object_position) ** 2).sum() ** 0.5
-            # set zorder based on distance (larger distance -> smaller zorder)
-            object_zorder = -euclidian_distance
-            for artist in changed_artists:
-                # TODO make the per artist zorder to work with the per object3d zorder
-                # - both are additive... should be doable
-                artist.set_zorder(object_zorder)
 
         # =============================================================================
         # Dispatch post_rendering Event

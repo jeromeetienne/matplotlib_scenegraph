@@ -24,7 +24,7 @@ class PolygonsMaterial(Material):
 
         self.colors: np.ndarray = colors if colors is not None else np.array([Constants.Color.GRAY])
         """array of point colors, shape (N, 3) or (N, 4)"""
-        self.face_sorting: bool = face_sorting if face_sorting is not None else False
+        self.depth_sorting: bool = face_sorting if face_sorting is not None else False
         """Whether to sort faces by depth (painter's algorithm)."""
         self.face_culling: Constants.FaceCulling = face_culling if face_culling is not None else Constants.FaceCulling.BothSides
         """Whether to cull faces based on their orientation relative to the camera."""

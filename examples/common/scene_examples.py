@@ -34,7 +34,7 @@ class SceneExamples:
     @staticmethod
     def getBunnyPoints() -> Points:
         geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "bunny.obj"))
-        geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+        geometry.vertices = GeometryUtils.fit_unit_cube(geometry.vertices)
         material = PointsMaterial(colors=np.array(Constants.Color.PURPLE))
         points_bunny = Points(geometry, material)
         return points_bunny
@@ -42,7 +42,7 @@ class SceneExamples:
     @staticmethod
     def getCubePoints() -> Points:
         geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "cube_meshio.obj"))
-        geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+        geometry.vertices = GeometryUtils.fit_unit_cube(geometry.vertices)
         material = PointsMaterial(colors=np.array(Constants.Color.CYAN))
         points_bunny = Points(geometry, material)
         return points_bunny
@@ -50,7 +50,7 @@ class SceneExamples:
     @staticmethod
     def getSuzannePoints() -> Points:
         geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "suzanne_meshio.obj"))
-        geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+        geometry.vertices = GeometryUtils.fit_unit_cube(geometry.vertices)
         material = PointsMaterial(colors=np.array(Constants.Color.CYAN))
         points_bunny = Points(geometry, material)
         return points_bunny
@@ -58,7 +58,7 @@ class SceneExamples:
     @staticmethod
     def getHeadPoints() -> Points:
         geometry = MeshUtils.parse_obj_file_manual(os.path.join(models_path, "head_meshio.obj"))
-        geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(geometry.vertices)
+        geometry.vertices = GeometryUtils.fit_unit_cube(geometry.vertices)
         material = PointsMaterial(colors=np.array(Constants.Color.CYAN))
         points_bunny = Points(geometry, material)
         return points_bunny

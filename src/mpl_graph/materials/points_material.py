@@ -17,6 +17,7 @@ class PointsMaterial(Material):
         sizes: np.ndarray | None = None,
         edge_colors: np.ndarray | None = None,
         edge_widths: np.ndarray | None = None,
+        depth_sorting: bool | None = None,
     ):
         super().__init__()
 
@@ -28,3 +29,5 @@ class PointsMaterial(Material):
         """array of point edge colors, shape (N, 3) or (N, 4)"""
         self.edge_widths: np.ndarray = edge_widths if edge_widths is not None else np.array([1.0])
         """array of point edge widths, shape (N,)"""
+        self.depth_sorting: bool = depth_sorting if depth_sorting is not None else True
+        """Whether to enable depth sorting based on camera distance at the point level."""

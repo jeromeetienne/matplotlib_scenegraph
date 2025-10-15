@@ -8,12 +8,11 @@ import numpy as np
 
 
 # local imports
-from ..core import Constants, Texture
 from ..materials import MeshNormalMaterial
 from ..objects.mesh import Mesh
 from .renderer import Renderer
 from ..cameras.camera_base import CameraBase
-from .renderer_mesh import RendererMesh
+from .renderer_utils import RendererUtils
 
 
 class RendererMeshNormalMaterial:
@@ -54,7 +53,7 @@ class RendererMeshNormalMaterial:
         # Computes face_colors
         # =============================================================================
 
-        faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
+        faces_normals_unit = RendererUtils.compute_faces_normal_unit(faces_vertices_world)
         camera_direction = mesh.get_world_position() - camera.get_world_position()
         camera_direction /= np.linalg.norm(camera_direction)
         camera_cosines: np.ndarray = np.cross(faces_normals_unit, camera_direction)
@@ -78,7 +77,7 @@ class RendererMeshNormalMaterial:
         # honor material.face_culling
         # =============================================================================
 
-        faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
+        faces_visible = RendererUtils.compute_faces_visible(faces_vertices_2d, material.face_culling)
         # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
 
         # remove hidden faces

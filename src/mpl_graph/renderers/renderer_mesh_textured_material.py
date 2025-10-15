@@ -20,6 +20,7 @@ from ..lights import Light
 from ..geometry.geometry_utils import GeometryUtils
 from ..materials import MeshPhongMaterial
 from .renderer_mesh import RendererMesh
+from .renderer_utils import RendererUtils
 from .renderer_mesh_phong_material import RendererMeshPhongMaterial
 
 
@@ -40,14 +41,14 @@ class RendererMeshTexturedMaterial:
         # =============================================================================
         # Face culling
         # =============================================================================
-        faces_visible = RendererMesh.compute_faces_visible(faces_vertices_2d, material.face_culling)
+        faces_visible = RendererUtils.compute_faces_visible(faces_vertices_2d, material.face_culling)
         # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
 
         # # =============================================================================
         # # Lighting
         # # =============================================================================
 
-        # faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
+        # faces_normals_unit = RendererUtils.compute_faces_normal_unit(faces_vertices_world)
 
         # # light_direction = light_position - mesh_position
         # light_direction = np.array((1.0, 1.0, 1.0)).astype(np.float32)
@@ -65,11 +66,11 @@ class RendererMeshTexturedMaterial:
         lights: list[Light] = [child for child in scene.traverse() if isinstance(child, Light)]
 
         # compute face normals and centroids in world space
-        faces_normals_unit = RendererMesh.compute_faces_normal_unit(faces_vertices_world)
-        faces_centroids_world = RendererMesh.compute_faces_centroids(faces_vertices_world)
+        faces_normals_unit = RendererUtils.compute_faces_normal_unit(faces_vertices_world)
+        faces_centroids_world = RendererUtils.compute_faces_centroids(faces_vertices_world)
 
         # apply flat shading
-        faces_color = RendererMeshPhongMaterial.shade_faces_flat(
+        faces_color = RendererUtils.shade_faces_flat(
             camera,
             material_color=material.color,
             material_shininess=material.shininess,

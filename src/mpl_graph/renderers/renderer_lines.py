@@ -6,6 +6,8 @@ import matplotlib.artist
 import matplotlib.collections
 import matplotlib.lines
 
+from mpl_graph.renderers.renderer_utils import RendererUtils
+
 # local imports
 from ..objects.lines import Lines
 from ..renderers.renderer import Renderer
@@ -19,15 +21,39 @@ class RendererLines:
     def render(renderer: "Renderer", lines: Lines, camera: CameraBase) -> list[matplotlib.artist.Artist]:
         geometry = lines.geometry
         material = lines.material
-
-        # print("Rendering Lines", lines.name)
-
         line_count = len(geometry.vertices) // 2
+
+        # =============================================================================
+        # Sanity checks
+        # =============================================================================
+
         assert line_count * 2 == len(geometry.vertices), "Lines vertices length must be even"
+
+        # =============================================================================
+        # Apply full transform the vertices
+        # =============================================================================
+
+        # full_transform = lines.get_world_matrix()
+        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, lines)
+        vertices = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
+
+        # dispatch the post_transforming event
+        lines.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
+
+        # =============================================================================
+        # Switch vertices to 2d
+        # =============================================================================
+
+        # drop z for 2D rendering
+        vertices_2d = vertices[:, :2]
+
+        # reshape to (line_count, 2 endpoints, 2 coords)
+        vertices_2d = vertices_2d.reshape((line_count, 2, 2))
 
         # =============================================================================
         # Create artists if needed
         # =============================================================================
+
         if lines.uuid not in renderer._artists:
             mpl_line_collection = matplotlib.collections.LineCollection([])
             mpl_line_collection.set_visible(False)  # hide until properly positioned and sized
@@ -42,27 +68,19 @@ class RendererLines:
         mpl_line_collection.set_visible(True)
 
         # =============================================================================
-        # Apply full transform the vertices
+        # do z-ordering based on distance to camera
         # =============================================================================
 
-        # full_transform = lines.get_world_matrix()
-        mvp_matrix = TransformUtils.compute_mvp_matrix(camera, lines)
-        vertices = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
-
-        # dispatch the post_transforming event
-        lines.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
-
-        # drop z for 2D rendering
-        vertices_2d = vertices[:, :2]
-
-        # reshape to (line_count, 2 endpoints, 2 coords)
-        vertices_2d = vertices_2d.reshape((line_count, 2, 2))
+        # compute and set zorder on our single artist
+        RendererUtils.update_single_artist_zorder(camera, lines, mpl_line_collection)
 
         # =============================================================================
         # Update the artists
         # =============================================================================
         mpl_line_collection.set_segments(typing.cast(list, vertices_2d))
         mpl_line_collection.set_color(typing.cast(list, material.colors))
+        mpl_line_collection.set_linewidth([1])  # TODO put that into material
+        mpl_line_collection.set_linestyle("solid")  # TODO put that into material
 
         # Return the changed_artists
         return [mpl_line_collection]
