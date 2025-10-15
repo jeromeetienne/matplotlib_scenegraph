@@ -1,16 +1,8 @@
-# stdlib imports
-import typing
-
 # pip imports
-import matplotlib.artist
-import matplotlib.collections
 import numpy as np
 from pyrr import matrix44
 
 # local imports
-from ..objects.points import Points
-from ..renderers.renderer import Renderer
-from ..cameras.camera_orthographic import CameraOrthographic
 from ..cameras.camera_base import CameraBase
 from ..core.object_3d import Object3D
 
