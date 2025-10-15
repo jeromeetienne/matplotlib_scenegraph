@@ -1,7 +1,9 @@
+- zorder in renderer
+  - for all artists, set the zorder according to the distance from the camera
+  - needs to be on option in the object3d  ?
 - TODO add an assert 
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
-- do a function .save_as_obj in geometry_utils
 - for lighting - https://chatgpt.com/c/68edfbd0-efb8-8330-b1a2-a6e65f3460ed
   - i can do that per polygon in flat shading
   - can i do lighting on point, line ?
@@ -13,12 +15,9 @@
 - put all the sanity check you got in the contructor, put it a function
   - call it at the end of the constructor
   - call it in the renderer
-- bug in geometryShape
-  - vertices are still reused . it makes `Polygons` to fail
-  - `GeometryUtils.expand_vertices(geometry)`
-  - make a function to clone the vertices if needed
-  - take it from the .obj loader
 - FIXME the notion of expanded geometry is unclear. figure it out
+  - it is about having a single indices for all the attributes
+  - NOT about not reusing vertices
 - there is a depth sorting inside the object3d sometime
   - and sometime there is a depth sorting at the face level
   - how can they interact ?
@@ -36,9 +35,24 @@
   - do a 3d figure with 3d bars
 - remove all the ' @ ' for the matrix multiplication
   - use np.matmul or the `@` operator
-- find a good API for the various materials
+- implement a `.serialization` ? to/from json ?
+  - could easily be done
+
+
+## Done
+- DONE bug in geometryShape
+  - vertices are still reused . it makes `Polygons` to fail
+  - `GeometryUtils.expand_vertices(geometry)`
+  - make a function to clone the vertices if needed
+  - take it from the .obj loader
+- DONE implement a .depth_sorting = true in renderer
+  - where object3d is sorted by their world position and then rendered
+  - NOTE: conflict with the delta rendering from the animation loop
+    - make an options to remove the delta rendering in the animation loop
+- DONE do you handle point light, directional light
+- DONE find a good API for the various materials
   - Q. do you do a Material class like in three.js ?
-- find a good API for the various materials
+- DONE find a good API for the various materials
   - the material can hook on the renderer loop
   - Q. do you do a Material class like in three.js ?
   - copy the one from three.js
@@ -49,16 +63,7 @@
   - MeshWireframeMaterial
   - MeshTextureMaterial
   - MeshNormalMaterial
-- do you handle point light, directional light
-- implement a `.serialization` ? to/from json ?
-  - could easily be done
-- implement a .depth_sorting = true in renderer
-  - where object3d is sorted by their world position and then rendered
-  - NOTE: conflict with the delta rendering from the animation loop
-    - make an options to remove the delta rendering in the animation loop
-
-
-## Done
+- DONE do a function .save_as_obj in geometry_utils
 - DONE lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)
   - the dedup_edges DO NOT WORK
 - DONE textured mesh vertices are not yet transformed

@@ -62,35 +62,22 @@ def main():
     # Load a obj model
     # obj_path = os.path.join(models_path, "head.obj")
     obj_path = os.path.join(models_path, "suzanne.obj")
-    # obj_path = os.path.join(models_path, "cube_meshio.obj")q
+    # obj_path = os.path.join(models_path, "cube_meshio.obj")
     mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
-
-    # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
     material = MeshTexturedMaterial(texture, face_culling=Constants.FaceCulling.FrontSide, face_sorting=True)
     mesh = Mesh(mesh_geometry, material)
-    # mesh.position[2] = -2
-    # mesh.scale[:] = 0.5
-    # mesh.rotation_euler[1] = np.pi  # rotate 180deg around Y to have the face looking towards the camera
-
-    # Add the textured mesh to the scene
     scene.add_child(mesh)
 
     @animation_loop.decorator_callback
     def mesh_update(delta_time: float) -> list[Mesh]:
-        present = time.time()
-        # mesh.position[0] = np.sin(present)
         mesh.rotation_euler[1] += delta_time
         return [mesh]
 
     # =============================================================================
     # Start the animation loop
     # =============================================================================
-
-    # renderer.render(scene, camera)
-    # print("scene rendered")
-    # matplotlib.pyplot.show(block=True)
 
     animation_loop.start(scene, camera)
 
