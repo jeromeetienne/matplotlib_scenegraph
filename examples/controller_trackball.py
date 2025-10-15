@@ -22,33 +22,48 @@ __dirname__ = os.path.dirname(os.path.abspath(__file__))
 def main():
     print("Controls: Left drag orbit | Middle drag/Shift+Left pan | Right drag/Ctrl+Left dolly | Wheel zoom")
 
-    # Scene & camera
+    # =============================================================================
+    # Set up the scene
+    # =============================================================================
+
+    # Create a renderer
+    renderer = Renderer(512, 512)
+
+    # Create the scene root
     scene = Scene()
+
+    # Create a camera
     camera = CameraPerspective()
     scene.add(camera)
     camera.position[2] = 5.0
-    # camera.position[:] = np.array([0.0, 0.0, 5.0], dtype=np.float32)
 
-    # Renderer
-    renderer = Renderer(512, 512)
-
-    # Animation loop
+    # Create an animation loop
     animation_loop = AnimationLoop(renderer)
+
+    # =============================================================================
+    # Init camera controller
+    # =============================================================================
 
     # Trackball controller bound to this camera
     controller = CameraControllerTrackball(renderer, camera)
     controller.start()
 
     @animation_loop.event_listener
-    def update_camera(_delta: float) -> Sequence[Object3D]:
-        has_moved = controller.update(_delta)
+    def update_camera(time_delta: float) -> Sequence[Object3D]:
+        has_moved = controller.update(time_delta)
         return scene.traverse() if has_moved else []
 
+    # =============================================================================
+    # Add some content
+    # =============================================================================
     # Simple content
     points = SceneExamples.addRandomPoints(1000)
     scene.add(points)
 
-    # run
+    # =============================================================================
+    # Start animation loop
+    # =============================================================================
+
     animation_loop.start(scene, camera)
 
 

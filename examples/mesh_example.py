@@ -56,8 +56,8 @@ def main():
     controller.start()
 
     @animation_loop.event_listener
-    def update_camera(_delta: float) -> Sequence[Object3D]:
-        has_moved = controller.update(_delta)
+    def update_camera(time_delta: float) -> Sequence[Object3D]:
+        has_moved = controller.update(time_delta)
         return scene.traverse() if has_moved else []
 
     # add standard lights
@@ -77,13 +77,14 @@ def main():
 
     # Create a textured mesh
     material = MeshTexturedMaterial(texture=texture)
-    # material = MeshPhongMaterial()
+    material = MeshPhongMaterial()
     mesh_textured = Mesh(mesh_geometry, material)
     mesh_textured.rotate_y(np.pi)  # rotate 180deg around Y to have the face looking towards the camera
 
     # Add the textured mesh to the scene
     scene.add(mesh_textured)
 
+    # update to rotate the mesh
     @animation_loop.event_listener
     def mesh_update(delta_time: float) -> list[Mesh]:
         mesh_textured.rotate_y(0.5 * delta_time)
