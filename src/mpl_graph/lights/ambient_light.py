@@ -11,6 +11,7 @@ class AmbientLight(Light):
         super().__init__()
 
         self.name = f"a {AmbientLight.__name__}"
+
         self.color = color if color is not None else Constants.Color.WHITE
         """Base color of the light, as an (R, G, B) array with values in [0, 1]. shape (3,)"""
         self.intensity = intensity if intensity is not None else 1.0

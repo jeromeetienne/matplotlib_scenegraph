@@ -13,7 +13,7 @@ from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers import Renderer
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
-from examples.common.controllers.object_controller_trackball import CameraControllerTrackball
+from common.controllers.camera_controller_trackball import CameraControllerTrackball
 from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))

@@ -47,7 +47,20 @@ from mpl_graph.cameras.camera_perspective import CameraPerspective
 
 
 class CameraControllerTrackball:
-    def __init__(self, renderer: Renderer, camera: CameraBase, target: Optional[np.ndarray] = None) -> None:
+    def __init__(
+        self,
+        renderer: Renderer,
+        camera: CameraBase,
+        target: Optional[np.ndarray] = None,
+        *,
+        invert_orbit_x: bool = True,
+        invert_orbit_y: bool = False,
+        invert_pan_x: bool = False,
+        invert_pan_y: bool = True,
+        invert_dolly_drag: bool = True,
+        invert_scroll: bool = False,
+        max_polar_angle_deg: float = 89.5,
+    ) -> None:
         """
         A trackball-style camera controller for orbiting/panning/dollying a camera.
         """
@@ -83,6 +96,18 @@ class CameraControllerTrackball:
         self.scroll_zoom_factor = 1.1  # multiplicative factor per scroll step
         self.min_distance = 0.05
         self.max_distance = 1e6
+        self.max_polar_angle = math.radians(float(max_polar_angle_deg))
+
+        # Direction tuning flags
+        # Defaults chosen for typical screen coordinates (y grows downward) and natural feel:
+        # - orbit yaw feels natural with invert_orbit_x=True (left drag rotates scene left)
+        # - orbit pitch feels natural with invert_orbit_y=False when dy<0 for upward drag
+        self.invert_orbit_x = bool(True if invert_orbit_x is None else invert_orbit_x)
+        self.invert_orbit_y = bool(False if invert_orbit_y is None else invert_orbit_y)
+        self.invert_pan_x = bool(invert_pan_x)
+        self.invert_pan_y = bool(invert_pan_y)
+        self.invert_dolly_drag = bool(invert_dolly_drag)
+        self.invert_scroll = bool(invert_scroll)
 
         # Dirty flag to integrate with AnimationLoop.update
         self._dirty = True  # ensure one initial update to push exact state
@@ -182,7 +207,7 @@ class CameraControllerTrackball:
             self._pan(dx, dy)
         elif (self._active_button == 3) or (self._active_button == 1 and is_ctrl):
             # dolly
-            self._dolly_pixels(-dy)  # drag up to move forward
+            self._dolly_pixels((-dy) if self.invert_dolly_drag else dy)  # drag up to move forward (zoom in)
 
     def _on_scroll(self, event: Any) -> None:
         """Zoom in/out by scaling the camera offset based on scroll direction/step."""
@@ -192,7 +217,9 @@ class CameraControllerTrackball:
         step = float(getattr(event, "step", 0.0) or (1.0 if getattr(event, "button", "up") == "up" else -1.0))
         if step != 0:
             factor = self.scroll_zoom_factor ** abs(step)
-            if step > 0:
+            # Allow inversion of scroll zoom direction if desired
+            effective_step = -step if self.invert_scroll else step
+            if effective_step > 0:
                 # zoom in: reduce offset length
                 self._offset = (self._offset / factor).astype(np.float32)
             else:
@@ -210,19 +237,21 @@ class CameraControllerTrackball:
     # Actions
     # =============================================================================
     def _orbit(self, dx: float, dy: float) -> None:
-        """Rotate around target by applying yaw (world up) then pitch (camera right)."""
-        # Build quaternions for yaw (world up) and pitch (camera right)
-        yaw = quaternion.create_from_axis_rotation(np.array([0.0, 1.0, 0.0], dtype=np.float32), float(dx) * self.rotate_speed)
-        right, up, _ = self._camera_axes_world()
-        pitch = quaternion.create_from_axis_rotation(right.astype(np.float32), float(-dy) * self.rotate_speed)
-        # Apply rotations to the offset vector (around target)
-        self._offset = self._rotate_vector_by_quaternion(self._offset, pitch)
-        self._offset = self._rotate_vector_by_quaternion(self._offset, yaw)
-        # keep distance within limits
-        cur_d = float(np.linalg.norm(self._offset))
-        cur_d = max(self.min_distance, min(self.max_distance, cur_d))
-        if cur_d > 1e-8:
-            self._offset = self._offset.astype(np.float32) * (self._distance / cur_d)
+        """Rotate around target using spherical angles with elevation clamp.
+
+        This keeps behavior stable near poles and allows configurable direction inversions.
+        """
+        # Convert current offset to spherical
+        r, theta, phi = self._offset_to_spherical(self._offset)
+        # Apply deltas with configurable inversion
+        s_yaw = -1.0 if self.invert_orbit_x else 1.0
+        s_pitch = 1.0 if not self.invert_orbit_y else -1.0
+        theta += s_yaw * float(dx) * self.rotate_speed
+        phi += s_pitch * float(dy) * self.rotate_speed
+        # Clamp elevation to avoid pole singularities
+        phi = max(-self.max_polar_angle, min(self.max_polar_angle, phi))
+        # Rebuild offset and apply
+        self._offset = self._spherical_to_offset(r, theta, phi)
         self._apply_state()
         self._dirty = True
 
@@ -242,8 +271,12 @@ class CameraControllerTrackball:
             # Orthographic: use a simple linear mapping
             world_per_px_x = world_per_px_y = self.pan_speed * distance
 
-        right, up, _forward = self._camera_axes_world()
-        pan_world = (+dx * world_per_px_x) * right + (-dy * world_per_px_y) * up
+        # Use robust axes based on offset rather than world matrix to avoid pole issues
+        right, up, _forward = self._orbit_axes()
+        # Apply inversion to match user preference/OS settings
+        sx = -1.0 if self.invert_pan_x else 1.0
+        sy = -1.0 if self.invert_pan_y else 1.0
+        pan_world = (sx * dx * world_per_px_x) * right + (sy * dy * world_per_px_y) * up
 
         self._target = (self._target + pan_world).astype(np.float32)
         # keep camera at same relative offset from target
@@ -293,7 +326,72 @@ class CameraControllerTrackball:
         z_axis = _norm(z_axis)
         return x_axis, y_axis, z_axis
 
+    def _orbit_axes(self) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Compute stable right/up/forward axes from target-offset, with fallback near poles.
+
+        forward points from camera toward target; right is world_up x forward. If forward
+        is near-colinear with world_up, use an alternate up axis to avoid degeneracy.
+        """
+        world_up = np.array([0.0, 1.0, 0.0], dtype=np.float32)
+        forward = (-self._offset).astype(np.float32)
+        f_norm = float(np.linalg.norm(forward))
+        if f_norm < 1e-12:
+            forward = np.array([0.0, 0.0, -1.0], dtype=np.float32)
+        else:
+            forward = (forward / f_norm).astype(np.float32)
+
+        # candidate right = up x forward
+        right = np.cross(world_up, forward).astype(np.float32)
+        r_norm = float(np.linalg.norm(right))
+        if r_norm < 1e-6:
+            # forward ~ parallel to world_up; pick an alternate up axis (Z) to define right
+            alt_up = np.array([0.0, 0.0, 1.0], dtype=np.float32)
+            right = np.cross(alt_up, forward).astype(np.float32)
+            r_norm = float(np.linalg.norm(right))
+            if r_norm < 1e-6:
+                # As last resort pick X axis
+                alt_up = np.array([1.0, 0.0, 0.0], dtype=np.float32)
+                right = np.cross(alt_up, forward).astype(np.float32)
+                r_norm = float(np.linalg.norm(right))
+        if r_norm > 0:
+            right = (right / r_norm).astype(np.float32)
+
+        up = np.cross(forward, right).astype(np.float32)
+        u_norm = float(np.linalg.norm(up))
+        if u_norm > 0:
+            up = (up / u_norm).astype(np.float32)
+        return right, up, forward
+
     def _rotate_vector_by_quaternion(self, v: np.ndarray, q: np.ndarray) -> np.ndarray:
         """Rotate a vector by a quaternion using pyrr helper."""
         res = quaternion.apply_to_vector(q.astype(np.float32), v.astype(np.float32))
         return np.asarray(res, dtype=np.float32)
+
+    # Spherical helpers -------------------------------------------------------
+    def _offset_to_spherical(self, offset: np.ndarray) -> tuple[float, float, float]:
+        """Return (r, theta, phi) from offset vector.
+
+        theta: azimuth around Y (world up), 0 aligned with +Z
+        phi: elevation from horizon ([-pi/2, +pi/2])
+        """
+        x, y, z = float(offset[0]), float(offset[1]), float(offset[2])
+        r = math.sqrt(x * x + y * y + z * z)
+        if r < 1e-12:
+            return 0.0, 0.0, 0.0
+        theta = math.atan2(x, z if abs(z) > 1e-12 else 1e-12)
+        hyp = math.sqrt(max(x * x + z * z, 1e-24))
+        phi = math.atan2(y, hyp)
+        return r, theta, phi
+
+    def _spherical_to_offset(self, r: float, theta: float, phi: float) -> np.ndarray:
+        """Return offset vector from (r, theta, phi) in right-handed coordinates.
+
+        x = r * sin(theta) * cos(phi)
+        y = r * sin(phi)
+        z = r * cos(theta) * cos(phi)
+        """
+        cos_phi = math.cos(phi)
+        sin_phi = math.sin(phi)
+        cos_theta = math.cos(theta)
+        sin_theta = math.sin(theta)
+        return np.array([r * sin_theta * cos_phi, r * sin_phi, r * cos_theta * cos_phi], dtype=np.float32)
