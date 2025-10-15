@@ -13,8 +13,8 @@ Matplotlib Scenegraph (`mpl-graph`) is a pure-Python 3D scene graph and renderer
 ## Quickstart
 
 ```bash
-python3.11 -m venv venv
-source venv/bin/activate
+python3.11 -m venv .venv
+source .venv/bin/activate
 pip install -e .
 ```
 
