@@ -69,7 +69,7 @@ def main():
 
     fps_monitor = FpsMonitor()
 
-    @animation_loop.callback_decorator
+    @animation_loop.decorator_callback
     def polygons_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
         polygons.rotation_euler[0] += delta_time

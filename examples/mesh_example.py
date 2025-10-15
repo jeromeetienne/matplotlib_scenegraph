@@ -77,7 +77,7 @@ def main():
     # Add the textured mesh to the scene
     scene.add_child(mesh)
 
-    @animation_loop.callback_decorator
+    @animation_loop.decorator_callback
     def mesh_update(delta_time: float) -> list[Mesh]:
         present = time.time()
         # mesh.position[0] = np.sin(present)

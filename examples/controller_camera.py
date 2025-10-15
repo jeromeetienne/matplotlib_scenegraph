@@ -50,7 +50,7 @@ def main():
     object_controller.start()
 
     # update the camera on each frame
-    @animation_loop.callback_decorator
+    @animation_loop.decorator_callback
     def update_camera(delta_time: float) -> Sequence[Object3D]:
         has_moved = object_controller.update(delta_time)
 
