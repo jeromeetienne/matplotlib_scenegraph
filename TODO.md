@@ -1,9 +1,5 @@
 # TODO
 
-- WONTDO Object3D
-  - depth sorting of this object3d
-- DONE rename `CameraBase` into `Camera`
-
 - TODO add an assert
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
@@ -32,6 +28,9 @@
 
 ## Done
 
+- WONTDO Object3D
+  - depth sorting of this object3d
+- DONE rename `CameraBase` into `Camera`
 - DONE implement zorder in renderer
   - for all artists, set the zorder according to the distance from the camera
 - DONE there is a depth sorting inside the object3d sometime
