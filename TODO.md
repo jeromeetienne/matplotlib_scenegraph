@@ -1,12 +1,12 @@
 # TODO
 
-- TODO add an assert
+- add an assert
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
 - put all the sanity check you got in the contructor, put it a function
   - call it at the end of the constructor
   - call it in the renderer
-- FIXME the notion of expanded geometry is unclear. figure it out
+- the notion of expanded geometry is unclear. figure it out
   - it is about having a single indices for all the attributes
   - NOT about not reusing vertices
 - publish event as staticTypeEvent
