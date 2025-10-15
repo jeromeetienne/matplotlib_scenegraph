@@ -68,7 +68,8 @@ def main():
     # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
 
     # Create a textured mesh
-    material = MeshTexturedMaterial(texture=texture, face_culling=Constants.FaceCulling.FrontSide, face_sorting=True)
+    # material = MeshTexturedMaterial(texture=texture)
+    material = MeshPhongMaterial()
     mesh = Mesh(mesh_geometry, material)
     # mesh.position[2] = -2
     # mesh.scale[:] = 0.5

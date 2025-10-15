@@ -69,7 +69,7 @@ class RendererMeshTexturedMaterial:
         faces_centroids_world = RendererMesh.compute_faces_centroids(faces_vertices_world)
 
         # apply flat shading
-        shaded_colors = RendererMeshPhongMaterial.shade_faces_flat(
+        faces_color = RendererMeshPhongMaterial.shade_faces_flat(
             camera,
             material_color=material.color,
             material_shininess=material.shininess,
@@ -77,9 +77,6 @@ class RendererMeshTexturedMaterial:
             faces_centroids_world=faces_centroids_world,
             lights=lights,
         )
-
-        # apply vertex colors if any
-        faces_color = shaded_colors
 
         # =============================================================================
         # Compute faces_depth to set zorder
@@ -161,6 +158,8 @@ class RendererMeshTexturedMaterial:
         """
 
         # sanity check
+        assert face_vertices_2d.shape == (3, 2), f"face_vertices_2d shape should be (3, 2), got {face_vertices_2d.shape}"
+        assert face_uvs.shape == (3, 2), f"face_uvs shape should be (3, 2), got {face_uvs.shape}"
         assert face_color.shape == (3,), f"face_color shape should be (3,), got {face_color.shape}"
 
         texture_data = texture.data
@@ -173,6 +172,7 @@ class RendererMeshTexturedMaterial:
         y_max = int(np.ceil(uvs_pixel[:, 1].max()))
 
         texture_region = texture_data[y_min:y_max, x_min:x_max, :] * 255.0 * face_color
+        texture_region = np.clip(texture_region, 0, 255)
         texture_region = (texture_region).astype(np.uint8)
         extent = x_min / image_w, x_max / image_w, y_min / image_h, y_max / image_h
 

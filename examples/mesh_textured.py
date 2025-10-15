@@ -14,7 +14,7 @@ from mpl_graph.core import Texture
 from mpl_graph.cameras import CameraOrthographic
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh, Scene
-from mpl_graph.materials import MeshTexturedMaterial
+from mpl_graph.materials import MeshTexturedMaterial, MeshPhongMaterial
 from mpl_graph.lights import DirectionalLight, AmbientLight, Light
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
@@ -78,7 +78,8 @@ def main():
     mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
 
     # Create a textured mesh
-    material = MeshTexturedMaterial(texture=texture)
+    material = MeshTexturedMaterial(texture=texture, shininess=100.0)
+    # material = MeshPhongMaterial()
     mesh = Mesh(mesh_geometry, material)
     scene.add_child(mesh)
 
