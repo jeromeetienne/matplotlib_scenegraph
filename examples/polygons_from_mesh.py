@@ -26,6 +26,7 @@ from common.fps_monitor import FpsMonitor
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 assets_path = os.path.join(__dirname__, "../assets")
 models_path = os.path.join(assets_path, "models")
+output_path = os.path.join(__dirname__, "output")
 
 
 def main():
@@ -34,8 +35,8 @@ def main():
     # =============================================================================
     scene = Scene()
 
-    # camera = CameraPerspective()
-    camera = CameraOrthographic()
+    camera = CameraPerspective()
+    # camera = CameraOrthographic()
     scene.add_child(camera)
     camera.position[2] = 5.0
 
@@ -52,7 +53,8 @@ def main():
     file_path = os.path.join(models_path, "bunny.obj")
     # file_path = os.path.join(models_path, "head.obj")
     # file_path = os.path.join(models_path, "cube.obj")
-    file_path = os.path.join(models_path, "suzanne.obj")
+    # file_path = os.path.join(models_path, "suzanne.obj")
+    file_path = os.path.join(output_path, "box.obj")
 
     # parse the .obj file
     mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)
@@ -73,6 +75,7 @@ def main():
     def polygons_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
         polygons.rotation_euler[0] += delta_time
+        polygons.rotation_euler[1] += delta_time * 0.5
 
         fps_monitor.print_fps()
         # polygons.position[2] = np.cos(present * 3) * 1

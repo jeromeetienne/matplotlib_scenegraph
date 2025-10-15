@@ -49,6 +49,7 @@ def main():
     # =============================================================================
 
     mesh_geometry = GeometryShape.box(1, 1, 1, 10, 10, 10)
+    mesh_geometry = GeometryShape.box(1, 1, 1, 10, 10, 10)
 
     obj_str = MeshUtils.geometry_as_obj_string(mesh_geometry)
 
