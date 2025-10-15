@@ -88,8 +88,8 @@ class GeometryShape:
                     c = vertex_offset + (u_index + 1) + stride * (v_index + 1)
                     d = vertex_offset + (u_index + 1) + stride * v_index
 
-                    faces_indices.append([a, d, b])
-                    faces_indices.append([d, c, b])
+                    faces_indices.append([a, b, d])
+                    faces_indices.append([d, b, c])
 
             vertex_offset += (seg_u + 1) * (seg_v + 1)
 
