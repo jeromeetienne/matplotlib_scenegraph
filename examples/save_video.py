@@ -48,7 +48,7 @@ def main():
     # stop the loop when video is saved
     # =============================================================================
 
-    @animation_loop.video_saved.event_decorator
+    @animation_loop.video_saved.event_listener
     def on_save():
         print(f"Video saved to: {video_path}")
         animation_loop.stop()
@@ -67,7 +67,7 @@ def main():
     points.scale[:] = 0.5
     scene.add_child(points)
 
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def points_animation(delta_time: float) -> Sequence[Points]:
         present = time.time()
         points.position[0] = np.sin(present * 3) * 0.5

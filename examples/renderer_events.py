@@ -50,7 +50,7 @@ def main():
     points = Points(geometry, material)
     scene.add_child(points)
 
-    @points.post_transform.event_decorator
+    @points.post_transform.event_listener
     def post_transform_points(vertices_transformed: np.ndarray) -> None:
 
         # sort inplace transformed positions by z value (3rd column). Largest z first

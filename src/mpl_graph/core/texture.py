@@ -47,6 +47,10 @@ class Texture:
 
         return self
 
+    def ensure_no_alpha(self) -> "Texture":
+        """Ensure the texture has no alpha channel, stripping it if necessary."""
+        return self.strip_alpha() if self.has_alpha() else self
+
     @staticmethod
     def from_file(file_path: str) -> "Texture":
         """

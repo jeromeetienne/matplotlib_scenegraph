@@ -11,6 +11,7 @@ from typing import Sequence
 import numpy as np
 
 # local imports
+from common.scene_examples import SceneExamples
 from mpl_graph.core import Object3D, Texture
 from mpl_graph.cameras import CameraOrthographic
 from mpl_graph.lights.ambient_light import AmbientLight
@@ -54,53 +55,43 @@ def main():
     controller = CameraControllerTrackball(renderer, camera)
     controller.start()
 
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def update_camera(_delta: float) -> Sequence[Object3D]:
         has_moved = controller.update(_delta)
         return scene.traverse() if has_moved else []
+
+    # add standard lights
+    scene.add_child(SceneExamples.getThreePointsLighting())
 
     # =============================================================================
     # Load a model
     # =============================================================================
 
-    ambient_light = AmbientLight(intensity=0.5)
-    scene.add_child(ambient_light)
-
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
-    texture = Texture.from_file(texture_path)
-    # remove the alpha channel if any
-    texture = texture.strip_alpha() if texture.has_alpha() else texture
+    texture = Texture.from_file(texture_path).ensure_no_alpha()
 
-    # Load a obj model
-    # obj_path = os.path.join(models_path, "head.obj")
+    # Load a obj geometry
     obj_path = os.path.join(models_path, "suzanne.obj")
-    # obj_path = os.path.join(models_path, "cube_meshio.obj")q
     mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
 
-    # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
-
     # Create a textured mesh
-    # material = MeshTexturedMaterial(texture=texture)
-    material = MeshPhongMaterial()
-    mesh = Mesh(mesh_geometry, material)
-    mesh.rotate_y(np.pi)  # rotate 180deg around Y to have the face looking towards the camera
+    material = MeshTexturedMaterial(texture=texture)
+    # material = MeshPhongMaterial()
+    mesh_textured = Mesh(mesh_geometry, material)
+    mesh_textured.rotate_y(np.pi)  # rotate 180deg around Y to have the face looking towards the camera
 
     # Add the textured mesh to the scene
-    scene.add_child(mesh)
+    scene.add_child(mesh_textured)
 
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def mesh_update(delta_time: float) -> list[Mesh]:
-        mesh.rotate_y(0.5 * delta_time)
-        return [mesh]
+        mesh_textured.rotate_y(0.5 * delta_time)
+        return [mesh_textured]
 
     # =============================================================================
     # Start the animation loop
     # =============================================================================
-
-    # renderer.render(scene, camera)
-    # print("scene rendered")
-    # matplotlib.pyplot.show(block=True)
 
     animation_loop.start(scene, camera)
 

@@ -63,7 +63,7 @@ def main():
     lines.scale[:] = 0.5
     scene.add_child(lines)
 
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def lines_update(delta_time: float) -> Sequence[Object3D]:
         lines.rotate_x(delta_time / 2)
         lines.rotate_y(delta_time)

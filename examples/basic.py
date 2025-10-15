@@ -55,7 +55,7 @@ def main():
     points.scale[:] = 0.5
     scene.add_child(points)
 
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def update_points(delta_time: float) -> Sequence[Object3D]:
         # Modify the points rotation
         angle = delta_time * np.pi / 2.0  # 90 degrees per second

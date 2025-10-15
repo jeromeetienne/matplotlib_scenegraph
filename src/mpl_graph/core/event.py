@@ -50,7 +50,7 @@ class Event(Generic[Callback]):
         for callback in self._callbacks:
             callback(*args, **kwargs)
 
-    def event_decorator(self, callback: Callback) -> Callback:
+    def event_listener(self, callback: Callback) -> Callback:
         """
         Decorator to subscribe a function to the event. This is a convenience method.
         It still ensure static type checking on the decorated function.

@@ -5,10 +5,11 @@ import os
 import numpy as np
 
 # local imports
-from mpl_graph.core import Constants, Texture
+from mpl_graph.core import Constants, Texture, Object3D
 from mpl_graph.geometry import Geometry, GeometryUtils
 from mpl_graph.materials import PointsMaterial, MeshPhongMaterial, MeshTexturedMaterial
 from mpl_graph.objects import Points, Mesh
+from mpl_graph.lights import DirectionalLight, AmbientLight
 from .mesh_utils import MeshUtils
 
 
@@ -78,3 +79,26 @@ class SceneExamples:
         material = MeshTexturedMaterial(texture=texture)
         textured_mesh = Mesh(mesh_geometry, material)
         return textured_mesh
+
+    @staticmethod
+    def getThreePointsLighting() -> Object3D:
+        """Returns a list of 3 lights for a three-point lighting setup"""
+
+        group = Object3D()
+
+        key_light = DirectionalLight(intensity=0.8)
+        key_light.position = np.array([5.0, 5.0, 5.0])
+        group.add_child(key_light)
+
+        fill_light = DirectionalLight(intensity=0.4)
+        fill_light.position = np.array([-5.0, 5.0, 5.0])
+        group.add_child(fill_light)
+
+        back_light = DirectionalLight(intensity=0.3)
+        back_light.position = np.array([0.0, 5.0, -5.0])
+        group.add_child(back_light)
+
+        ambient_light = AmbientLight(intensity=0.2)
+        group.add_child(ambient_light)
+
+        return group

@@ -16,7 +16,7 @@ from mpl_graph.cameras import CameraOrthographic, CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
-from examples.common.controllers.object_controller_awds import ObjectControllerWasd
+from common.controllers.object_controller_awds import ObjectControllerWasd
 from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -55,7 +55,7 @@ def main():
     object_controller = ObjectControllerWasd(renderer, random_points)
     object_controller.start()
 
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def update_controller(delta_time: float) -> Sequence[Object3D]:
         object_controller.update(delta_time)
         return [random_points]

@@ -62,79 +62,52 @@ def main():
     scene.add_child(directional_light_key)
     scene.add_child(directional_light_key.target)
 
-    # # Create a directional fill light
-    # directional_light_fill = DirectionalLight(color=Constants.Color.WHITE, intensity=0.3)
-    # directional_light_fill.position = np.array((-1.0, 0.0, -1.0))
-    # scene.add_child(directional_light_fill)
-    # scene.add_child(directional_light_fill.target)
+    # Create a directional fill light
+    directional_light_fill = DirectionalLight(color=Constants.Color.WHITE, intensity=0.3)
+    directional_light_fill.position = np.array((-1.0, 0.0, -1.0))
+    scene.add_child(directional_light_fill)
+    scene.add_child(directional_light_fill.target)
 
-    # # Create a directional rim light
-    # directional_light_rim = DirectionalLight(color=Constants.Color.WHITE, intensity=0.2)
-    # directional_light_rim.position = np.array((0.0, 1.0, -1.0))
-    # scene.add_child(directional_light_rim)
-    # scene.add_child(directional_light_rim.target)
+    # Create a directional backlight light
+    directional_light_backlight = DirectionalLight(color=Constants.Color.WHITE, intensity=0.2)
+    directional_light_backlight.position = np.array((0.0, 1.0, -1.0))
+    scene.add_child(directional_light_backlight)
+    scene.add_child(directional_light_backlight.target)
 
-    # # add a ambient light
-    # ambient_light = AmbientLight(color=Constants.Color.DARK_RED, intensity=0.2)
-    # scene.add_child(ambient_light)
+    # add a ambient light
+    ambient_light = AmbientLight(color=Constants.Color.DARK_RED, intensity=0.2)
+    scene.add_child(ambient_light)
 
-    # # # add a point light
-    # point_light = PointLight(color=Constants.Color.RED, intensity=2)
-    # point_light.position = np.array((2.0, 0.0, 2.0))
-    # scene.add_child(point_light)
+    # # add a point light
+    point_light = PointLight(color=Constants.Color.RED, intensity=2)
+    point_light.position = np.array((2.0, 0.0, 2.0))
+    scene.add_child(point_light)
 
-    # point_light_helper = Mesh(Geometry.box(), MeshBasicMaterial(color=Constants.Color.RED))
-
-    mesh_grid = Mesh(GeometryShape.grid(5.0, 5.0), MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE))
-    scene.add_child(mesh_grid)
-    mesh_grid.position[1] = 0
-    mesh_grid.position[2] = -0.01  # trick to ensure the grid is behind the other objects
-
-    # =============================================================================
-    #
-    # =============================================================================
-    # Load a texture image
-    texture_path = os.path.join(images_path, "uv-grid.png")
-    texture = Texture.from_file(texture_path)
-    # remove the alpha channel if any
-    texture = texture.strip_alpha() if texture.has_alpha() else texture
-
-    # Load a obj model
-    obj_path = os.path.join(models_path, "head.obj")
-    # obj_path = os.path.join(models_path, "suzanne.obj")
-    # obj_path = os.path.join(models_path, "cube_meshio.obj")
-    mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
-
-    # mesh_geometry = GeometryShape.box(1, 1, 1, 3, 3, 3)
-
-    # Create a textured mesh
-    # material = MeshTexturedMaterial(texture)
-    # material = MeshPhongMaterial()
-    material = MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE)
-    # material = MeshBasicMaterial()
-    # material = MeshNormalMaterial()
-    # material = MeshDepthMaterial(colormap_name="viridis")
-    mesh_head = Mesh(mesh_geometry, material)
-    mesh_head.scale[:] = 1
-    mesh_head.rotate_y(np.pi)
-
-    # Add the textured mesh to the scene
-    scene.add_child(mesh_head)
-
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def light_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
         directional_light_key.position[0] = 2.0 * np.cos(present)
         directional_light_key.position[2] = 2.0 * np.sin(present)
-        return [mesh_head, directional_light_key]
+        return [mesh, directional_light_key]
+
+    # =============================================================================
+    #
+    # =============================================================================
+
+    # Load a obj geometry
+    obj_path = os.path.join(models_path, "head.obj")
+    mesh_geometry = MeshUtils.parse_obj_file_manual(obj_path)
+
+    # Create a mesh
+    material = MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE)
+    mesh = Mesh(mesh_geometry, material)
+    scene.add_child(mesh)
+    mesh.scale[:] = 1
+    mesh.rotate_y(np.pi)
 
     # =============================================================================
     # Start the animation loop
     # =============================================================================
-
-    # renderer.render(scene, camera)
-    # print("scene rendered")
-    # matplotlib.pyplot.show(block=True)
 
     animation_loop.start(scene, camera)
 

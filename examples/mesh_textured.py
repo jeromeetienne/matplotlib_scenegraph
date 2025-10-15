@@ -84,7 +84,7 @@ def main():
     mesh.rotate_y(np.pi)  # rotate the model to face the camera
     scene.add_child(mesh)
 
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def mesh_update(delta_time: float) -> list[Mesh]:
         mesh.rotate_y(0.5 * delta_time)
         return [mesh]

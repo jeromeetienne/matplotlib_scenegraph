@@ -17,7 +17,7 @@ from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.renderers import Renderer
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
-from examples.common.controllers.object_controller_awds import ObjectControllerWasd
+from common.controllers.object_controller_awds import ObjectControllerWasd
 from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -50,7 +50,7 @@ def main():
     object_controller.start()
 
     # update the camera on each frame
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def update_camera(delta_time: float) -> Sequence[Object3D]:
         has_moved = object_controller.update(delta_time)
 

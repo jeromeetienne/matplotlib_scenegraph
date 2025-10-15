@@ -39,7 +39,7 @@ def main():
     controller = CameraControllerTrackball(renderer, camera)
     controller.start()
 
-    @animation_loop.callback_decorator
+    @animation_loop.event_listener
     def update_camera(_delta: float) -> Sequence[Object3D]:
         has_moved = controller.update(_delta)
         return scene.traverse() if has_moved else []
