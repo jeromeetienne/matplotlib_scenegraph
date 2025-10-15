@@ -55,7 +55,7 @@ def main():
     points.scale[:] = 0.5
     scene.add_child(points)
 
-    @animation_loop.decorator
+    @animation_loop.callback_decorator
     def update_points(delta_time: float) -> Sequence[Object3D]:
         # Modify the points rotation
         points.rotation_euler[1] += delta_time % (2 * np.pi)

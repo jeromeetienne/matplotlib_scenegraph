@@ -86,7 +86,7 @@ def main():
 
     # point_light_helper = Mesh(Geometry.box(), MeshBasicMaterial(color=Constants.Color.RED))
 
-    @animation_loop.decorator
+    @animation_loop.callback_decorator
     def light_update(delta_time: float) -> Sequence[Light]:
         present = time.time()
         directional_light_key.position[0] = 2.0 * np.cos(present)
@@ -99,7 +99,7 @@ def main():
     mesh_grid.position[1] = 0
     mesh_grid.position[2] = -0.01  # trick to ensure the grid is behind the other objects
 
-    @animation_loop.decorator
+    @animation_loop.callback_decorator
     def grid_update(delta_time: float) -> Sequence[Object3D]:
         # mesh_grid.rotation_euler[0] += 0.1 * delta_time
         return [mesh_grid]
@@ -135,7 +135,7 @@ def main():
     # Add the textured mesh to the scene
     scene.add_child(mesh_head)
 
-    @animation_loop.decorator
+    @animation_loop.callback_decorator
     def mesh_update(delta_time: float) -> list[Mesh]:
         present = time.time()
         # mesh.position[0] = np.sin(present)

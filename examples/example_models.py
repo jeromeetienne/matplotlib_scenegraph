@@ -71,7 +71,7 @@ def main():
     suzanne_points.position[0] = -3
     suzanne_points.position[1] = -3
 
-    @animation_loop.decorator
+    @animation_loop.callback_decorator
     def update_model_root(delta_time: float) -> typing.Sequence[Object3D]:
         present = time.time()
         range = np.sin(present) * 1 + 2

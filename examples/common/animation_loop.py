@@ -1,5 +1,6 @@
 # stdlib imports
 from typing import Callable, Sequence
+from typing import Protocol
 
 # pip imports
 import time
@@ -11,6 +12,7 @@ import matplotlib.pyplot
 from common.example_utils import ExamplesUtils
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.objects import Scene
+from mpl_graph.core.event import Event
 from mpl_graph.cameras.camera_base import CameraBase
 from mpl_graph.renderers.renderer import Renderer
 
@@ -23,8 +25,12 @@ Arguments:
 """
 
 
+class VideoSavedCalledback(Protocol):
+    def __call__(self) -> None: ...  # type: ignore
+
+
 class AnimationLoop:
-    __slots__ = ("_callbacks", "_renderer", "_fps", "_video_duration", "_video_path", "_time_last_update", "_scene", "_camera")
+    __slots__ = ("_callbacks", "_renderer", "_fps", "_video_duration", "_video_path", "_time_last_update", "_scene", "_camera", "video_saved")
 
     def __init__(self, renderer: Renderer, fps: int = 30, video_duration: float = 10.0, video_path: str | None = None) -> None:
         """
@@ -47,6 +53,9 @@ class AnimationLoop:
         self._time_last_update = None
         self._scene: Object3D | None = None
         self._camera: CameraBase | None = None
+
+        self.video_saved = Event[VideoSavedCalledback]()
+        """Event triggered when the video is saved."""
 
     # =============================================================================
     # .start/.stop
@@ -71,6 +80,8 @@ class AnimationLoop:
         )
         if self._video_path is not None:
             funcAnimation.save(self._video_path, dpi=200, fps=self._fps)
+            print(f"Video saved to: {self._video_path}")
+            self.video_saved.dispatch()
 
         matplotlib.pyplot.show(block=True)
 
@@ -94,7 +105,7 @@ class AnimationLoop:
         """Remove a callback from the animation loop."""
         self._callbacks.remove(func)
 
-    def decorator(self, func: AnimationLoopCallbackType) -> AnimationLoopCallbackType:
+    def callback_decorator(self, func: AnimationLoopCallbackType) -> AnimationLoopCallbackType:
         """A decorator to add a callback to the animation loop.
 
         Usage:

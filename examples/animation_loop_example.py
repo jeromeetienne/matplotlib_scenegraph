@@ -72,7 +72,7 @@ def main():
     lines = Lines(geometry)
     scene.add_child(lines)
 
-    @animation_loop.decorator
+    @animation_loop.callback_decorator
     def lines_update(delta_time: float) -> Sequence[Object3D]:
         lines.geometry.vertices = np.random.uniform(-1, 1, size=(lines_count * 2, 3)).astype(np.float32)
         return [lines]

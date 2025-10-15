@@ -65,7 +65,7 @@ def main():
     lines.scale[:] = 0.5
     scene.add_child(lines)
 
-    @animation_loop.decorator
+    @animation_loop.callback_decorator
     def lines_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
         lines.rotation_euler[1] = present

@@ -50,7 +50,7 @@ def main():
     points = Points(geometry, material)
     scene.add_child(points)
 
-    @points.post_transform.subscriber
+    @points.post_transform.event_decorator
     def post_transform_points(vertices_transformed: np.ndarray) -> None:
 
         # sort inplace transformed positions by z value (3rd column). Largest z first
@@ -72,8 +72,6 @@ def main():
             color_component = (vertex[2] - z_min) / z_range
             color = np.array([1.0, 1.0 - color_component, 1.0 - color_component, 1.0], dtype=np.float32)
             points.material.colors[vertex_index] = color
-
-    # points.post_transform.subscribe(post_transform_points)
 
     def update_points(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
