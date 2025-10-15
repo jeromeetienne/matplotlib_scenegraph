@@ -13,6 +13,7 @@ from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Lines, Scene
 from mpl_graph.materials import LinesMaterial
+from common.geometry_shape import GeometryShape
 from common.example_utils import ExamplesUtils
 from common.animation_loop import AnimationLoop
 from common.mesh_utils import MeshUtils
@@ -45,22 +46,17 @@ def main():
 
     # Load a model from an .obj file
     # file_path = os.path.join(models_path, "cube_meshio.obj")
-    file_path = os.path.join(models_path, "suzanne_meshio.obj")
+    file_path = os.path.join(models_path, "suzanne.obj")
 
     # parse the .obj file
     mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)
     assert mesh_geometry.indices is not None, "The .obj file must contain face indices"
 
-    print(f"mesh_geometry vertices: {mesh_geometry.vertices.shape}, faces: {mesh_geometry.indices.shape}")
-
     # Normalize the vertices to fit in a unit cube
     mesh_geometry.vertices = GeometryUtils.normalize_vertices_to_unit_cube(mesh_geometry.vertices)
 
     # Build the lines object
-    material = LinesMaterial(colors=np.array([Constants.Color.GRAY]))
     lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)
-
-    print(f"lines vertices: {lines.geometry.vertices.shape}")
     lines.material.colors = Constants.Color.CYAN
     lines.scale[:] = 0.5
     scene.add_child(lines)
@@ -68,9 +64,16 @@ def main():
     @animation_loop.decorator_callback
     def lines_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
+        lines.rotation_euler[0] = present
         lines.rotation_euler[1] = present
-        lines.position[1] = np.cos(present * 3) * 1
+        # lines.position[1] = np.cos(present * 3) * 1
         return [lines]
+
+    # Compare with and without deduplication of edges
+    lines_without_dedup = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=False)
+    print(f"lines: without dedup {len(lines_without_dedup.geometry.vertices//2)} line segments")
+    print(f"lines: with dedup {len(lines.geometry.vertices // 2)} line segments")
+    print(f"lines reduction: {100 - (len(lines.geometry.vertices) / len(lines_without_dedup.geometry.vertices) * 100):.2f}%")
 
     # =============================================================================
     # Start the animation loop

@@ -41,13 +41,8 @@ class Lines(Object3D):
         # Get info from the geometry
         face_count = mesh_geometry.indices.shape[0]
         vertices_per_face = mesh_geometry.indices.shape[1]
-        vertices_per_line = 2
-
-        # Each face has vertices_per_face edges, each edge has 2 vertices
-        line_vertices = np.zeros((face_count * vertices_per_face * vertices_per_line, 3)).astype(np.float32)
-
-        # create a set which will contain the unique edges (index_start, index_end)
         edges_set = set()
+        lines_vertices: list[np.ndarray] = []
 
         # Create line vertices from the mesh faces
         for face_index in range(face_count):
@@ -56,23 +51,25 @@ class Lines(Object3D):
                 index_start = mesh_geometry.indices[face_index, vertex_index]
                 index_end = mesh_geometry.indices[face_index, (vertex_index + 1) % vertices_per_face]
 
-                # to avoid duplicating edges, we store them in a set with sorted indices
-                if dedup_edges:
-                    edge = (min(index_start, index_end), max(index_start, index_end))
-                    if edge in edges_set:
-                        continue
-                    edges_set.add(edge)
-
                 # get the vertex positions
-                vertex_start = mesh_geometry.vertices[int(index_start)]
-                vertex_end = mesh_geometry.vertices[int(index_end)]
+                vertex_start = np.asarray(mesh_geometry.vertices[int(index_start)], dtype=np.float32)
+                vertex_end = np.asarray(mesh_geometry.vertices[int(index_end)], dtype=np.float32)
 
-                # set the line vertices
-                line_vertices[(face_index * vertices_per_face + vertex_index) * 2] = vertex_start
-                line_vertices[(face_index * vertices_per_face + vertex_index) * 2 + 1] = vertex_end
+                # build a canonical key based on coordinates so orientation and indices do not matter
+                if dedup_edges:
+                    start_tuple = tuple(float(value) for value in vertex_start)
+                    end_tuple = tuple(float(value) for value in vertex_end)
+                    edge_key = (start_tuple, end_tuple) if start_tuple <= end_tuple else (end_tuple, start_tuple)
+                    if edge_key in edges_set:
+                        continue
+                    edges_set.add(edge_key)
 
+                lines_vertices.append(vertex_start)
+                lines_vertices.append(vertex_end)
+
+        lines_vertices_np = np.asanyarray(lines_vertices, dtype=np.float32)
         # Build the lines object
-        lines_geometry = Geometry(line_vertices)
+        lines_geometry = Geometry(lines_vertices_np)
         lines = Lines(lines_geometry)
 
         return lines
