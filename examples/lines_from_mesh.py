@@ -1,19 +1,12 @@
 # stdlib imports
 import os
-import time
 from typing import Sequence
-
-# pip imports
-import numpy as np
-
 
 # local imports
 from mpl_graph.core import Object3D, Constants
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Lines, Scene
-from mpl_graph.materials import LinesMaterial
-from common.geometry_shape import GeometryShape
 from common.example_utils import ExamplesUtils
 from common.animation_loop import AnimationLoop
 from common.mesh_utils import MeshUtils

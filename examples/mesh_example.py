@@ -4,7 +4,6 @@ basic example of rendering a rotating point cloud
 
 # stdlib imports
 import os
-import time
 from typing import Sequence
 
 # pip imports
@@ -14,16 +13,13 @@ import numpy as np
 from common.scene_examples import SceneExamples
 from mpl_graph.core import Object3D, Texture
 from mpl_graph.cameras import CameraOrthographic
-from mpl_graph.lights.ambient_light import AmbientLight
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh, Scene
-from mpl_graph.geometry import Geometry
 from mpl_graph.materials import MeshPhongMaterial, MeshTexturedMaterial
 from common.controllers.camera_controller_trackball import CameraControllerTrackball
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
-from common.geometry_shape import GeometryShape
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
 assets_path = os.path.join(__dirname__, "../assets")

@@ -17,6 +17,7 @@ from ..objects.polygons import Polygons
 from ..objects.sprite import Sprite
 from ..objects.mesh import Mesh
 from ..objects.scene import Scene
+from ..objects.text import Text
 from ..cameras.camera_base import CameraBase
 
 
@@ -106,6 +107,11 @@ class Renderer:
 
             _changed_artists = RendererLines.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
+        elif isinstance(object3d, Mesh):
+            from .renderer_mesh import RendererMesh
+
+            _changed_artists = RendererMesh.render(self, object3d, camera)
+            changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Polygons):
             from .renderer_polygons import RendererPolygons
 
@@ -116,10 +122,10 @@ class Renderer:
 
             _changed_artists = RendererSprite.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
-        elif isinstance(object3d, Mesh):
-            from .renderer_mesh import RendererMesh
+        elif isinstance(object3d, Text):
+            from .renderer_text import RendererText
 
-            _changed_artists = RendererMesh.render(self, object3d, camera)
+            _changed_artists = RendererText.render(self, object3d, camera)
             changed_artists.extend(_changed_artists)
         elif isinstance(object3d, Object3D):
             # base class, do nothing

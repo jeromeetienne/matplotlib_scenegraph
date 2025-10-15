@@ -1,11 +1,11 @@
+## TODO
+
 - zorder in renderer
   - for all artists, set the zorder according to the distance from the camera
   - needs to be on option in the object3d  ?
-- TODO add an assert 
+- TODO add an assert
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
-- make an object `Text`
-  - https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b
 - put all the sanity check you got in the contructor, put it a function
   - call it at the end of the constructor
   - call it in the renderer
@@ -22,7 +22,7 @@
   - you give it an object, and a target_geometry
   - it will interpolate the geometry vertices
 - do a "capitain blood" flying in the montain
-  - https://youtu.be/CeNKepH2ut4?t=224
+  - <https://youtu.be/CeNKepH2ut4?t=224>
 - make a histogram animated
   - add the axes with the ticks and labels
   - do a 2d figure with lines and bars
@@ -34,9 +34,12 @@
   - maybe the model matrix is not applied correctly
 
 ## Done
+
+- DONE make an object `Text`
+  - <https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b>
 - WONTDO implement a `.serialization` ? to/from json ?
   - could easily be done
-- DONE for lighting - https://chatgpt.com/c/68edfbd0-efb8-8330-b1a2-a6e65f3460ed
+- DONE for lighting - <https://chatgpt.com/c/68edfbd0-efb8-8330-b1a2-a6e65f3460ed>
   - i can do that per polygon in flat shading
   - can i do lighting on point, line ?
     - a line is lit relative to its center
@@ -79,7 +82,7 @@
   - Mesh(geometry, MeshWireframeMaterial) -> Lines (geometry is not the same, duplication of vertices)
   - Mesh(geometry, MeshBasicMaterial) -> Polygons
   - Mesh(geometry, MeshNormalMaterial) -> Polygons
-  - Mesh(geometry, MeshPhongMaterial) -> 
+  - Mesh(geometry, MeshPhongMaterial) ->
 - DONE make a scene class
 - DONE do a backface culling for polygons
   - front, back, both
@@ -98,7 +101,7 @@
   - first handle the object3d transform. local_transform, world_transform
     - how to test that ?
     - for translation, rotation, scale
-  - once object3d transform is fixed, then do the camera transform 
+  - once object3d transform is fixed, then do the camera transform
 - DONE transform fixed ? it seems so
   - clean it
 - DONE add more geometry shapes in `GeometryMeshShape`
@@ -120,7 +123,7 @@
   - must have a function in animation loop, else you do repeat from keyboard
   - you get a angular speed in seconds, position speed in seconds.
   - you read keyboard and maintain a {lateral: [-1,0,+1], vertical: [-1,0,+1], depth: [-1,0,+1], rotation_y: [-1,0,+1]}
-  - in animation function, you use this and the world_matrix to update the camera 
+  - in animation function, you use this and the world_matrix to update the camera
 - DONE modify the obj loader to use Geometry
   - to support 'non-meshio' obj files
 - DONE implement the test layer from gsp_sc
@@ -145,15 +148,15 @@
   - allow to change the color based on depth
   - simulate a fog for various effect
   - do an example of protein with fog
-  - it would help 
+  - it would help
 - DONE import suzanne model in .obj
 - DONE Code various camera controller
   - first do you awsd camera
   - how to handle input events in matplotlib
-  - awsd camera 
+  - awsd camera
   - orbit camera
   - first person camera
 - DONE remove ./matplotlib in ./renderer
-  - there is only one renderer 
+  - there is only one renderer
 - DONE move it in iits own folder - matplotlib_sc for now ?
   - find a good name for it
