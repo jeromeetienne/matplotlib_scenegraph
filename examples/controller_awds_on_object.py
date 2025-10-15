@@ -16,7 +16,7 @@ from mpl_graph.cameras import CameraOrthographic, CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples
-from common.camera_controller_awds import ObjectControllerWasd
+from examples.common.controllers.object_controller_awds import ObjectControllerWasd
 from common.example_utils import ExamplesUtils
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))

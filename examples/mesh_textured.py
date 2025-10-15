@@ -81,6 +81,7 @@ def main():
     material = MeshTexturedMaterial(texture=texture, shininess=100.0)
     # material = MeshPhongMaterial()
     mesh = Mesh(mesh_geometry, material)
+    mesh.rotate_y(np.pi)  # rotate the model to face the camera
     scene.add_child(mesh)
 
     @animation_loop.decorator_callback
