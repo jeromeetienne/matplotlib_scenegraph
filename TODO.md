@@ -1,8 +1,6 @@
 - TODO add an assert 
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
-- lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)
-  - the dedup_edges DO NOT WORK
 - do a function .save_as_obj in geometry_utils
 - for lighting - https://chatgpt.com/c/68edfbd0-efb8-8330-b1a2-a6e65f3460ed
   - i can do that per polygon in flat shading
@@ -15,7 +13,6 @@
 - put all the sanity check you got in the contructor, put it a function
   - call it at the end of the constructor
   - call it in the renderer
-- textured mesh vertices are not yet transformed
 - bug in geometryShape
   - vertices are still reused . it makes `Polygons` to fail
   - `GeometryUtils.expand_vertices(geometry)`
@@ -62,6 +59,9 @@
 
 
 ## Done
+- DONE lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)
+  - the dedup_edges DO NOT WORK
+- DONE textured mesh vertices are not yet transformed
 - DONE Start a mesh object and put multiple material
   - see how you can handle it in the renderer
     - renderer_mesh_wireframe.py
