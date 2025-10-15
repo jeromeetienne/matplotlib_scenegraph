@@ -23,7 +23,6 @@ class RendererMeshDepthMaterial:
         renderer: "Renderer",
         mesh: Mesh,
         camera: CameraBase,
-        faces_vertices_world: np.ndarray,
         faces_vertices_ndc: np.ndarray,
         faces_vertices_2d: np.ndarray,
     ) -> list[matplotlib.artist.Artist]:

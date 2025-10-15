@@ -44,7 +44,7 @@ class RendererPolygons:
         faces_vertices_ndc = vertices_ndc.reshape(polygons.polygon_count, polygons.vertices_per_polygon, 3)
 
         # dispatch the post_transforming event
-        polygons.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices_clip)
+        polygons.post_transform.dispatch(vertices_clip)
 
         # =============================================================================
         # Face culling

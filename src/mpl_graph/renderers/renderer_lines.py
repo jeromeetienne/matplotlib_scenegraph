@@ -35,17 +35,17 @@ class RendererLines:
 
         # full_transform = lines.get_world_matrix()
         mvp_matrix = TransformUtils.compute_mvp_matrix(camera, lines)
-        vertices = GeometryUtils.apply_transform(geometry.vertices, mvp_matrix)
+        vertices_ndc, vertices_world = GeometryUtils.apply_mvp_matrix(geometry.vertices, mvp_matrix)
 
         # dispatch the post_transforming event
-        lines.post_transform.dispatch(renderer=renderer, camera=camera, vertices_transformed=vertices)
+        lines.post_transform.dispatch(vertices_ndc)
 
         # =============================================================================
         # Switch vertices to 2d
         # =============================================================================
 
         # drop z for 2D rendering
-        vertices_2d = vertices[:, :2]
+        vertices_2d = vertices_ndc[:, :2]
 
         # reshape to (line_count, 2 endpoints, 2 coords)
         vertices_2d = vertices_2d.reshape((line_count, 2, 2))

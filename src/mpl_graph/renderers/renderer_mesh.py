@@ -104,7 +104,6 @@ class RendererMesh:
                 renderer=renderer,
                 mesh=mesh,
                 camera=camera,
-                faces_vertices_world=faces_vertices_world,
                 faces_vertices_ndc=faces_vertices_ndc,
                 faces_vertices_2d=faces_vertices_2d,
             )

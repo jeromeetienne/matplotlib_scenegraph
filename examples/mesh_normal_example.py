@@ -36,8 +36,7 @@ def main():
     scene = Scene()
 
     # Create a camera and add it to the scene
-    # camera = CameraOrthographic()
-    camera = CameraPerspective()
+    camera = CameraOrthographic()
     scene.add(camera)
     camera.position[2] = 5.0
 
