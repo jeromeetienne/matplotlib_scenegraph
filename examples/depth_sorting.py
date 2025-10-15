@@ -61,7 +61,7 @@ def main():
     box2_lines.material.colors = Constants.Color.RED
     scene.add_child(box2_lines)
 
-    @animation_loop.decorator_callback
+    @animation_loop.callback_decorator
     def update_points(delta_time: float) -> Sequence[Object3D]:
         box1_lines.position[0] = np.cos(time.time()) * 1
         box1_lines.position[2] = np.sin(time.time()) * 1

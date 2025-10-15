@@ -66,7 +66,7 @@ def main():
     grid_lines.position[2] = -0.01  # trick to ensure the grid is behind the other objects
     scene.add_child(grid_lines)
 
-    @animation_loop.decorator_callback
+    @animation_loop.callback_decorator
     def box_update(delta_time: float) -> Sequence[Object3D]:
         box_polygons.rotate_y(0.5 * delta_time)
         plane_lines.rotate_y(0.5 * delta_time)

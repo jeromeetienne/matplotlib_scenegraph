@@ -67,7 +67,7 @@ def main():
     points.scale[:] = 0.5
     scene.add_child(points)
 
-    @animation_loop.decorator_callback
+    @animation_loop.callback_decorator
     def points_animation(delta_time: float) -> Sequence[Points]:
         present = time.time()
         points.position[0] = np.sin(present * 3) * 0.5

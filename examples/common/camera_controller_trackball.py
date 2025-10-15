@@ -182,7 +182,7 @@ class CameraControllerTrackball:
             self._pan(dx, dy)
         elif (self._active_button == 3) or (self._active_button == 1 and is_ctrl):
             # dolly
-            self._dolly_pixels(dy)  # drag up to move forward (zoom in)
+            self._dolly_pixels(-dy)  # drag up to move forward
 
     def _on_scroll(self, event: Any) -> None:
         """Zoom in/out by scaling the camera offset based on scroll direction/step."""
@@ -210,16 +210,11 @@ class CameraControllerTrackball:
     # Actions
     # =============================================================================
     def _orbit(self, dx: float, dy: float) -> None:
-        """Rotate around target by applying yaw (world up) then pitch (camera right).
-
-        Intuitive mapping:
-        - Drag left (dx < 0) -> yaw right (negative angle) so scene appears to move left.
-        - Drag up (dy < 0 or > 0 depending on backend) -> pitch up: use +dy for natural feel.
-        """
+        """Rotate around target by applying yaw (world up) then pitch (camera right)."""
         # Build quaternions for yaw (world up) and pitch (camera right)
-        yaw = quaternion.create_from_axis_rotation(np.array([0.0, 1.0, 0.0], dtype=np.float32), float(-dx) * self.rotate_speed)
+        yaw = quaternion.create_from_axis_rotation(np.array([0.0, 1.0, 0.0], dtype=np.float32), float(dx) * self.rotate_speed)
         right, up, _ = self._camera_axes_world()
-        pitch = quaternion.create_from_axis_rotation(right.astype(np.float32), float(dy) * self.rotate_speed)
+        pitch = quaternion.create_from_axis_rotation(right.astype(np.float32), float(-dy) * self.rotate_speed)
         # Apply rotations to the offset vector (around target)
         self._offset = self._rotate_vector_by_quaternion(self._offset, pitch)
         self._offset = self._rotate_vector_by_quaternion(self._offset, yaw)
@@ -247,9 +242,8 @@ class CameraControllerTrackball:
             # Orthographic: use a simple linear mapping
             world_per_px_x = world_per_px_y = self.pan_speed * distance
 
-    right, up, _forward = self._camera_axes_world()
-    # Map drag directly: left drag moves target left, up drag moves target up
-    pan_world = (+dx * world_per_px_x) * right + (+dy * world_per_px_y) * up
+        right, up, _forward = self._camera_axes_world()
+        pan_world = (+dx * world_per_px_x) * right + (-dy * world_per_px_y) * up
 
         self._target = (self._target + pan_world).astype(np.float32)
         # keep camera at same relative offset from target

@@ -121,7 +121,7 @@ def main():
     # Add the textured mesh to the scene
     scene.add_child(mesh_head)
 
-    @animation_loop.decorator_callback
+    @animation_loop.callback_decorator
     def light_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
         directional_light_key.position[0] = 2.0 * np.cos(present)

@@ -5,20 +5,20 @@ basic example of rendering a rotating point cloud
 # stdlib imports
 import os
 import time
+from typing import Sequence
 
 # pip imports
 import numpy as np
 
 # local imports
 from mpl_graph.core import Object3D, Texture
-from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.cameras.camera_perspective import CameraPerspective
-from mpl_graph.core.constants import Constants
+from mpl_graph.cameras import CameraOrthographic
 from mpl_graph.lights.ambient_light import AmbientLight
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh, Scene
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import MeshPhongMaterial, MeshTexturedMaterial
+from common.controllers.camera_controller_trackball import CameraControllerTrackball
 from common.mesh_utils import MeshUtils
 from common.animation_loop import AnimationLoop
 from common.example_utils import ExamplesUtils
@@ -50,6 +50,15 @@ def main():
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
 
+    # Trackball controller bound to this camera
+    controller = CameraControllerTrackball(renderer, camera)
+    controller.start()
+
+    @animation_loop.callback_decorator
+    def update_camera(_delta: float) -> Sequence[Object3D]:
+        has_moved = controller.update(_delta)
+        return scene.traverse() if has_moved else []
+
     # =============================================================================
     # Load a model
     # =============================================================================
@@ -80,7 +89,7 @@ def main():
     # Add the textured mesh to the scene
     scene.add_child(mesh)
 
-    @animation_loop.decorator_callback
+    @animation_loop.callback_decorator
     def mesh_update(delta_time: float) -> list[Mesh]:
         mesh.rotate_y(0.5 * delta_time)
         return [mesh]

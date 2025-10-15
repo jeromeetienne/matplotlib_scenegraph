@@ -36,10 +36,10 @@ def main():
     animation_loop = AnimationLoop(renderer)
 
     # Trackball controller bound to this camera
-    controller = CameraControllerTrackball(renderer, camera, target=np.array([0.0, 0.0, 0.0], dtype=np.float32))
+    controller = CameraControllerTrackball(renderer, camera)
     controller.start()
 
-    @animation_loop.decorator_callback
+    @animation_loop.callback_decorator
     def update_camera(_delta: float) -> Sequence[Object3D]:
         has_moved = controller.update(_delta)
         return scene.traverse() if has_moved else []

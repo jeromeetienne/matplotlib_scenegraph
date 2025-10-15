@@ -108,7 +108,7 @@ class AnimationLoop:
         """Remove a callback from the animation loop."""
         self._callbacks.remove(func)
 
-    def decorator_callback(self, func: AnimationLoopCallbackType) -> AnimationLoopCallbackType:
+    def callback_decorator(self, func: AnimationLoopCallbackType) -> AnimationLoopCallbackType:
         """A decorator to add a callback to the animation loop.
 
         Usage:

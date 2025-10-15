@@ -64,7 +64,7 @@ def main():
     quad_polygons = Polygons(polygon_count, vertices_per_polygon, geometry)
     scene.add_child(quad_polygons)
 
-    @animation_loop.decorator_callback
+    @animation_loop.callback_decorator
     def quad_polygons_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
         quad_polygons.position[0] = np.cos(present) * 0.5
