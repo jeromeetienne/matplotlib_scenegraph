@@ -45,7 +45,7 @@ def main():
     # Create a camera and add it to the scene
     camera = CameraOrthographic()
     # camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create an animation loop
@@ -61,7 +61,7 @@ def main():
         return scene.traverse() if has_moved else []
 
     # add standard lights
-    scene.add_child(SceneExamples.getThreePointsLighting())
+    scene.add(SceneExamples.getThreePointsLighting())
 
     # =============================================================================
     # Load a model
@@ -82,7 +82,7 @@ def main():
     mesh_textured.rotate_y(np.pi)  # rotate 180deg around Y to have the face looking towards the camera
 
     # Add the textured mesh to the scene
-    scene.add_child(mesh_textured)
+    scene.add(mesh_textured)
 
     @animation_loop.event_listener
     def mesh_update(delta_time: float) -> list[Mesh]:

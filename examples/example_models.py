@@ -27,7 +27,7 @@ def main():
     scene.name = "Scene"
 
     camera = CameraOrthographic()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
@@ -41,32 +41,32 @@ def main():
 
     model_root = Object3D()
     # model_root.scale[:] = 0.1
-    scene.add_child(model_root)
+    scene.add(model_root)
 
     # =============================================================================
     # Add models to the scene
     # =============================================================================
 
     cube_points = SceneExamples.getCubePoints()
-    model_root.add_child(cube_points)
+    model_root.add(cube_points)
     cube_points.scale[:] = 0.2
     cube_points.position[0] = -3
     cube_points.position[1] = 3
 
     bunny_points = SceneExamples.getBunnyPoints()
-    model_root.add_child(bunny_points)
+    model_root.add(bunny_points)
     bunny_points.scale[:] = 0.2
     bunny_points.position[0] = 3
     bunny_points.position[1] = 3
 
     head_points = SceneExamples.getHeadPoints()
-    model_root.add_child(head_points)
+    model_root.add(head_points)
     head_points.scale[:] = 0.2
     head_points.position[0] = 3
     head_points.position[1] = -3
 
     suzanne_points = SceneExamples.getSuzannePoints()
-    model_root.add_child(suzanne_points)
+    model_root.add(suzanne_points)
     suzanne_points.scale[:] = 0.2
     suzanne_points.position[0] = -3
     suzanne_points.position[1] = -3

@@ -25,7 +25,7 @@ def main():
     # Scene & camera
     scene = Scene()
     camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
     # camera.position[:] = np.array([0.0, 0.0, 5.0], dtype=np.float32)
 
@@ -46,7 +46,7 @@ def main():
 
     # Simple content
     points = SceneExamples.addRandomPoints(1000)
-    scene.add_child(points)
+    scene.add(points)
 
     # run
     animation_loop.start(scene, camera)

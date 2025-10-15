@@ -37,7 +37,7 @@ def main():
 
     # Create a camera
     camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # =============================================================================

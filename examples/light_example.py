@@ -46,7 +46,7 @@ def main():
     camera.near = 0.1
     camera.far = 4
     # camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create an animation loop
@@ -57,31 +57,26 @@ def main():
     # =============================================================================
 
     # Create a directional key light
-    directional_light_key = DirectionalLight(intensity=1)
+    directional_light_key = DirectionalLight(intensity=1, color=Constants.Color.LIGHT_BLUE)
     directional_light_key.position = np.array((1.0, 0.0, -1.0))
-    scene.add_child(directional_light_key)
-    scene.add_child(directional_light_key.target)
+    scene.add(directional_light_key)
+    scene.add(directional_light_key.target)
 
     # Create a directional fill light
     directional_light_fill = DirectionalLight(color=Constants.Color.WHITE, intensity=0.3)
     directional_light_fill.position = np.array((-1.0, 0.0, -1.0))
-    scene.add_child(directional_light_fill)
-    scene.add_child(directional_light_fill.target)
+    scene.add(directional_light_fill)
+    scene.add(directional_light_fill.target)
 
     # Create a directional backlight light
     directional_light_backlight = DirectionalLight(color=Constants.Color.WHITE, intensity=0.2)
     directional_light_backlight.position = np.array((0.0, 1.0, -1.0))
-    scene.add_child(directional_light_backlight)
-    scene.add_child(directional_light_backlight.target)
+    scene.add(directional_light_backlight)
+    scene.add(directional_light_backlight.target)
 
     # add a ambient light
-    ambient_light = AmbientLight(color=Constants.Color.DARK_RED, intensity=0.2)
-    scene.add_child(ambient_light)
-
-    # # add a point light
-    point_light = PointLight(color=Constants.Color.RED, intensity=2)
-    point_light.position = np.array((2.0, 0.0, 2.0))
-    scene.add_child(point_light)
+    ambient_light = AmbientLight(color=Constants.Color.WHITE, intensity=0.2)
+    scene.add(ambient_light)
 
     @animation_loop.event_listener
     def light_update(delta_time: float) -> Sequence[Object3D]:
@@ -101,7 +96,7 @@ def main():
     # Create a mesh
     material = MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE)
     mesh = Mesh(mesh_geometry, material)
-    scene.add_child(mesh)
+    scene.add(mesh)
     mesh.scale[:] = 1
     mesh.rotate_y(np.pi)
 

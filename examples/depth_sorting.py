@@ -39,7 +39,7 @@ def main():
 
     # Create a camera
     camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create an animation loop
@@ -53,13 +53,13 @@ def main():
     box1_lines = Lines.from_mesh_geometry(geometry_box1)
     box1_lines.position[0] = -0.5
     box1_lines.material.colors = Constants.Color.GREEN
-    scene.add_child(box1_lines)
+    scene.add(box1_lines)
 
     geometry_box2 = GeometryShape.box()
     box2_lines = Lines.from_mesh_geometry(geometry_box2)
     box2_lines.position[0] = 0.5
     box2_lines.material.colors = Constants.Color.RED
-    scene.add_child(box2_lines)
+    scene.add(box2_lines)
 
     @animation_loop.event_listener
     def update_points(delta_time: float) -> Sequence[Object3D]:

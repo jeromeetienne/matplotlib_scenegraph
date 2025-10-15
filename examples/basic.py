@@ -36,7 +36,7 @@ def main():
 
     # Create a camera
     camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create an animation loop
@@ -53,7 +53,7 @@ def main():
     material = PointsMaterial(colors=colors)
     points = Points(geometry, material)
     points.scale[:] = 0.5
-    scene.add_child(points)
+    scene.add(points)
 
     @animation_loop.event_listener
     def update_points(delta_time: float) -> Sequence[Object3D]:

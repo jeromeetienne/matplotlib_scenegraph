@@ -31,7 +31,7 @@ def main():
     scene = Scene()
 
     camera = CameraOrthographic()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
@@ -62,7 +62,7 @@ def main():
     vertices = vertices.reshape(polygon_count * vertices_per_polygon, 3)
     geometry = Geometry(vertices=vertices)
     quad_polygons = Polygons(polygon_count, vertices_per_polygon, geometry)
-    scene.add_child(quad_polygons)
+    scene.add(quad_polygons)
 
     @animation_loop.event_listener
     def quad_polygons_update(delta_time: float) -> Sequence[Object3D]:

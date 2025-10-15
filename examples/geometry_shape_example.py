@@ -31,7 +31,7 @@ def main():
 
     # Create a camera
     camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[1] = 1.0
     camera.position[2] = 5.0
 
@@ -49,7 +49,7 @@ def main():
     plane_lines = Lines.from_mesh_geometry(geometry_plane)
     plane_lines.position[0] = -1
     plane_lines.position[1] = 0.7
-    scene.add_child(plane_lines)
+    scene.add(plane_lines)
 
     geometry_box = GeometryShape.box(1.0, 1.0, 1.0)
     box_polygons = Polygons.from_mesh_geometry(geometry_box)
@@ -57,14 +57,14 @@ def main():
     box_polygons.material.face_sorting = True
     box_polygons.position[0] = 1
     box_polygons.position[1] = 0.7
-    scene.add_child(box_polygons)
+    scene.add(box_polygons)
 
     geometry_grid = GeometryShape.grid(5.0, 5.0)
     grid_lines = Lines.from_mesh_geometry(geometry_grid)
     grid_lines.material.colors = Constants.Color.CYAN
     grid_lines.position[1] = 0
     grid_lines.position[2] = -0.01  # trick to ensure the grid is behind the other objects
-    scene.add_child(grid_lines)
+    scene.add(grid_lines)
 
     @animation_loop.event_listener
     def box_update(delta_time: float) -> Sequence[Object3D]:

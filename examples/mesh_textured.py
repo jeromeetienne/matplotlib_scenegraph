@@ -41,7 +41,7 @@ def main():
     # Create a camera and add it to the scene
     camera = CameraOrthographic()
     # camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create an animation loop
@@ -53,13 +53,13 @@ def main():
 
     # add a ambient light
     ambient_light = AmbientLight(intensity=0.2)
-    scene.add_child(ambient_light)
+    scene.add(ambient_light)
 
     # Create a directional key light
     directional_light_key = DirectionalLight(intensity=0.8)
     directional_light_key.position = np.array((1.0, 0.0, -1.0))
-    scene.add_child(directional_light_key)
-    scene.add_child(directional_light_key.target)
+    scene.add(directional_light_key)
+    scene.add(directional_light_key.target)
 
     # =============================================================================
     # Load a model
@@ -82,7 +82,7 @@ def main():
     # material = MeshPhongMaterial()
     mesh = Mesh(mesh_geometry, material)
     mesh.rotate_y(np.pi)  # rotate the model to face the camera
-    scene.add_child(mesh)
+    scene.add(mesh)
 
     # @animation_loop.event_listener
     # def mesh_update(delta_time: float) -> list[Mesh]:

@@ -30,7 +30,7 @@ def main():
 
     # Create a camera
     camera = CameraOrthographic()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # =============================================================================
@@ -44,7 +44,7 @@ def main():
     material = PointsMaterial(colors=colors)
     points = Points(geometry, material)
     points.scale[:] = 0.5
-    scene.add_child(points)
+    scene.add(points)
 
     # =============================================================================
     # Render the scene

@@ -50,7 +50,7 @@ class TestObject3DCore(unittest.TestCase):
         child.rotation = quaternion.create(dtype=np.float32)
         child.scale = vector3.create(1.0, 1.0, 1.0)
 
-        parent.add_child(child)
+        parent.add(child)
         parent.update_world_matrix()
 
         # Build expected matrices with class' multiplication order (local first, then parent)

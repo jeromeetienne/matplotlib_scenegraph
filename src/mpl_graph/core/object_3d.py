@@ -76,12 +76,12 @@ class Object3D:
     # =============================================================================
     # add/remove child
     # =============================================================================
-    def add_child(self, child: "Object3D") -> None:
+    def add(self, child: "Object3D") -> None:
         """Add a child Object3D to this object."""
         child.parent = self
         self._children.append(child)
 
-    def remove_child(self, child: "Object3D") -> None:
+    def remove(self, child: "Object3D") -> None:
         """Remove a child Object3D from this object."""
         assert child in self._children, "Child not found"
         self._children.remove(child)

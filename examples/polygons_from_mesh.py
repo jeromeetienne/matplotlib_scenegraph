@@ -33,7 +33,7 @@ def main():
 
     camera = CameraPerspective()
     # camera = CameraOrthographic()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
@@ -63,7 +63,7 @@ def main():
     polygons.material.face_culling = Constants.FaceCulling.FrontSide
     polygons.material.face_sorting = True
     polygons.scale[:] = 0.5
-    scene.add_child(polygons)
+    scene.add(polygons)
 
     fps_monitor = FpsMonitor()
 

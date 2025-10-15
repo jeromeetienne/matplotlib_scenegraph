@@ -95,9 +95,9 @@ class TestObject3DCoreComplex(unittest.TestCase):
         D.rotation = quaternion.create_from_y_rotation(np.deg2rad(15), dtype=np.float32)
 
         # Link
-        A.add_child(B)
-        B.add_child(C)
-        C.add_child(D)
+        A.add(B)
+        B.add(C)
+        C.add(D)
 
         # Update
         A.update_world_matrix()
@@ -158,9 +158,9 @@ class TestObject3DCoreComplex(unittest.TestCase):
         b.name = "b"
         c = Object3D()
         c.name = "c"
-        root.add_child(a)
-        root.add_child(b)
-        a.add_child(c)
+        root.add(a)
+        root.add(b)
+        a.add(c)
 
         names = [n.name for n in root.traverse()]
         # Depth-first order with parent first as implemented
@@ -169,7 +169,7 @@ class TestObject3DCoreComplex(unittest.TestCase):
         self.assertIs(c.root(), root)
 
         # Remove node and ensure traverse updates
-        a.remove_child(c)
+        a.remove(c)
         names2 = [n.name for n in root.traverse()]
         self.assertEqual(names2, ["root", "a", "b"])
 

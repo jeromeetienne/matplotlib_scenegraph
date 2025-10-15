@@ -28,7 +28,7 @@ def main():
     scene = Scene()
 
     camera = CameraOrthographic()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
@@ -48,7 +48,7 @@ def main():
     edge_colors = np.array([[0.0, 0.0, 0.0, 0.2] for i in range(point_count)])
     material = PointsMaterial(colors=colors, sizes=sizes, edge_colors=edge_colors)
     points = Points(geometry, material)
-    scene.add_child(points)
+    scene.add(points)
 
     @points.post_transform.event_listener
     def post_transform_points(vertices_transformed: np.ndarray) -> None:

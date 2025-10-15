@@ -32,7 +32,7 @@ def main():
 
     # Create a camera
     camera = CameraOrthographic()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create an animation loop
@@ -49,7 +49,7 @@ def main():
     material = PointsMaterial(colors=colors)
     points = Points(geometry, material)
     points.scale[:] = 0.5
-    scene.add_child(points)
+    scene.add(points)
 
     # add a callback via `animation_loop.add_callback()`
     def update_points(delta_time: float) -> Sequence[Object3D]:
@@ -69,7 +69,7 @@ def main():
     vertices = np.random.uniform(-1, 1, size=(lines_count * 2, 3)).astype(np.float32)
     geometry = Geometry(vertices=vertices)
     lines = Lines(geometry)
-    scene.add_child(lines)
+    scene.add(lines)
 
     @animation_loop.event_listener
     def lines_update(delta_time: float) -> Sequence[Object3D]:

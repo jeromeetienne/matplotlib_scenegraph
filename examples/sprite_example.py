@@ -34,7 +34,7 @@ def main():
     scene = Scene()
 
     camera = CameraOrthographic()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
@@ -53,7 +53,7 @@ def main():
     material = PointsMaterial(colors=colors)
     points = Points(geometry, material)
     points.scale[:] = 0.5
-    scene.add_child(points)
+    scene.add(points)
 
     # =============================================================================
     # Load a model
@@ -65,7 +65,7 @@ def main():
     material = SpriteMaterial(texture=texture)
     sprite = Sprite(material)
     # sprite.extent = np.array([0.0, 0.5, 0.0, 0.5])
-    scene.add_child(sprite)
+    scene.add(sprite)
 
     @animation_loop.event_listener
     def sprite_animation(delta_time: float) -> Sequence[Object3D]:

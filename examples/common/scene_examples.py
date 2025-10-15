@@ -88,17 +88,17 @@ class SceneExamples:
 
         key_light = DirectionalLight(intensity=0.8)
         key_light.position = np.array([5.0, 5.0, 5.0])
-        group.add_child(key_light)
+        group.add(key_light)
 
         fill_light = DirectionalLight(intensity=0.4)
         fill_light.position = np.array([-5.0, 5.0, 5.0])
-        group.add_child(fill_light)
+        group.add(fill_light)
 
         back_light = DirectionalLight(intensity=0.3)
         back_light.position = np.array([0.0, 5.0, -5.0])
-        group.add_child(back_light)
+        group.add(back_light)
 
         ambient_light = AmbientLight(intensity=0.2)
-        group.add_child(ambient_light)
+        group.add(ambient_light)
 
         return group

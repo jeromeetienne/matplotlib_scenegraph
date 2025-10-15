@@ -33,7 +33,7 @@ def main():
     scene = Scene()
 
     camera = CameraOrthographic()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
@@ -57,7 +57,7 @@ def main():
     lines = Lines.from_mesh_geometry(mesh_geometry, dedup_edges=True)
     lines.material.colors = Constants.Color.CYAN
     lines.scale[:] = 0.5
-    scene.add_child(lines)
+    scene.add(lines)
 
     @animation_loop.event_listener
     def lines_update(delta_time: float) -> Sequence[Object3D]:

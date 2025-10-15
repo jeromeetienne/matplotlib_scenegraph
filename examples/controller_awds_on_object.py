@@ -33,7 +33,7 @@ def main():
     scene = Scene()
 
     camera = CameraPerspective()
-    scene.add_child(camera)
+    scene.add(camera)
     camera.position[2] = 5.0
 
     # Create a renderer
@@ -47,7 +47,7 @@ def main():
 
     random_points = SceneExamples.addRandomPoints(1000)
     random_points.scale[:] = 0.5
-    scene.add_child(random_points)
+    scene.add(random_points)
 
     # =============================================================================
     # Add a controller on random_points
