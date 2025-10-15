@@ -1,12 +1,9 @@
 # TODO
 
-- Object3D
+- WONTDO Object3D
   - depth sorting of this object3d
-- rename `CameraBase` into `Camera`
+- DONE rename `CameraBase` into `Camera`
 
-- zorder in renderer
-  - for all artists, set the zorder according to the distance from the camera
-  - needs to be on option in the object3d  ?
 - TODO add an assert
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
@@ -16,10 +13,6 @@
 - FIXME the notion of expanded geometry is unclear. figure it out
   - it is about having a single indices for all the attributes
   - NOT about not reusing vertices
-- there is a depth sorting inside the object3d sometime
-  - and sometime there is a depth sorting at the face level
-  - how can they interact ?
-  - zorder = distance from the camera... period
 - publish event as staticTypeEvent
   - an minimal event system which support static type checking
 - do a geometry animation/morphing
@@ -39,6 +32,13 @@
 
 ## Done
 
+- DONE implement zorder in renderer
+  - for all artists, set the zorder according to the distance from the camera
+- DONE there is a depth sorting inside the object3d sometime
+  - and sometime there is a depth sorting at the face level
+  - how can they interact ?
+  - zorder = distance from the camera... period
+  - needs to be on option in the object3d  ?
 - DONE make an object `Text`
   - <https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b>
 - WONTDO implement a `.serialization` ? to/from json ?
