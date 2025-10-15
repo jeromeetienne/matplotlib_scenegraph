@@ -13,7 +13,7 @@ from common.example_utils import ExamplesUtils
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.objects import Scene
 from mpl_graph.core.event import Event
-from mpl_graph.cameras.camera_base import CameraBase
+from mpl_graph.cameras.camera import Camera
 from mpl_graph.renderers.renderer import Renderer
 
 # do a callback type for the animation loop
@@ -52,7 +52,7 @@ class AnimationLoop:
         self._video_path = video_path
         self._time_last_update = None
         self._scene: Object3D | None = None
-        self._camera: CameraBase | None = None
+        self._camera: Camera | None = None
         self._funcAnimation: matplotlib.animation.FuncAnimation | None = None
 
         self.video_saved = Event[VideoSavedCalledback]()
@@ -62,7 +62,7 @@ class AnimationLoop:
     # .start/.stop
     # =============================================================================
 
-    def start(self, scene: Scene, camera: CameraBase):
+    def start(self, scene: Scene, camera: Camera):
         """Start the animation loop."""
 
         self._scene = scene

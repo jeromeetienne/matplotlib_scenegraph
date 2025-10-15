@@ -42,12 +42,12 @@ from pyrr import quaternion
 
 # local imports
 from mpl_graph.renderers.renderer import Renderer
-from mpl_graph.cameras.camera_base import CameraBase
+from mpl_graph.cameras.camera import Camera
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 
 
 class CameraControllerTrackball:
-    def __init__(self, renderer: Renderer, camera: CameraBase, target: Optional[np.ndarray] = None) -> None:
+    def __init__(self, renderer: Renderer, camera: Camera, target: Optional[np.ndarray] = None) -> None:
         """
         A trackball-style camera controller for orbiting/panning/dollying a camera.
         """

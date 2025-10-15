@@ -3,13 +3,13 @@ import numpy as np
 from pyrr import matrix44
 
 # local imports
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..core.object_3d import Object3D
 
 
 class TransformUtils:
     @staticmethod
-    def compute_mvp_matrix(camera: CameraBase, object3d: Object3D) -> np.ndarray:
+    def compute_mvp_matrix(camera: Camera, object3d: Object3D) -> np.ndarray:
         """
         Compute the Model-View-Projection (MVP) matrix for a 3D object.
 

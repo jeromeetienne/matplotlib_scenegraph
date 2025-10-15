@@ -3,7 +3,7 @@ import matplotlib.artist
 import numpy as np
 
 # local imports
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..core import Object3D
 from ..core.constants import Constants
 from ..lights import Light, DirectionalLight, PointLight, AmbientLight
@@ -12,7 +12,7 @@ from ..lights import Light, DirectionalLight, PointLight, AmbientLight
 class RendererUtils:
 
     @staticmethod
-    def update_single_artist_zorder(camera: CameraBase, object3d: Object3D, artist: matplotlib.artist.Artist):
+    def update_single_artist_zorder(camera: Camera, object3d: Object3D, artist: matplotlib.artist.Artist):
         """
         Update the zorder of a single artist based on the distance from the camera to the Object3D position.
         - larger distance -> smaller zorder (drawn first)
@@ -101,7 +101,7 @@ class RendererUtils:
 
     @staticmethod
     def shade_faces_flat(
-        camera: CameraBase,
+        camera: Camera,
         material_color: np.ndarray,
         material_shininess: float,
         faces_normals_unit: np.ndarray,

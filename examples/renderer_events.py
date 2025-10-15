@@ -18,7 +18,7 @@ from common.example_utils import ExamplesUtils
 from mpl_graph.objects import Points, Scene
 from mpl_graph.geometry import Geometry
 from mpl_graph.materials import PointsMaterial
-from mpl_graph.cameras.camera_base import CameraBase
+from mpl_graph.cameras.camera import Camera
 
 
 def main():

@@ -14,7 +14,7 @@ import numpy as np
 from ..objects import Mesh, Scene
 from ..core import Texture, Object3D
 from .renderer import Renderer
-from ..cameras import CameraBase
+from ..cameras import Camera
 from ..lights import Light
 from ..materials import MeshTexturedMaterial
 from .renderer_utils import RendererUtils
@@ -26,7 +26,7 @@ class RendererMeshTexturedMaterial:
     def render(
         renderer: "Renderer",
         mesh: Mesh,
-        camera: CameraBase,
+        camera: Camera,
         faces_vertices_world: np.ndarray,
         faces_vertices_2d: np.ndarray,
         faces_uvs: np.ndarray,

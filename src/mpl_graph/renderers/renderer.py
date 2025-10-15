@@ -18,7 +18,7 @@ from ..objects.sprite import Sprite
 from ..objects.mesh import Mesh
 from ..objects.scene import Scene
 from ..objects.text import Text
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 
 
 class Renderer:
@@ -71,7 +71,7 @@ class Renderer:
     def get_axis(self) -> matplotlib.axes.Axes:
         return self._axis
 
-    def render(self, scene: Scene, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(self, scene: Scene, camera: Camera) -> list[matplotlib.artist.Artist]:
         # update world matrices
         scene.update_world_matrix()
 
@@ -83,14 +83,14 @@ class Renderer:
 
         return changed_artists
 
-    def render_object(self, object3d: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render_object(self, object3d: Object3D, camera: Camera) -> list[matplotlib.artist.Artist]:
         changed_artists: list[matplotlib.artist.Artist] = self._render_object(object3d, camera)
         return changed_artists
 
     # =============================================================================
     # Private functions
     # =============================================================================
-    def _render_object(self, object3d: Object3D, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def _render_object(self, object3d: Object3D, camera: Camera) -> list[matplotlib.artist.Artist]:
 
         # =============================================================================
         # Dispatch pre_rendering Event

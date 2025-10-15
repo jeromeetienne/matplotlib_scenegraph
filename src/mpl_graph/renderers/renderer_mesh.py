@@ -11,7 +11,7 @@ from ..core.constants import Constants
 from ..objects.mesh import Mesh
 from ..materials import MeshBasicMaterial, MeshPhongMaterial, MeshNormalMaterial, MeshDepthMaterial, MeshTexturedMaterial
 from .renderer import Renderer
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 
@@ -26,7 +26,7 @@ from ..geometry.geometry_utils import GeometryUtils
 
 class RendererMesh:
     @staticmethod
-    def render(renderer: "Renderer", mesh: Mesh, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", mesh: Mesh, camera: Camera) -> list[matplotlib.artist.Artist]:
 
         # =============================================================================
         # sanity checks

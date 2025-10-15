@@ -13,7 +13,7 @@ from mpl_graph.renderers.renderer_utils import RendererUtils
 # local imports
 from ..objects.polygons import Polygons
 from ..renderers.renderer import Renderer
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 from ..core.constants import Constants
@@ -21,7 +21,7 @@ from ..core.constants import Constants
 
 class RendererPolygons:
     @staticmethod
-    def render(renderer: "Renderer", polygons: Polygons, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", polygons: Polygons, camera: Camera) -> list[matplotlib.artist.Artist]:
         geometry = polygons.geometry
         material = polygons.material
 

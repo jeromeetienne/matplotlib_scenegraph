@@ -11,7 +11,7 @@ import numpy as np
 from ..materials import MeshNormalMaterial
 from ..objects.mesh import Mesh
 from .renderer import Renderer
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from .renderer_utils import RendererUtils
 
 
@@ -21,7 +21,7 @@ class RendererMeshNormalMaterial:
     def render(
         renderer: "Renderer",
         mesh: Mesh,
-        camera: CameraBase,
+        camera: Camera,
         faces_vertices_world: np.ndarray,
         faces_vertices_ndc: np.ndarray,
         faces_vertices_2d: np.ndarray,

@@ -11,7 +11,7 @@ from pyrr import vector, vector3
 from ..objects import Mesh, Scene
 from ..lights import Light, DirectionalLight, PointLight, AmbientLight
 from .renderer import Renderer
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..core import Object3D
 from ..materials import MeshPhongMaterial
 from .renderer_mesh import RendererMesh
@@ -28,7 +28,7 @@ class RendererMeshPhongMaterial:
     def render(
         renderer: "Renderer",
         mesh: Mesh,
-        camera: CameraBase,
+        camera: Camera,
         faces_vertices_world: np.ndarray,
         faces_vertices_ndc: np.ndarray,
         faces_vertices_2d: np.ndarray,

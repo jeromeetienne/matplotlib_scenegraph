@@ -12,14 +12,14 @@ from mpl_graph.renderers.renderer_utils import RendererUtils
 # local imports
 from ..objects.sprite import Sprite
 from ..renderers.renderer import Renderer
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 
 
 class RendererSprite:
     @staticmethod
-    def render(renderer: "Renderer", sprite: Sprite, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", sprite: Sprite, camera: Camera) -> list[matplotlib.artist.Artist]:
         material = sprite.material
 
         # =============================================================================

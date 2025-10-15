@@ -2,10 +2,10 @@
 from pyrr import matrix44
 
 # local imports
-from ..cameras.camera_base import CameraBase
+from .camera import Camera
 
 
-class CameraOrthographic(CameraBase):
+class CameraOrthographic(Camera):
     def __init__(self):
         super().__init__()
         self.name = f"a {CameraOrthographic.__name__}"

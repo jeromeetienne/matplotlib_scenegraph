@@ -9,7 +9,7 @@ import numpy as np
 # local imports
 from ..objects.text import Text
 from ..renderers.renderer import Renderer
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 from ..materials.text_material import TextMaterial
@@ -18,7 +18,7 @@ from .renderer_utils import RendererUtils
 
 class RendererText:
     @staticmethod
-    def render(renderer: "Renderer", text: Text, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", text: Text, camera: Camera) -> list[matplotlib.artist.Artist]:
         material: TextMaterial = text.material
         # =============================================================================
         # Apply full transform the vertices

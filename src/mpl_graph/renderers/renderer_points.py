@@ -9,7 +9,7 @@ import numpy as np
 # local imports
 from ..objects.points import Points
 from ..renderers.renderer import Renderer
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 from ..renderers.renderer_utils import RendererUtils
@@ -17,7 +17,7 @@ from ..renderers.renderer_utils import RendererUtils
 
 class RendererPoints:
     @staticmethod
-    def render(renderer: "Renderer", points: Points, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", points: Points, camera: Camera) -> list[matplotlib.artist.Artist]:
         geometry = points.geometry
         material = points.material
 

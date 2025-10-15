@@ -11,7 +11,7 @@ from pyrr import matrix44
 # local imports
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.core.object_3d import Object3D
-from mpl_graph.cameras.camera_base import CameraBase
+from mpl_graph.cameras.camera import Camera
 
 
 class ObjectControllerWasd:

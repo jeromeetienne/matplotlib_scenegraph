@@ -11,14 +11,14 @@ from mpl_graph.renderers.renderer_utils import RendererUtils
 # local imports
 from ..objects.lines import Lines
 from ..renderers.renderer import Renderer
-from ..cameras.camera_base import CameraBase
+from ..cameras.camera import Camera
 from ..math.transform_utils import TransformUtils
 from ..geometry.geometry_utils import GeometryUtils
 
 
 class RendererLines:
     @staticmethod
-    def render(renderer: "Renderer", lines: Lines, camera: CameraBase) -> list[matplotlib.artist.Artist]:
+    def render(renderer: "Renderer", lines: Lines, camera: Camera) -> list[matplotlib.artist.Artist]:
         geometry = lines.geometry
         material = lines.material
         line_count = len(geometry.vertices) // 2

@@ -3,10 +3,10 @@ from pyrr import matrix44
 import numpy as np
 
 # local imports
-from .camera_base import CameraBase
+from .camera import Camera
 
 
-class CameraPerspective(CameraBase):
+class CameraPerspective(Camera):
     def __init__(self, fovy: float = 50.0, aspect: float = 1.0, near: float = 0.001, far: float = 100.0):
         super().__init__()
         self.name = f"a {CameraPerspective.__name__}"
