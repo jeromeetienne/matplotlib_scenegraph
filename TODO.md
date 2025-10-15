@@ -4,12 +4,6 @@
 - TODO add an assert 
   - ndc coord must be in [-1,+1]
   - so after computation add the assert for it
-- for lighting - https://chatgpt.com/c/68edfbd0-efb8-8330-b1a2-a6e65f3460ed
-  - i can do that per polygon in flat shading
-  - can i do lighting on point, line ?
-    - a line is lit relative to its center
-    - a point is lit relative to its position
-    - ambient will be the same on all the same
 - make an object `Text`
   - https://chatgpt.com/c/68ed8560-e520-8332-9352-3926389f393b
 - put all the sanity check you got in the contructor, put it a function
@@ -35,11 +29,19 @@
   - do a 3d figure with 3d bars
 - remove all the ' @ ' for the matrix multiplication
   - use np.matmul or the `@` operator
-- implement a `.serialization` ? to/from json ?
-  - could easily be done
-
+- Perspective camera is buggy
+  - it seems that the point the closer to the camera, are getting smaller, within the model
+  - maybe the model matrix is not applied correctly
 
 ## Done
+- WONTDO implement a `.serialization` ? to/from json ?
+  - could easily be done
+- DONE for lighting - https://chatgpt.com/c/68edfbd0-efb8-8330-b1a2-a6e65f3460ed
+  - i can do that per polygon in flat shading
+  - can i do lighting on point, line ?
+    - a line is lit relative to its center
+    - a point is lit relative to its position
+    - ambient will be the same on all the same
 - DONE bug in geometryShape
   - vertices are still reused . it makes `Polygons` to fail
   - `GeometryUtils.expand_vertices(geometry)`
