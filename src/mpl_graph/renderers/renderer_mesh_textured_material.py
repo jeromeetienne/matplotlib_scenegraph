@@ -11,17 +11,13 @@ import numpy as np
 
 
 # local imports
-from ..objects.mesh import Mesh
-from ..core import Constants, Texture, Object3D
+from ..objects import Mesh, Scene
+from ..core import Texture, Object3D
 from .renderer import Renderer
-from ..cameras.camera_base import CameraBase
-from ..math.transform_utils import TransformUtils
+from ..cameras import CameraBase
 from ..lights import Light
-from ..geometry.geometry_utils import GeometryUtils
-from ..materials import MeshPhongMaterial
-from .renderer_mesh import RendererMesh
+from ..materials import MeshTexturedMaterial
 from .renderer_utils import RendererUtils
-from .renderer_mesh_phong_material import RendererMeshPhongMaterial
 
 
 class RendererMeshTexturedMaterial:
@@ -35,26 +31,19 @@ class RendererMeshTexturedMaterial:
         faces_vertices_2d: np.ndarray,
         faces_uvs: np.ndarray,
     ) -> list[matplotlib.artist.Artist]:
-        material = typing.cast(MeshPhongMaterial, mesh.material)
-        assert material.texture is not None and material.texture.data.size > 0, "MeshPhongMaterial requires a valid texture."
+        material = typing.cast(MeshTexturedMaterial, mesh.material)
+
+        # =============================================================================
+        # Sanity checks
+        # =============================================================================
+
+        assert material.texture is not None and material.texture.data.size > 0, "MeshTexturedMaterial requires a valid texture."
 
         # =============================================================================
         # Face culling
         # =============================================================================
+
         faces_visible = RendererUtils.compute_faces_visible(faces_vertices_2d, material.face_culling)
-        # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
-
-        # # =============================================================================
-        # # Lighting
-        # # =============================================================================
-
-        # faces_normals_unit = RendererUtils.compute_faces_normal_unit(faces_vertices_world)
-
-        # # light_direction = light_position - mesh_position
-        # light_direction = np.array((1.0, 1.0, 1.0)).astype(np.float32)
-        # light_direction /= np.linalg.norm(light_direction)
-        # light_cosines: np.ndarray = np.dot(faces_normals_unit, light_direction)
-        # light_intensities = (light_cosines + 1) / 2
 
         # =============================================================================
         # Lighting - compute faces_color
@@ -62,7 +51,7 @@ class RendererMeshTexturedMaterial:
 
         # get the scene lights in the scene graph
         scene = mesh.root()
-        assert isinstance(scene, Object3D)
+        assert isinstance(scene, Scene)
         lights: list[Light] = [child for child in scene.traverse() if isinstance(child, Light)]
 
         # compute face normals and centroids in world space
@@ -108,21 +97,24 @@ class RendererMeshTexturedMaterial:
         for face_index, (face_vertices_2d, face_uvs, face_color, face_visible, face_depth) in enumerate(
             zip(faces_vertices_2d, faces_uvs, faces_color, faces_visible, faces_depth)
         ):
+            # get the artist for this face
             face_uuid = f"{mesh.uuid}_face_{face_index}"
-            changed_artist = renderer._artists[face_uuid]
-            changed_artists.append(changed_artist)
+            axes_image = typing.cast(matplotlib.image.AxesImage, renderer._artists[face_uuid])
+            changed_artists.append(axes_image)
+
+            # set visibility
+            axes_image.set_visible(face_visible)
 
             # set the zorder based on the depth (the more negative, the closer to the camera), so invert the depth
             # - also, matplotlib has a limited zorder range, so scale it down
-            # if material.face_sorting:
-            changed_artist.set_zorder(-face_depth)
-            changed_artist.set_visible(face_visible)
+            if material.face_sorting:
+                axes_image.set_zorder(-face_depth)
 
-            # skip hidden faces
+            # skip if not visible
             if not face_visible:
                 continue
 
-            axes_image = typing.cast(matplotlib.image.AxesImage, changed_artist)
+            # update the textured face
             RendererMeshTexturedMaterial.update_textured_face(
                 mpl_axes=renderer._axis,
                 axes_image=axes_image,

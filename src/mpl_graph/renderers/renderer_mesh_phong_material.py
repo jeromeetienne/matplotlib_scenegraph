@@ -36,7 +36,7 @@ class RendererMeshPhongMaterial:
         material = typing.cast(MeshPhongMaterial, mesh.material)
 
         # =============================================================================
-        # Lighting - compute faces_color
+        # Compute faces_color
         # =============================================================================
 
         # get the scene lights in the scene graph
@@ -55,7 +55,7 @@ class RendererMeshPhongMaterial:
         faces_color = shaded_colors
 
         # =============================================================================
-        # Face sorting based on depth
+        # Honor material.face_sorting
         # =============================================================================
 
         # Sort polygons by depth (painter's algorithm)
@@ -74,7 +74,7 @@ class RendererMeshPhongMaterial:
             faces_color = faces_color[depth_sorted_indices]
 
         # =============================================================================
-        # Face culling
+        # honor material.face_culling
         # =============================================================================
 
         faces_visible = RendererUtils.compute_faces_visible(faces_vertices_2d, material.face_culling)
@@ -83,14 +83,6 @@ class RendererMeshPhongMaterial:
         # - CAUTION: here reorder ALL arrays you use below to keep them in sync
         faces_vertices_2d = faces_vertices_2d[faces_visible]
         faces_color = faces_color[faces_visible]
-
-        # =============================================================================
-        #
-        # =============================================================================
-
-        # =============================================================================
-        #
-        # =============================================================================
 
         # =============================================================================
         # Create artists if needed
@@ -107,6 +99,13 @@ class RendererMeshPhongMaterial:
 
         mpl_poly_collection = typing.cast(matplotlib.collections.PolyCollection, renderer._artists[mesh.uuid])
         mpl_poly_collection.set_visible(True)
+
+        # =============================================================================
+        # do z-ordering based on distance to camera
+        # =============================================================================
+
+        # compute and set zorder on our single artist
+        RendererUtils.update_single_artist_zorder(camera, mesh, mpl_poly_collection)
 
         # =============================================================================
         # Update all the artists

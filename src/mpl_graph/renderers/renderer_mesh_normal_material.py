@@ -29,6 +29,10 @@ class RendererMeshNormalMaterial:
         geometry = mesh.geometry
         material = typing.cast(MeshNormalMaterial, mesh.material)
 
+        # =============================================================================
+        # Sanity checks
+        # =============================================================================
+
         # faces_vertices_world: (n_faces, 3, 3) array of the 3D vertices of each face in world space
         # faces_vertices_2d: (n_faces, 3, 2) array of the 2D vertices of each face in screen space
         # faces_uvs: (n_faces, 3, 2) array of the UV coordinates of each face
@@ -50,26 +54,31 @@ class RendererMeshNormalMaterial:
         ), f"Expected faces_vertices_2d to have {len(geometry.indices)} faces, got {len(faces_vertices_2d)}"
 
         # =============================================================================
-        # Computes face_colors
+        # Computes faces_color
         # =============================================================================
 
         faces_normals_unit = RendererUtils.compute_faces_normal_unit(faces_vertices_world)
         camera_direction = mesh.get_world_position() - camera.get_world_position()
         camera_direction /= np.linalg.norm(camera_direction)
         camera_cosines: np.ndarray = np.cross(faces_normals_unit, camera_direction)
-        faces_color = (np.abs(camera_cosines) + 1) / 2
+        faces_color = (camera_cosines + 1) / 2
 
         # =============================================================================
-        # honor material.face_sorting
+        # Face sorting based on depth
         # =============================================================================
 
-        # compute face depth as the mean Z of the face vertices in world space (negative is in front of the camera)
-        # - will be used for zorder in matplotlib
+        # Sort polygons by depth (painter's algorithm)
+        # - faces are sorted based on their depth (z) in camera space within a single artist
+        # - this artist.set_zorder() is set based on the distance from the camera to the Object3D position
+        # - so possible conflict between faces of different objects
+        # - CAUTION: here reorder ALL arrays you use below to keep them in sync
         if material.face_sorting:
+            # compute the depth of each face as the mean z value of its vertices
             faces_depth = faces_vertices_ndc[:, :, 2].mean(axis=1)
             # get the sorting indices (from farthest to nearest)
             depth_sorted_indices = np.argsort(faces_depth)
-            # apply the sorting to faces_vertices_2d and faces_hidden
+            # apply the sorting to faces_vertices and faces_hidden
+            # CAUTION: here reorder ALL arrays you use below to keep them in sync
             faces_vertices_2d = faces_vertices_2d[depth_sorted_indices]
             faces_color = faces_color[depth_sorted_indices]
 
@@ -78,7 +87,6 @@ class RendererMeshNormalMaterial:
         # =============================================================================
 
         faces_visible = RendererUtils.compute_faces_visible(faces_vertices_2d, material.face_culling)
-        # print(f"faces_visible: {faces_visible.sum()}/{len(faces_visible)}")
 
         # remove hidden faces
         faces_vertices_2d = faces_vertices_2d[faces_visible]
@@ -99,6 +107,13 @@ class RendererMeshNormalMaterial:
 
         mpl_poly_collection = typing.cast(matplotlib.collections.PolyCollection, renderer._artists[mesh.uuid])
         mpl_poly_collection.set_visible(True)
+
+        # =============================================================================
+        # do z-ordering based on distance to camera
+        # =============================================================================
+
+        # compute and set zorder on our single artist
+        RendererUtils.update_single_artist_zorder(camera, mesh, mpl_poly_collection)
 
         # =============================================================================
         # Update all the artists
