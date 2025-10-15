@@ -110,9 +110,6 @@ class Object3D:
         rotation_matrix = matrix44.create_from_quaternion(self.rotation, dtype=np.float32)
         translation_matrix = matrix44.create_from_translation(self.position, dtype=np.float32)
 
-        # self._local_matrix = trans_m @ rot_m @ scale_m
-        # self._local_matrix = scale_matrix @ rotation_matrix @ translation_matrix
-
         # compute the local matrix: first `scale`, then `rotate`, then `translate`
         self._local_matrix = matrix44.create_identity(dtype=np.float32)
         self._local_matrix = matrix44.multiply(self._local_matrix, scale_matrix)
@@ -134,11 +131,9 @@ class Object3D:
             child.update_world_matrix(self._world_matrix)
 
     def get_local_matrix(self) -> np.ndarray:
-        # self.update_local_matrix()
         return self._local_matrix
 
     def get_world_matrix(self) -> np.ndarray:
-        # self.update_world_matrix()
         return self._world_matrix
 
     # =============================================================================
