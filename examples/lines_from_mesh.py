@@ -45,12 +45,8 @@ def main():
     # Random animated lines
     # =============================================================================
 
-    # Load a model from an .obj file
-    # file_path = os.path.join(models_path, "cube_meshio.obj")
+    # parse the .obj geometry
     file_path = os.path.join(models_path, "suzanne.obj")
-    file_path = os.path.join(output_path, "box.obj")
-
-    # parse the .obj file
     mesh_geometry = MeshUtils.parse_obj_file_manual(file_path)
     assert mesh_geometry.indices is not None, "The .obj file must contain face indices"
 
