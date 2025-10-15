@@ -48,8 +48,6 @@ def main():
     # camera = CameraPerspective()
     scene.add_child(camera)
     camera.position[2] = 5.0
-    # camera.position[1] = 2.0
-    # camera.rotation_euler[0] = np.pi / 10
 
     # Create an animation loop
     animation_loop = AnimationLoop(renderer)
@@ -87,23 +85,10 @@ def main():
 
     # point_light_helper = Mesh(Geometry.box(), MeshBasicMaterial(color=Constants.Color.RED))
 
-    @animation_loop.decorator_callback
-    def light_update(delta_time: float) -> Sequence[Light]:
-        present = time.time()
-        directional_light_key.position[0] = 2.0 * np.cos(present)
-        directional_light_key.position[2] = 2.0 * np.sin(present)
-        return [directional_light_key]
-
     mesh_grid = Mesh(GeometryShape.grid(5.0, 5.0), MeshPhongMaterial(shininess=30, color=Constants.Color.LIGHT_BLUE))
     scene.add_child(mesh_grid)
-    mesh_grid.rotation_euler[1] = np.pi
     mesh_grid.position[1] = 0
     mesh_grid.position[2] = -0.01  # trick to ensure the grid is behind the other objects
-
-    @animation_loop.decorator_callback
-    def grid_update(delta_time: float) -> Sequence[Object3D]:
-        # mesh_grid.rotation_euler[0] += 0.1 * delta_time
-        return [mesh_grid]
 
     # =============================================================================
     #
@@ -131,17 +116,17 @@ def main():
     # material = MeshDepthMaterial(colormap_name="viridis")
     mesh_head = Mesh(mesh_geometry, material)
     mesh_head.scale[:] = 1
-    mesh_head.rotation_euler[1] = np.pi
+    mesh_head.rotate_y(np.pi)
 
     # Add the textured mesh to the scene
     scene.add_child(mesh_head)
 
     @animation_loop.decorator_callback
-    def mesh_update(delta_time: float) -> list[Mesh]:
+    def light_update(delta_time: float) -> Sequence[Object3D]:
         present = time.time()
-        # mesh.position[0] = np.sin(present)
-        # mesh.rotation_euler[1] += delta_time
-        return [mesh_head]
+        directional_light_key.position[0] = 2.0 * np.cos(present)
+        directional_light_key.position[2] = 2.0 * np.sin(present)
+        return [mesh_head, directional_light_key]
 
     # =============================================================================
     # Start the animation loop

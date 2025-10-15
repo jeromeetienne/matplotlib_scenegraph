@@ -85,7 +85,7 @@ def main():
 
     @animation_loop.decorator_callback
     def mesh_update(delta_time: float) -> list[Mesh]:
-        mesh.rotation_euler[1] += delta_time
+        mesh.rotate_y(0.5 * delta_time)
         return [mesh]
 
     # =============================================================================

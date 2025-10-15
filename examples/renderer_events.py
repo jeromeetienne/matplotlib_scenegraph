@@ -74,8 +74,7 @@ def main():
             points.material.colors[vertex_index] = color
 
     def update_points(delta_time: float) -> Sequence[Object3D]:
-        present = time.time()
-        points.rotation_euler[0] = present
+        points.rotate_x(0.5 * delta_time)
         return [points]
 
     animation_loop.add_callback(update_points)

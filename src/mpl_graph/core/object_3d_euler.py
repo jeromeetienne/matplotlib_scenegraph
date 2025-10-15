@@ -1,7 +1,9 @@
 # pip imports
-from pyrr import vector3, matrix44, quaternion
+from pyrr import vector3, matrix44
+from math import atan2
 import numpy as np
 from typing import Callable
+import math
 from typing import Protocol
 
 # local imports
@@ -27,7 +29,7 @@ class Object3D:
         "uuid",
         "name",
         "position",
-        "rotation",
+        "rotation_euler",
         "scale",
         "parent",
         "_children",
@@ -44,8 +46,8 @@ class Object3D:
 
         self.position = vector3.create(0.0, 0.0, 0.0)
         """Position vector (x, y, z) in local space."""
-        self.rotation = quaternion.create(dtype=np.float32)  # Identity quaternion (x, y, z, w)
-        """Rotation as a quaternion (x, y, z, w) in local space."""
+        self.rotation_euler = vector3.create(0.0, 0.0, 0.0)  # Euler XYZ, radians
+        """Rotation euler angles (rx, ry, rz) in local space, in radians."""
         self.scale = vector3.create(1.0, 1.0, 1.0)
         """Scale vector (sx, sy, sz) in local space."""
 
@@ -77,18 +79,15 @@ class Object3D:
     # add/remove child
     # =============================================================================
     def add_child(self, child: "Object3D") -> None:
-        """Add a child Object3D to this object."""
         child.parent = self
         self._children.append(child)
 
     def remove_child(self, child: "Object3D") -> None:
-        """Remove a child Object3D from this object."""
         assert child in self._children, "Child not found"
         self._children.remove(child)
         child.parent = None
 
     def traverse(self) -> list["Object3D"]:
-        """Return a list of this object and all its descendants (children, grandchildren, etc.)."""
         objects: list[Object3D] = [self]
         for child in self._children:
             child_objects = child.traverse()
@@ -96,7 +95,6 @@ class Object3D:
         return objects
 
     def root(self) -> "Object3D":
-        """Return the root Object3D of the scene graph this object belongs to."""
         object: Object3D = self
         while object.parent is not None:
             object = object.parent
@@ -107,7 +105,12 @@ class Object3D:
     # =============================================================================
     def update_local_matrix(self) -> None:
         scale_matrix = matrix44.create_from_scale(self.scale, dtype=np.float32)
-        rotation_matrix = matrix44.create_from_quaternion(self.rotation, dtype=np.float32)
+        # REQUIRED: % (math.pi*2) is needed because matrix44.create_from_eulers() doesnt handle angles > 2pi correctly... OOPSSAAA
+        # - try: .rotation[2] = time.time() ...
+        new_rotation_euler = np.array(
+            [self.rotation_euler[0] % (math.pi * 2), self.rotation_euler[2] % (math.pi * 2), self.rotation_euler[1] % (math.pi * 2)], dtype=np.float32
+        )
+        rotation_matrix = matrix44.create_from_eulers(new_rotation_euler, dtype=np.float32)
         translation_matrix = matrix44.create_from_translation(self.position, dtype=np.float32)
 
         # self._local_matrix = trans_m @ rot_m @ scale_m
@@ -142,7 +145,7 @@ class Object3D:
         return self._world_matrix
 
     # =============================================================================
-    # get_world_position/scale/rotation (quaternion)
+    # get_world_position/scale/rotation_euler
     # =============================================================================
     def get_world_position(self) -> np.ndarray:
         return self._world_matrix[3, :3]
@@ -153,113 +156,19 @@ class Object3D:
         sz = np.linalg.norm(self._world_matrix[2, :3])
         return vector3.create(sx, sy, sz)  # type: ignore
 
-    def get_world_rotation_quaternion(self) -> np.ndarray:
-        """Return world rotation as a normalized quaternion.
+    def get_world_rotation_euler(self) -> np.ndarray:
+        # TODO use library to do that... you dont want complex math in your code...
+        rot_m = self._world_matrix[:3, :3]
+        sy = np.sqrt(rot_m[0, 0] ** 2 + rot_m[1, 0] ** 2)
 
-        Note: extracts rotation from the world matrix by removing the scale.
-        """
-        # Extract and normalize the rotation axes to remove scale
-        m = self._world_matrix.astype(np.float64)
-        x_axis = m[0, :3]
-        y_axis = m[1, :3]
-        z_axis = m[2, :3]
-
-        sx = np.linalg.norm(x_axis)
-        sy = np.linalg.norm(y_axis)
-        sz = np.linalg.norm(z_axis)
-
-        if sx > 0:
-            x_axis = x_axis / sx
-        if sy > 0:
-            y_axis = y_axis / sy
-        if sz > 0:
-            z_axis = z_axis / sz
-
-        R = np.stack([x_axis, y_axis, z_axis], axis=0)
-
-        # Convert 3x3 rotation matrix to quaternion (x, y, z, w)
-        trace = np.trace(R)
-        if trace > 0.0:
-            s = np.sqrt(trace + 1.0) * 2.0
-            qw = 0.25 * s
-            qx = (R[2, 1] - R[1, 2]) / s
-            qy = (R[0, 2] - R[2, 0]) / s
-            qz = (R[1, 0] - R[0, 1]) / s
+        singular = sy < 1e-6
+        if not singular:
+            x = atan2(rot_m[2, 1], rot_m[2, 2])
+            y = atan2(-rot_m[2, 0], sy)
+            z = atan2(rot_m[1, 0], rot_m[0, 0])
         else:
-            if R[0, 0] > R[1, 1] and R[0, 0] > R[2, 2]:
-                s = np.sqrt(1.0 + R[0, 0] - R[1, 1] - R[2, 2]) * 2.0
-                qw = (R[2, 1] - R[1, 2]) / s
-                qx = 0.25 * s
-                qy = (R[0, 1] + R[1, 0]) / s
-                qz = (R[0, 2] + R[2, 0]) / s
-            elif R[1, 1] > R[2, 2]:
-                s = np.sqrt(1.0 + R[1, 1] - R[0, 0] - R[2, 2]) * 2.0
-                qw = (R[0, 2] - R[2, 0]) / s
-                qx = (R[0, 1] + R[1, 0]) / s
-                qy = 0.25 * s
-                qz = (R[1, 2] + R[2, 1]) / s
-            else:
-                s = np.sqrt(1.0 + R[2, 2] - R[0, 0] - R[1, 1]) * 2.0
-                qw = (R[1, 0] - R[0, 1]) / s
-                qx = (R[0, 2] + R[2, 0]) / s
-                qy = (R[1, 2] + R[2, 1]) / s
-                qz = 0.25 * s
+            x = atan2(-rot_m[1, 2], rot_m[1, 1])
+            y = atan2(-rot_m[2, 0], sy)
+            z = 0
 
-        q = np.array([qx, qy, qz, qw], dtype=np.float32)
-        # Normalize to ensure a valid quaternion
-        q = q / np.linalg.norm(q)
-        return q
-
-    # =============================================================================
-    # rotate_x / rotate_y / rotate_z (local space)
-    # =============================================================================
-    def rotate_x(self, angle_rad: float) -> "Object3D":
-        """Rotate locally around +X by angle_rad (radians)."""
-        rot = quaternion.create_from_x_rotation(float(angle_rad), dtype=np.float32)
-        self.rotation = quaternion.normalize(quaternion.cross(rot, self.rotation))
-        return self
-
-    def rotate_y(self, angle_rad: float) -> "Object3D":
-        """Rotate locally around +Y by angle_rad (radians)."""
-        rot = quaternion.create_from_y_rotation(float(angle_rad), dtype=np.float32)
-        self.rotation = quaternion.normalize(quaternion.cross(rot, self.rotation))
-        return self
-
-    def rotate_z(self, angle_rad: float) -> "Object3D":
-        """Rotate locally around +Z by angle_rad (radians)."""
-        rot = quaternion.create_from_z_rotation(float(angle_rad), dtype=np.float32)
-        self.rotation = quaternion.normalize(quaternion.cross(rot, self.rotation))
-        return self
-
-    def reset_rotation(self) -> "Object3D":
-        """Reset local rotation to identity (no rotation)."""
-        self.rotation = quaternion.create(dtype=np.float32)
-        return self
-
-    def look_at(self, target: np.ndarray, up: np.ndarray | None = None) -> "Object3D":
-        """Orient this object so its forward (-Z) points toward `target`.
-
-        Uses pyrr's look-at to derive orientation and minimizes custom math. Right-handed, forward is -Z.
-        """
-        if up is None:
-            up = np.array([0.0, 1.0, 0.0], dtype=np.float32)
-
-        eye = np.asarray(self.position, dtype=np.float32)
-        tgt = np.asarray(target, dtype=np.float32)
-        up = np.asarray(up, dtype=np.float32)
-
-        # If target equals eye, do nothing
-        if np.allclose(eye, tgt):
-            return self
-
-        # View matrix (world -> view)
-        view = matrix44.create_look_at(eye=eye, target=tgt, up=up, dtype=np.float32)
-        # Extract view rotation and invert it to get object rotation (view is R^T for orthonormal)
-        R_view = view[:3, :3]
-        R_obj = R_view.T
-
-        # Prefer pyrr for matrix->quaternion if available; otherwise fallback
-        q = quaternion.create_from_matrix(R_obj.astype(np.float32), dtype=np.float32)
-
-        self.rotation = q / np.linalg.norm(q)
-        return self
+        return vector3.create(x, y, z)

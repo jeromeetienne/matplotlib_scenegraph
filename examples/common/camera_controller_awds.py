@@ -35,13 +35,13 @@ class ObjectControllerWasd:
     # =============================================================================
     # Public Functions
     # =============================================================================
-    def start(self):
+    def start(self) -> None:
         """start controlling the object with the keyboard"""
         # connect the keyboard events
         self._mpl_keypress_cid = self._renderer.get_figure().canvas.mpl_connect("key_press_event", self._on_key_press)
         self._mpl_keyrelease_cid = self._renderer.get_figure().canvas.mpl_connect("key_release_event", self._on_key_release)
 
-    def stop(self):
+    def stop(self) -> None:
         """stop controlling the object with the keyboard"""
         # disconnect the keyboard events
         if self._mpl_keypress_cid is not None:
@@ -51,7 +51,7 @@ class ObjectControllerWasd:
             self._renderer.get_figure().canvas.mpl_disconnect(self._mpl_keyrelease_cid)
         self._mpl_keyrelease_cid = None
 
-    def update(self, delta_time: float):
+    def update(self, delta_time: float) -> bool:
         """
         update the object position/rotation based on keyboard state
 
@@ -66,16 +66,16 @@ class ObjectControllerWasd:
         # print(f"translation_transformed: {translation_transformed}")
         # print(f"vector_translation: {self._vector_translation}, vector_rotation: {self._vector_rotation}")
         self._object.position += translation_transformed * self._speed_translation * delta_time
-        self._object.rotation_euler += self._vector_rotation * self._speed_rotation * delta_time
+        self._object.rotate_y(self._vector_rotation[1] * self._speed_rotation * delta_time)
 
         has_moved = np.linalg.norm(self._vector_translation) > 0 or np.linalg.norm(self._vector_rotation) > 0
-        return has_moved
+        return bool(has_moved)
 
     # =============================================================================
     # Maintain the rotation/translation vectors
     # =============================================================================
 
-    def _state_change(self, key_str: str, is_pressed: bool):
+    def _state_change(self, key_str: str, is_pressed: bool) -> None:
         # print(f"Key state change: '{key_str}' to {'pressed' if is_pressed else 'released'}")
         if (key_str == "w" or key_str == "up") or (key_str == "shift+w" or key_str == "shift+up"):
             self._vector_translation[2] = -1 * is_pressed
@@ -95,14 +95,14 @@ class ObjectControllerWasd:
     # =============================================================================
     # event handlers
     # =============================================================================
-    def _on_key_press(self, event: matplotlib.backend_bases.Event):
+    def _on_key_press(self, event: matplotlib.backend_bases.Event) -> None:
         # get the key event
         keyEvent = typing.cast(matplotlib.backend_bases.KeyEvent, event)
         assert isinstance(keyEvent.key, str), f"keyEvent.key must be str, got {type(keyEvent.key)}"
         # update the keyboard state
         self._state_change(keyEvent.key, True)
 
-    def _on_key_release(self, event: matplotlib.backend_bases.Event):
+    def _on_key_release(self, event: matplotlib.backend_bases.Event) -> None:
         # get the key event
         keyEvent = typing.cast(matplotlib.backend_bases.KeyEvent, event)
         assert isinstance(keyEvent.key, str), f"keyEvent.key must be str, got {type(keyEvent.key)}"

@@ -12,8 +12,7 @@ import numpy as np
 # local imports
 from mpl_graph.core.object_3d import Object3D
 from mpl_graph.objects import Scene
-from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.cameras.camera_perspective import CameraPerspective
+from mpl_graph.cameras import CameraOrthographic, CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from common.animation_loop import AnimationLoop
 from common.scene_examples import SceneExamples

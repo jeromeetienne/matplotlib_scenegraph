@@ -9,18 +9,14 @@ import numpy as np
 
 # local imports
 from mpl_graph.core import Object3D
-from mpl_graph.cameras.camera_orthographic import CameraOrthographic
-from mpl_graph.cameras.camera_perspective import CameraPerspective
+from mpl_graph.cameras import CameraPerspective
 from mpl_graph.renderers.renderer import Renderer
 from mpl_graph.objects import Polygons, Scene
-from mpl_graph.core import TransformUtils
 from mpl_graph.geometry import Geometry, GeometryUtils
 from mpl_graph.core.constants import Constants
 from common.animation_loop import AnimationLoop
-from common.scene_examples import SceneExamples
 from common.mesh_utils import MeshUtils
 from common.example_utils import ExamplesUtils
-from common.geometry_shape import GeometryShape
 from common.fps_monitor import FpsMonitor
 
 __dirname__ = os.path.dirname(os.path.abspath(__file__))
@@ -73,12 +69,10 @@ def main():
 
     @animation_loop.decorator_callback
     def polygons_update(delta_time: float) -> Sequence[Object3D]:
-        present = time.time()
-        polygons.rotation_euler[0] += delta_time
-        polygons.rotation_euler[1] += delta_time * 0.5
+        polygons.rotate_x(delta_time)
+        polygons.rotate_y(delta_time * 0.5)
 
         fps_monitor.print_fps()
-        # polygons.position[2] = np.cos(present * 3) * 1
         return [polygons]
 
     # =============================================================================

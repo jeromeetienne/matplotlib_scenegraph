@@ -43,8 +43,18 @@ def main():
     video_duration = 10.0  # seconds
     print(f"Animation will be saved to: {video_path}")
     animation_loop = AnimationLoop(renderer, video_duration=video_duration, video_path=video_path)
-    animation_loop.video_saved.subscribe(lambda: print("Video has been saved!"))
-    # TODO how can i stop whenever the video is done
+
+    # =============================================================================
+    # stop the loop when video is saved
+    # =============================================================================
+
+    @animation_loop.video_saved.event_decorator
+    def on_save():
+        print(f"Video saved to: {video_path}")
+        animation_loop.stop()
+
+    # animation_loop.video_saved.subscribe(lambda: print("Video has been saved!"))
+    # # TODO how can i stop whenever the video is done
 
     # =============================================================================
     # Add a point cloud

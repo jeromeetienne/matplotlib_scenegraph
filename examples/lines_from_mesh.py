@@ -65,10 +65,8 @@ def main():
 
     @animation_loop.decorator_callback
     def lines_update(delta_time: float) -> Sequence[Object3D]:
-        present = time.time()
-        lines.rotation_euler[0] = present
-        lines.rotation_euler[1] = present
-        # lines.position[1] = np.cos(present * 3) * 1
+        lines.rotate_x(delta_time / 2)
+        lines.rotate_y(delta_time)
         return [lines]
 
     # Compare with and without deduplication of edges

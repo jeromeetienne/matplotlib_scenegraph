@@ -68,9 +68,9 @@ def main():
 
     @animation_loop.decorator_callback
     def box_update(delta_time: float) -> Sequence[Object3D]:
-        box_polygons.rotation_euler[1] += 0.2 * delta_time
-        plane_lines.rotation_euler[1] += 0.2 * delta_time
-        # grid_lines.rotation_euler[0] += 0.2 * delta_time
+        box_polygons.rotate_y(0.5 * delta_time)
+        plane_lines.rotate_y(0.5 * delta_time)
+        # grid_lines.rotate_x(0.2 * delta_time)
 
         return [box_polygons, plane_lines, grid_lines]
 

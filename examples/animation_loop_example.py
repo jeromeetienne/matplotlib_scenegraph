@@ -53,8 +53,7 @@ def main():
 
     # add a callback via `animation_loop.add_callback()`
     def update_points(delta_time: float) -> Sequence[Object3D]:
-        present = time.time()
-        points.rotation_euler[1] = present % (2 * np.pi)
+        points.rotate_y(delta_time)
 
         # return the changed objects thus the renderer can optimize the rendering
         changed_object: Sequence[Points] = [points]

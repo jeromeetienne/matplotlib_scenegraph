@@ -50,7 +50,7 @@ scene.add_child(points)
 animation_loop = AnimationLoop(renderer)
 @animation_loop.decorator_callback
 def spin(delta_time):
-		points.rotation_euler[1] += delta_time
+		points.rotate_y(0.5 * delta_time)
 		return [points]
 ```
 

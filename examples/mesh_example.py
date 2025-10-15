@@ -14,6 +14,7 @@ from mpl_graph.core import Object3D, Texture
 from mpl_graph.cameras.camera_orthographic import CameraOrthographic
 from mpl_graph.cameras.camera_perspective import CameraPerspective
 from mpl_graph.core.constants import Constants
+from mpl_graph.lights.ambient_light import AmbientLight
 from mpl_graph.renderers import Renderer
 from mpl_graph.objects import Mesh, Scene
 from mpl_graph.geometry import Geometry
@@ -53,6 +54,9 @@ def main():
     # Load a model
     # =============================================================================
 
+    ambient_light = AmbientLight(intensity=0.5)
+    scene.add_child(ambient_light)
+
     # Load a texture image
     texture_path = os.path.join(images_path, "uv-grid.png")
     texture = Texture.from_file(texture_path)
@@ -71,18 +75,14 @@ def main():
     # material = MeshTexturedMaterial(texture=texture)
     material = MeshPhongMaterial()
     mesh = Mesh(mesh_geometry, material)
-    # mesh.position[2] = -2
-    # mesh.scale[:] = 0.5
-    # mesh.rotation_euler[1] = np.pi  # rotate 180deg around Y to have the face looking towards the camera
+    mesh.rotate_y(np.pi)  # rotate 180deg around Y to have the face looking towards the camera
 
     # Add the textured mesh to the scene
     scene.add_child(mesh)
 
     @animation_loop.decorator_callback
     def mesh_update(delta_time: float) -> list[Mesh]:
-        present = time.time()
-        # mesh.position[0] = np.sin(present)
-        mesh.rotation_euler[1] += delta_time
+        mesh.rotate_y(0.5 * delta_time)
         return [mesh]
 
     # =============================================================================

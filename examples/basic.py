@@ -58,7 +58,9 @@ def main():
     @animation_loop.decorator_callback
     def update_points(delta_time: float) -> Sequence[Object3D]:
         # Modify the points rotation
-        points.rotation_euler[1] += delta_time % (2 * np.pi)
+        angle = delta_time * np.pi / 2.0  # 90 degrees per second
+        points.rotate_y(angle)
+
         # return the changed objects thus the renderer can optimize the rendering
         return [points]
 
