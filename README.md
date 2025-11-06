@@ -2,6 +2,9 @@
 
 Matplotlib Scenegraph (`mpl-graph`) is a pure-Python 3D scene graph and renderer that leans on Matplotlib for visualization. It provides hierarchical transforms, multiple geometry types, and a lightweight animation loop so you can prototype scientific visuals, custom plot tooling, or interactive demos without leaving the Matplotlib ecosystem.
 
+## Code name GSP_02
+- it has been written after GSP_01 and before GSP_03
+
 ## Context & Motivation
 
 Matplotlib is a fantastic library for 2D plotting, but it has limited built-in support for 3D graphics. While `mpl_toolkits.mplot3d` provides basic 3D plotting capabilities, it lacks advanced features like hierarchical scene management, complex geometries, and efficient rendering techniques.
